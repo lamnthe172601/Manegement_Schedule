@@ -3,16 +3,20 @@
   "WorkspaceRootPath": "D:\\Report\\Manegement_Schedule\\Management_Schedule_BE\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BF503498-7203-4459-A111-FCE1E492B873}|Management_Schedule_BE\\Management_Schedule_BE.csproj|d:\\report\\manegement_schedule\\management_schedule_be\\management_schedule_be\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BF503498-7203-4459-A111-FCE1E492B873}|Management_Schedule_BE\\Management_Schedule_BE.csproj|solutionrelative:management_schedule_be\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Report\\Manegement_Schedule\\Management_Schedule_BE\\Management_Schedule_BE\\Migrations\\20250517152711_InitialCreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Management_Schedule_BE\\Migrations\\20250517152711_InitialCreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BF503498-7203-4459-A111-FCE1E492B873}|Management_Schedule_BE\\Management_Schedule_BE.csproj|d:\\report\\manegement_schedule\\management_schedule_be\\management_schedule_be\\models\\sessioncode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BF503498-7203-4459-A111-FCE1E492B873}|Management_Schedule_BE\\Management_Schedule_BE.csproj|solutionrelative:management_schedule_be\\models\\sessioncode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BF503498-7203-4459-A111-FCE1E492B873}|Management_Schedule_BE\\Management_Schedule_BE.csproj|d:\\report\\manegement_schedule\\management_schedule_be\\management_schedule_be\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{BF503498-7203-4459-A111-FCE1E492B873}|Management_Schedule_BE\\Management_Schedule_BE.csproj|solutionrelative:management_schedule_be\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BF503498-7203-4459-A111-FCE1E492B873}|Management_Schedule_BE\\Management_Schedule_BE.csproj|d:\\report\\manegement_schedule\\management_schedule_be\\management_schedule_be\\management_schedule_be.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{BF503498-7203-4459-A111-FCE1E492B873}|Management_Schedule_BE\\Management_Schedule_BE.csproj|solutionrelative:management_schedule_be\\management_schedule_be.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{BF503498-7203-4459-A111-FCE1E492B873}|Management_Schedule_BE\\Management_Schedule_BE.csproj|d:\\report\\manegement_schedule\\management_schedule_be\\management_schedule_be\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BF503498-7203-4459-A111-FCE1E492B873}|Management_Schedule_BE\\Management_Schedule_BE.csproj|solutionrelative:management_schedule_be\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,45 +26,62 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "20250517152711_InitialCreate.cs",
+              "DocumentMoniker": "D:\\Report\\Manegement_Schedule\\Management_Schedule_BE\\Management_Schedule_BE\\Migrations\\20250517152711_InitialCreate.cs",
+              "RelativeDocumentMoniker": "Management_Schedule_BE\\Migrations\\20250517152711_InitialCreate.cs",
+              "ToolTip": "D:\\Report\\Manegement_Schedule\\Management_Schedule_BE\\Management_Schedule_BE\\Migrations\\20250517152711_InitialCreate.cs",
+              "RelativeToolTip": "Management_Schedule_BE\\Migrations\\20250517152711_InitialCreate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-17T15:27:11.299Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "SessionCode.cs",
+              "DocumentMoniker": "D:\\Report\\Manegement_Schedule\\Management_Schedule_BE\\Management_Schedule_BE\\Models\\SessionCode.cs",
+              "RelativeDocumentMoniker": "Management_Schedule_BE\\Models\\SessionCode.cs",
+              "ToolTip": "D:\\Report\\Manegement_Schedule\\Management_Schedule_BE\\Management_Schedule_BE\\Models\\SessionCode.cs",
+              "RelativeToolTip": "Management_Schedule_BE\\Models\\SessionCode.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAgwAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-17T15:25:18.207Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Report\\Manegement_Schedule\\Management_Schedule_BE\\Management_Schedule_BE\\Program.cs",
               "RelativeDocumentMoniker": "Management_Schedule_BE\\Program.cs",
               "ToolTip": "D:\\Report\\Manegement_Schedule\\Management_Schedule_BE\\Management_Schedule_BE\\Program.cs",
               "RelativeToolTip": "Management_Schedule_BE\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-16T12:13:06.16Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\Report\\Manegement_Schedule\\Management_Schedule_BE\\Management_Schedule_BE\\appsettings.json",
               "RelativeDocumentMoniker": "Management_Schedule_BE\\appsettings.json",
               "ToolTip": "D:\\Report\\Manegement_Schedule\\Management_Schedule_BE\\Management_Schedule_BE\\appsettings.json",
               "RelativeToolTip": "Management_Schedule_BE\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAA/AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2025-05-16T12:11:56.567Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Management_Schedule_BE",
-              "DocumentMoniker": "D:\\Report\\Manegement_Schedule\\Management_Schedule_BE\\Management_Schedule_BE\\Management_Schedule_BE.csproj",
-              "RelativeDocumentMoniker": "Management_Schedule_BE\\Management_Schedule_BE.csproj",
-              "ToolTip": "D:\\Report\\Manegement_Schedule\\Management_Schedule_BE\\Management_Schedule_BE\\Management_Schedule_BE.csproj",
-              "RelativeToolTip": "Management_Schedule_BE\\Management_Schedule_BE.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-05-16T12:10:29.373Z",
               "EditorCaption": ""
             }
           ]
