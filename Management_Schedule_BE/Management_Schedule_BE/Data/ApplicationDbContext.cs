@@ -63,6 +63,50 @@ namespace Management_Schedule_BE.Data
             modelBuilder.Entity<Salary>()
                 .HasIndex(s => s.SalaryName)
                 .IsUnique();
+
+            // Configure CreatedAt and ModifiedAt for all entities
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                if (entityType.FindProperty("CreatedAt") != null)
+                {
+                    modelBuilder.Entity(entityType.Name)
+                        .Property("CreatedAt")
+                        .HasDefaultValueSql("GETDATE()");
+                }
+
+                if (entityType.FindProperty("ModifiedAt") != null)
+                {
+                    modelBuilder.Entity(entityType.Name)
+                        .Property("ModifiedAt")
+                        .HasDefaultValueSql("GETDATE()");
+                }
+            }
+        }
+
+        public override int SaveChanges()
+        {
+            var entries = ChangeTracker
+                .Entries()
+                .Where(e => e.Entity is User || e.Entity is Teacher || e.Entity is Student || 
+                           e.Entity is Course || e.Entity is Class || e.Entity is Lesson || 
+                           e.Entity is SessionCode || e.Entity is Schedule || e.Entity is Tuition || 
+                           e.Entity is Salary || e.Entity is StudentTuitionHistory || 
+                           e.Entity is TeacherSalaryHistory)
+                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+
+            foreach (var entityEntry in entries)
+            {
+                var entity = entityEntry.Entity;
+
+                if (entityEntry.State == EntityState.Added)
+                {
+                    entity.GetType().GetProperty("CreatedAt")?.SetValue(entity, DateTime.Now);
+                }
+
+                entity.GetType().GetProperty("ModifiedAt")?.SetValue(entity, DateTime.Now);
+            }
+
+            return base.SaveChanges();
         }
     }
 } 
