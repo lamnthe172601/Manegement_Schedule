@@ -16,11 +16,11 @@ namespace Management_Schedule_BE.Models
 
         [Required]
         [StringLength(255)]
-        public string LessonName { get; set; }
+        public string? LessonName { get; set; }
 
         [Required]
         [StringLength(512)]
-        public string ContentUrl { get; set; }
+        public string? ContentUrl { get; set; }
 
         [StringLength(512)]
         public string? ThumbnailUrl { get; set; }
@@ -41,6 +41,6 @@ namespace Management_Schedule_BE.Models
 
         // Navigation properties
         [ForeignKey("CourseID")]
-        public virtual Course Course { get; set; }
+        public virtual Course? Course { get; set; }
     }
 } 

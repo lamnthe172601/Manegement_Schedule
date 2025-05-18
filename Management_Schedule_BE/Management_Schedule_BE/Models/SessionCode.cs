@@ -13,7 +13,7 @@ namespace Management_Schedule_BE.Models
 
         [Required]
         [StringLength(100)]
-        public string DisplayName { get; set; }
+        public string? DisplayName { get; set; }
 
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
@@ -22,6 +22,6 @@ namespace Management_Schedule_BE.Models
         public DateTime ModifiedAt { get; set; } = DateTime.Now;
 
         // Navigation properties
-        public virtual ICollection<Schedule> Schedules { get; set; }
+        public virtual ICollection<Schedule>? Schedules { get; set; }
     }
 } 

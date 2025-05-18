@@ -13,11 +13,11 @@ namespace Management_Schedule_BE.Models
 
         [Required]
         [StringLength(255)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Required]
         [StringLength(512)]
-        public string PasswordHash { get; set; }
+        public string? PasswordHash { get; set; }
 
         [Required]
         public byte Role { get; set; } // 1=Admin, 2=Teacher, 3=Student

@@ -13,7 +13,7 @@ namespace Management_Schedule_BE.Models
 
         [Required]
         [StringLength(100)]
-        public string SalaryName { get; set; }
+        public string? SalaryName { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(10,2)")]
@@ -30,6 +30,6 @@ namespace Management_Schedule_BE.Models
         public DateTime ModifiedAt { get; set; } = DateTime.Now;
 
         // Navigation properties
-        public virtual ICollection<TeacherSalaryHistory> TeacherSalaryHistories { get; set; }
+        public virtual ICollection<TeacherSalaryHistory>? TeacherSalaryHistories { get; set; }
     }
 } 

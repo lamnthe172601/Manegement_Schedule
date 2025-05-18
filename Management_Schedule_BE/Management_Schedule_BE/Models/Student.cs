@@ -20,11 +20,11 @@ namespace Management_Schedule_BE.Models
 
         // Navigation properties
         [ForeignKey("StudentID")]
-        public virtual User User { get; set; }
+        public virtual User? User { get; set; }
 
         [ForeignKey("ClassID")]
         public virtual Class? Class { get; set; }
 
-        public virtual ICollection<StudentTuitionHistory> TuitionHistory { get; set; }
+        public virtual ICollection<StudentTuitionHistory>? TuitionHistory { get; set; }
     }
 } 

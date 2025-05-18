@@ -13,7 +13,7 @@ namespace Management_Schedule_BE.Models
 
         [Required]
         [StringLength(255)]
-        public string CourseName { get; set; }
+        public string? CourseName { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(10,2)")]
@@ -47,6 +47,6 @@ namespace Management_Schedule_BE.Models
 
         // Navigation properties
         public virtual ICollection<Class> Classes { get; set; }
-        public virtual ICollection<Lesson> Lessons { get; set; }
+        public virtual ICollection<Lesson>? Lessons { get; set; }
     }
 } 

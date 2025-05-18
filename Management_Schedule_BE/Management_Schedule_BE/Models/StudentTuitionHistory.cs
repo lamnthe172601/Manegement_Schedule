@@ -32,9 +32,9 @@ namespace Management_Schedule_BE.Models
 
         // Navigation properties
         [ForeignKey("StudentID")]
-        public virtual Student Student { get; set; }
+        public virtual Student? Student { get; set; }
 
         [ForeignKey("TuitionID")]
-        public virtual Tuition Tuition { get; set; }
+        public virtual Tuition? Tuition { get; set; }
     }
 } 

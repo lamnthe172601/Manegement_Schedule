@@ -13,7 +13,7 @@ namespace Management_Schedule_BE.Models
 
         [Required]
         [StringLength(100)]
-        public string TuitionName { get; set; }
+        public string? TuitionName { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(10,2)")]
@@ -26,6 +26,6 @@ namespace Management_Schedule_BE.Models
         public DateTime ModifiedAt { get; set; } = DateTime.Now;
 
         // Navigation properties
-        public virtual ICollection<StudentTuitionHistory> StudentTuitionHistories { get; set; }
+        public virtual ICollection<StudentTuitionHistory>? StudentTuitionHistories { get; set; }
     }
 } 

@@ -22,11 +22,11 @@ namespace Management_Schedule_BE.Models
 
         [Required]
         [StringLength(20)]
-        public string SessionCode { get; set; }
+        public string? SessionCode { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string TimeSlot { get; set; }
+        public string? TimeSlot { get; set; }
 
         [StringLength(255)]
         public string? Subject { get; set; }
@@ -39,12 +39,12 @@ namespace Management_Schedule_BE.Models
 
         // Navigation properties
         [ForeignKey("ClassID")]
-        public virtual Class Class { get; set; }
+        public virtual Class? Class { get; set; }
 
         [ForeignKey("TeacherID")]
-        public virtual Teacher Teacher { get; set; }
+        public virtual Teacher? Teacher { get; set; }
 
         [ForeignKey("SessionCode")]
-        public virtual SessionCode SessionCodeNavigation { get; set; }
+        public virtual SessionCode? SessionCodeNavigation { get; set; }
     }
 } 

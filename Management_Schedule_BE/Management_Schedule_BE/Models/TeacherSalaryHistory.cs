@@ -32,9 +32,9 @@ namespace Management_Schedule_BE.Models
 
         // Navigation properties
         [ForeignKey("TeacherID")]
-        public virtual Teacher Teacher { get; set; }
+        public virtual Teacher? Teacher { get; set; }
 
         [ForeignKey("SalaryID")]
-        public virtual Salary Salary { get; set; }
+        public virtual Salary? Salary { get; set; }
     }
 } 

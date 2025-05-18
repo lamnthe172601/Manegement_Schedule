@@ -33,8 +33,8 @@ namespace Management_Schedule_BE.Models
 
         // Navigation properties
         [ForeignKey("TeacherID")]
-        public virtual User User { get; set; }
-        public virtual ICollection<Schedule> Schedules { get; set; }
-        public virtual ICollection<TeacherSalaryHistory> SalaryHistory { get; set; }
+        public virtual User? User { get; set; }
+        public virtual ICollection<Schedule>? Schedules { get; set; }
+        public virtual ICollection<TeacherSalaryHistory>? SalaryHistory { get; set; }
     }
 } 
