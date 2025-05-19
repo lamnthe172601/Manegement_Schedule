@@ -4,12 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Management_Schedule_BE.Models
 {
-    [Table("SessionCodes")]
-    public class SessionCode
+    [Table("StudySession ")]
+    public class StudySession
     {
         [Key]
         [StringLength(20)]
-        public string Code { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+
+        public int StudySessionId { get; set; }
 
         [Required]
         [StringLength(100)]
@@ -23,5 +25,7 @@ namespace Management_Schedule_BE.Models
 
         // Navigation properties
         public virtual ICollection<Schedule>? Schedules { get; set; }
+
+       
     }
 } 

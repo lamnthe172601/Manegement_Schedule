@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Management_Schedule_BE.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class CreateInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,8 +26,8 @@ namespace Management_Schedule_BE.Migrations
                     IsComingSoon = table.Column<bool>(type: "bit", nullable: false),
                     IsSelling = table.Column<bool>(type: "bit", nullable: false),
                     IsCompletable = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -43,8 +43,8 @@ namespace Management_Schedule_BE.Migrations
                     SalaryName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     BasicSalary = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Bonus = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -52,17 +52,18 @@ namespace Management_Schedule_BE.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SessionCodes",
+                name: "StudySession ",
                 columns: table => new
                 {
-                    Code = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    StudySessionId = table.Column<int>(type: "int", maxLength: 20, nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     DisplayName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SessionCodes", x => x.Code);
+                    table.PrimaryKey("PK_StudySession ", x => x.StudySessionId);
                 });
 
             migrationBuilder.CreateTable(
@@ -73,8 +74,8 @@ namespace Management_Schedule_BE.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TuitionName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Fee = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -97,8 +98,8 @@ namespace Management_Schedule_BE.Migrations
                     Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Introduction = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AvatarUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -113,8 +114,8 @@ namespace Management_Schedule_BE.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClassName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CourseID = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -140,8 +141,8 @@ namespace Management_Schedule_BE.Migrations
                     Position = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsPublished = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -164,8 +165,8 @@ namespace Management_Schedule_BE.Migrations
                     InstagramUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     GoogleUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     YouTubeUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -184,8 +185,8 @@ namespace Management_Schedule_BE.Migrations
                 {
                     StudentID = table.Column<int>(type: "int", nullable: false),
                     ClassID = table.Column<int>(type: "int", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -215,8 +216,9 @@ namespace Management_Schedule_BE.Migrations
                     SessionCode = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     TimeSlot = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Subject = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    StudySessionId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -228,11 +230,10 @@ namespace Management_Schedule_BE.Migrations
                         principalColumn: "ClassID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Schedules_SessionCodes_SessionCode",
-                        column: x => x.SessionCode,
-                        principalTable: "SessionCodes",
-                        principalColumn: "Code",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Schedules_StudySession _StudySessionId",
+                        column: x => x.StudySessionId,
+                        principalTable: "StudySession ",
+                        principalColumn: "StudySessionId");
                     table.ForeignKey(
                         name: "FK_Schedules_Teachers_TeacherID",
                         column: x => x.TeacherID,
@@ -251,8 +252,8 @@ namespace Management_Schedule_BE.Migrations
                     SalaryID = table.Column<int>(type: "int", nullable: false),
                     AmountPaid = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -281,8 +282,8 @@ namespace Management_Schedule_BE.Migrations
                     TuitionID = table.Column<int>(type: "int", nullable: false),
                     AmountPaid = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -335,9 +336,9 @@ namespace Management_Schedule_BE.Migrations
                 column: "ClassID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Schedules_SessionCode",
+                name: "IX_Schedules_StudySessionId",
                 table: "Schedules",
-                column: "SessionCode");
+                column: "StudySessionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Schedules_TeacherID",
@@ -398,7 +399,7 @@ namespace Management_Schedule_BE.Migrations
                 name: "TeacherSalaryHistory");
 
             migrationBuilder.DropTable(
-                name: "SessionCodes");
+                name: "StudySession ");
 
             migrationBuilder.DropTable(
                 name: "Students");

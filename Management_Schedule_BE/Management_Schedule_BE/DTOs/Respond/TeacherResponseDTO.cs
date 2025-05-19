@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using Management_Schedule_BE.DTOs.Respond;
+
 namespace Management_Schedule_BE.DTOs.Respond
 {
     public class TeacherResponseDTO

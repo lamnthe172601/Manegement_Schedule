@@ -16,7 +16,7 @@ namespace Management_Schedule_BE.Data
         public DbSet<Course> Courses { get; set; }
         public DbSet<Class> Classes { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
-        public DbSet<SessionCode> SessionCodes { get; set; }
+        public DbSet<StudySession> StudySessions { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Tuition> Tuitions { get; set; }
         public DbSet<Salary> Salaries { get; set; }
@@ -89,7 +89,7 @@ namespace Management_Schedule_BE.Data
                 .Entries()
                 .Where(e => e.Entity is User || e.Entity is Teacher || e.Entity is Student || 
                            e.Entity is Course || e.Entity is Class || e.Entity is Lesson || 
-                           e.Entity is SessionCode || e.Entity is Schedule || e.Entity is Tuition || 
+                           e.Entity is StudySession || e.Entity is Schedule || e.Entity is Tuition || 
                            e.Entity is Salary || e.Entity is StudentTuitionHistory || 
                            e.Entity is TeacherSalaryHistory)
                 .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);

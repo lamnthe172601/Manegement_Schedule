@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Management_Schedule_BE.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250517152711_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250519062609_CreateInit")]
+    partial class CreateInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,10 +42,14 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.HasKey("ClassID");
 
@@ -71,7 +75,9 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -92,7 +98,9 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10,2)");
@@ -126,7 +134,9 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -140,7 +150,9 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<int>("Position")
                         .HasColumnType("int");
@@ -171,10 +183,14 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("SalaryName")
                         .IsRequired()
@@ -201,18 +217,25 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<byte>("DayOfWeek")
                         .HasColumnType("tinyint");
 
                     b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("SessionCode")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<int?>("StudySessionId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Subject")
                         .HasMaxLength(255)
@@ -230,33 +253,11 @@ namespace Management_Schedule_BE.Migrations
 
                     b.HasIndex("ClassID");
 
-                    b.HasIndex("SessionCode");
+                    b.HasIndex("StudySessionId");
 
                     b.HasIndex("TeacherID");
 
                     b.ToTable("Schedules");
-                });
-
-            modelBuilder.Entity("Management_Schedule_BE.Models.SessionCode", b =>
-                {
-                    b.Property<string>("Code")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Code");
-
-                    b.ToTable("SessionCodes");
                 });
 
             modelBuilder.Entity("Management_Schedule_BE.Models.Student", b =>
@@ -268,10 +269,14 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.HasKey("StudentID");
 
@@ -292,10 +297,14 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
@@ -315,13 +324,44 @@ namespace Management_Schedule_BE.Migrations
                     b.ToTable("StudentTuitionHistory");
                 });
 
+            modelBuilder.Entity("Management_Schedule_BE.Models.StudySession", b =>
+                {
+                    b.Property<int>("StudySessionId")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudySessionId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.HasKey("StudySessionId");
+
+                    b.ToTable("StudySession ");
+                });
+
             modelBuilder.Entity("Management_Schedule_BE.Models.Teacher", b =>
                 {
                     b.Property<int>("TeacherID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("FacebookUrl")
                         .HasMaxLength(512)
@@ -336,7 +376,9 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("nvarchar(512)");
 
                     b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("ProfileImageUrl")
                         .HasMaxLength(512)
@@ -363,10 +405,14 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
@@ -395,13 +441,17 @@ namespace Management_Schedule_BE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TuitionID"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<decimal>("Fee")
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("TuitionName")
                         .IsRequired()
@@ -433,7 +483,9 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("nvarchar(512)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -455,7 +507,9 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ModifiedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -507,11 +561,9 @@ namespace Management_Schedule_BE.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Management_Schedule_BE.Models.SessionCode", "SessionCodeNavigation")
+                    b.HasOne("Management_Schedule_BE.Models.StudySession", "SessionCodeNavigation")
                         .WithMany("Schedules")
-                        .HasForeignKey("SessionCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StudySessionId");
 
                     b.HasOne("Management_Schedule_BE.Models.Teacher", "Teacher")
                         .WithMany("Schedules")
@@ -611,14 +663,14 @@ namespace Management_Schedule_BE.Migrations
                     b.Navigation("TeacherSalaryHistories");
                 });
 
-            modelBuilder.Entity("Management_Schedule_BE.Models.SessionCode", b =>
-                {
-                    b.Navigation("Schedules");
-                });
-
             modelBuilder.Entity("Management_Schedule_BE.Models.Student", b =>
                 {
                     b.Navigation("TuitionHistory");
+                });
+
+            modelBuilder.Entity("Management_Schedule_BE.Models.StudySession", b =>
+                {
+                    b.Navigation("Schedules");
                 });
 
             modelBuilder.Entity("Management_Schedule_BE.Models.Teacher", b =>

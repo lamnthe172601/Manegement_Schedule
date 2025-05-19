@@ -231,6 +231,9 @@ namespace Management_Schedule_BE.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<int?>("StudySessionId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Subject")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
@@ -247,37 +250,11 @@ namespace Management_Schedule_BE.Migrations
 
                     b.HasIndex("ClassID");
 
-                    b.HasIndex("SessionCode");
+                    b.HasIndex("StudySessionId");
 
                     b.HasIndex("TeacherID");
 
                     b.ToTable("Schedules");
-                });
-
-            modelBuilder.Entity("Management_Schedule_BE.Models.SessionCode", b =>
-                {
-                    b.Property<string>("Code")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.HasKey("Code");
-
-                    b.ToTable("SessionCodes");
                 });
 
             modelBuilder.Entity("Management_Schedule_BE.Models.Student", b =>
@@ -342,6 +319,35 @@ namespace Management_Schedule_BE.Migrations
                     b.HasIndex("TuitionID");
 
                     b.ToTable("StudentTuitionHistory");
+                });
+
+            modelBuilder.Entity("Management_Schedule_BE.Models.StudySession", b =>
+                {
+                    b.Property<int>("StudySessionId")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudySessionId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.HasKey("StudySessionId");
+
+                    b.ToTable("StudySession ");
                 });
 
             modelBuilder.Entity("Management_Schedule_BE.Models.Teacher", b =>
@@ -552,11 +558,9 @@ namespace Management_Schedule_BE.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Management_Schedule_BE.Models.SessionCode", "SessionCodeNavigation")
+                    b.HasOne("Management_Schedule_BE.Models.StudySession", "SessionCodeNavigation")
                         .WithMany("Schedules")
-                        .HasForeignKey("SessionCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StudySessionId");
 
                     b.HasOne("Management_Schedule_BE.Models.Teacher", "Teacher")
                         .WithMany("Schedules")
@@ -656,14 +660,14 @@ namespace Management_Schedule_BE.Migrations
                     b.Navigation("TeacherSalaryHistories");
                 });
 
-            modelBuilder.Entity("Management_Schedule_BE.Models.SessionCode", b =>
-                {
-                    b.Navigation("Schedules");
-                });
-
             modelBuilder.Entity("Management_Schedule_BE.Models.Student", b =>
                 {
                     b.Navigation("TuitionHistory");
+                });
+
+            modelBuilder.Entity("Management_Schedule_BE.Models.StudySession", b =>
+                {
+                    b.Navigation("Schedules");
                 });
 
             modelBuilder.Entity("Management_Schedule_BE.Models.Teacher", b =>

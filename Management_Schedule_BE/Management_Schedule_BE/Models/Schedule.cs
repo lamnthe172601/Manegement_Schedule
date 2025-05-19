@@ -44,7 +44,7 @@ namespace Management_Schedule_BE.Models
         [ForeignKey("TeacherID")]
         public virtual Teacher? Teacher { get; set; }
 
-        [ForeignKey("SessionCode")]
-        public virtual SessionCode? SessionCodeNavigation { get; set; }
+        [ForeignKey("StudySessionId")]
+        public virtual StudySession? SessionCodeNavigation { get; set; }
     }
 } 
