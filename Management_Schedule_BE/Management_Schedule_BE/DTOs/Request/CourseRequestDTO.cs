@@ -41,15 +41,15 @@ namespace Management_Schedule_BE.DTOs.Request
         [Range(0, double.MaxValue, ErrorMessage = "Giá không được âm")]
         public decimal? Price { get; set; }
 
-        public string Level { get; set; }
-        public string Status { get; set; }
+        public string? Level { get; set; }
+        public string? Status { get; set; }
     }
 
     public class CourseFilterRequestDTO
     {
-        public string SearchTerm { get; set; }
-        public string Level { get; set; }
-        public string Status { get; set; }
+        public string? SearchTerm { get; set; }
+        public string? Level { get; set; }
+        public string? Status { get; set; }
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }
         public int PageNumber { get; set; } = 1;
