@@ -42,6 +42,9 @@ namespace Management_Schedule_BE.Models
         public string? AvatarUrl { get; set; }
 
         [Required]
+        public byte Status { get; set; } // 1=Active, 2=Inactive, 3=Suspended
+
+        [Required]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         [Required]

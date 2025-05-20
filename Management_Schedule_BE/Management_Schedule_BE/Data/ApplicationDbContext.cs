@@ -27,6 +27,23 @@ namespace Management_Schedule_BE.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Configure decimal precision for all decimal properties
+            modelBuilder.Entity<Course>()
+                .Property(c => c.Price)
+                .HasColumnType("decimal(10,2)");
+
+            modelBuilder.Entity<Salary>()
+                .Property(s => s.BasicSalary)
+                .HasColumnType("decimal(10,2)");
+
+            modelBuilder.Entity<Salary>()
+                .Property(s => s.Bonus)
+                .HasColumnType("decimal(10,2)");
+
+            modelBuilder.Entity<Tuition>()
+                .Property(t => t.Fee)
+                .HasColumnType("decimal(10,2)");
+
             // Configure User
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)

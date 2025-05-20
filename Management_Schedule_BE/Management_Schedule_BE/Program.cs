@@ -1,12 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Management_Schedule_BE.Data;
-using Management_Schedule_BE.Helpers.Mappings;
-using Management_Schedule_BE.Repositories.Interfaces;
-using Management_Schedule_BE.Repositories.Generic;
 using Management_Schedule_BE.Models;
-using Management_Schedule_BE.Services.Interfaces;
-using Management_Schedule_BE.Services.Implement;
-using Management_Schedule_BE.Repositories.Implement;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,13 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
-// Register Repositories
-builder.Services.AddScoped<CourseRepository>();
-
-// Register Services
-builder.Services.AddScoped<ICourseService, CourseService>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

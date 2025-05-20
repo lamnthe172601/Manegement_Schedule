@@ -13,15 +13,22 @@ namespace Management_Schedule_BE.Models
 
         [Required]
         [StringLength(100)]
-        public string? SalaryName { get; set; }
+        public string SalaryName { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(10,2)")]
         public decimal BasicSalary { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(10,2)")]
         public decimal Bonus { get; set; }
+
+        [Required]
+        public byte Type { get; set; } // 1=Monthly, 2=Hourly
+
+        [Required]
+        public DateTime EffectiveDate { get; set; }
+
+        [Required]
+        public byte Status { get; set; } // 1=Active, 2=Inactive
 
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
@@ -30,6 +37,6 @@ namespace Management_Schedule_BE.Models
         public DateTime ModifiedAt { get; set; } = DateTime.Now;
 
         // Navigation properties
-        public virtual ICollection<TeacherSalaryHistory>? TeacherSalaryHistories { get; set; }
+        public virtual ICollection<TeacherSalaryHistory>? SalaryHistory { get; set; }
     }
 } 

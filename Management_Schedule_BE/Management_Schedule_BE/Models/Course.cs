@@ -13,31 +13,36 @@ namespace Management_Schedule_BE.Models
 
         [Required]
         [StringLength(255)]
-        public string? CourseName { get; set; }
-
-        [Required]
-        [Column(TypeName = "decimal(10,2)")]
-        public decimal Price { get; set; }
-
-        [Required]
-        public byte DiscountPercent { get; set; }
+        public string CourseName { get; set; }
 
         public string? Description { get; set; }
+
+        [Required]
+        public decimal Price { get; set; }
 
         [StringLength(512)]
         public string? ThumbnailUrl { get; set; }
 
         [Required]
-        public bool IsPro { get; set; }
+        public bool IsSelling { get; set; }
 
         [Required]
         public bool IsComingSoon { get; set; }
 
         [Required]
-        public bool IsSelling { get; set; }
+        public bool IsPro { get; set; }
 
         [Required]
         public bool IsCompletable { get; set; }
+
+        [Required]
+        public byte DiscountPercent { get; set; }
+
+        [Required]
+        public int Duration { get; set; } // Duration in hours
+
+        [Required]
+        public byte Level { get; set; } // 1=Beginner, 2=Elementary, 3=Intermediate, 4=Upper Intermediate, 5=Advanced
 
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
@@ -46,7 +51,7 @@ namespace Management_Schedule_BE.Models
         public DateTime ModifiedAt { get; set; } = DateTime.Now;
 
         // Navigation properties
-        public virtual ICollection<Class> Classes { get; set; }
+        public virtual ICollection<Class>? Classes { get; set; }
         public virtual ICollection<Lesson>? Lessons { get; set; }
     }
 } 

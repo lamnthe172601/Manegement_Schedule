@@ -25,6 +25,15 @@ namespace Management_Schedule_BE.Models
         public DateTime PaymentDate { get; set; }
 
         [Required]
+        public byte PaymentMethod { get; set; } // 1=Cash, 2=Bank Transfer, 3=Credit Card
+
+        [StringLength(100)]
+        public string? TransactionID { get; set; }
+
+        [Required]
+        public byte Status { get; set; } // 1=Pending, 2=Completed, 3=Failed
+
+        [Required]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         [Required]

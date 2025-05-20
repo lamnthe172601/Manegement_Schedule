@@ -13,10 +13,21 @@ namespace Management_Schedule_BE.Models
 
         [Required]
         [StringLength(100)]
-        public string? ClassName { get; set; }
+        public string ClassName { get; set; }
 
         [Required]
         public int CourseID { get; set; }
+
+        [Required]
+        public int MaxStudents { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        public DateTime? EndDate { get; set; }
+
+        [Required]
+        public byte Status { get; set; } // 1=Active, 2=Completed, 3=Cancelled
 
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.Now;

@@ -43,10 +43,22 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MaxStudents")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ModifiedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
 
                     b.HasKey("ClassID");
 
@@ -82,6 +94,9 @@ namespace Management_Schedule_BE.Migrations
                     b.Property<byte>("DiscountPercent")
                         .HasColumnType("tinyint");
 
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsComingSoon")
                         .HasColumnType("bit");
 
@@ -94,10 +109,16 @@ namespace Management_Schedule_BE.Migrations
                     b.Property<bool>("IsSelling")
                         .HasColumnType("bit");
 
+                    b.Property<byte>("Level")
+                        .HasColumnType("tinyint");
+
                     b.Property<DateTime>("ModifiedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("Prerequisites")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10,2)");
@@ -138,6 +159,9 @@ namespace Management_Schedule_BE.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsPublished")
                         .HasColumnType("bit");
 
@@ -157,6 +181,9 @@ namespace Management_Schedule_BE.Migrations
                     b.Property<string>("ThumbnailUrl")
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
+
+                    b.Property<byte>("Type")
+                        .HasColumnType("tinyint");
 
                     b.HasKey("LessonID");
 
@@ -184,6 +211,9 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<DateTime>("EffectiveDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("ModifiedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -193,6 +223,12 @@ namespace Management_Schedule_BE.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.Property<byte>("Type")
+                        .HasColumnType("tinyint");
 
                     b.HasKey("SalaryID");
 
@@ -226,10 +262,21 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Room")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<string>("SessionCode")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
 
                     b.Property<int?>("StudySessionId")
                         .HasColumnType("int");
@@ -270,10 +317,19 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<DateTime>("EnrollmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("Level")
+                        .HasColumnType("tinyint");
+
                     b.Property<DateTime>("ModifiedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
 
                     b.HasKey("StudentID");
 
@@ -306,8 +362,18 @@ namespace Management_Schedule_BE.Migrations
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte>("PaymentMethod")
+                        .HasColumnType("tinyint");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
                     b.Property<int>("StudentID")
                         .HasColumnType("int");
+
+                    b.Property<string>("TransactionID")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("TuitionID")
                         .HasColumnType("int");
@@ -325,7 +391,6 @@ namespace Management_Schedule_BE.Migrations
                 {
                     b.Property<int>("StudySessionId")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(20)
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudySessionId"));
@@ -335,19 +400,32 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("EndTime")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("ModifiedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<string>("StartTime")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.HasKey("StudySessionId");
 
-                    b.ToTable("StudySession ");
+                    b.ToTable("StudySession");
                 });
 
             modelBuilder.Entity("Management_Schedule_BE.Models.Teacher", b =>
@@ -414,11 +492,21 @@ namespace Management_Schedule_BE.Migrations
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte>("PaymentMethod")
+                        .HasColumnType("tinyint");
+
                     b.Property<int>("SalaryID")
                         .HasColumnType("int");
 
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
                     b.Property<int>("TeacherID")
                         .HasColumnType("int");
+
+                    b.Property<string>("TransactionID")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("PaymentID");
 
@@ -442,6 +530,9 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<decimal>("Fee")
                         .HasColumnType("decimal(10,2)");
 
@@ -450,10 +541,16 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
                     b.Property<string>("TuitionName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<byte>("Type")
+                        .HasColumnType("tinyint");
 
                     b.HasKey("TuitionID");
 
@@ -518,6 +615,9 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<byte>("Role")
+                        .HasColumnType("tinyint");
+
+                    b.Property<byte>("Status")
                         .HasColumnType("tinyint");
 
                     b.HasKey("UserID");
@@ -601,7 +701,7 @@ namespace Management_Schedule_BE.Migrations
                         .IsRequired();
 
                     b.HasOne("Management_Schedule_BE.Models.Tuition", "Tuition")
-                        .WithMany("StudentTuitionHistories")
+                        .WithMany("TuitionHistory")
                         .HasForeignKey("TuitionID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -625,7 +725,7 @@ namespace Management_Schedule_BE.Migrations
             modelBuilder.Entity("Management_Schedule_BE.Models.TeacherSalaryHistory", b =>
                 {
                     b.HasOne("Management_Schedule_BE.Models.Salary", "Salary")
-                        .WithMany("TeacherSalaryHistories")
+                        .WithMany("SalaryHistory")
                         .HasForeignKey("SalaryID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -657,7 +757,7 @@ namespace Management_Schedule_BE.Migrations
 
             modelBuilder.Entity("Management_Schedule_BE.Models.Salary", b =>
                 {
-                    b.Navigation("TeacherSalaryHistories");
+                    b.Navigation("SalaryHistory");
                 });
 
             modelBuilder.Entity("Management_Schedule_BE.Models.Student", b =>
@@ -679,7 +779,7 @@ namespace Management_Schedule_BE.Migrations
 
             modelBuilder.Entity("Management_Schedule_BE.Models.Tuition", b =>
                 {
-                    b.Navigation("StudentTuitionHistories");
+                    b.Navigation("TuitionHistory");
                 });
 
             modelBuilder.Entity("Management_Schedule_BE.Models.User", b =>
