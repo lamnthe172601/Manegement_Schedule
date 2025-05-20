@@ -25,7 +25,6 @@
 		<Folder Include="Helpers\Validation\" />
 		<Folder Include="Helpers\" />
 		<Folder Include="Helpers\Mappings\" />
-		<Folder Include="Repositories\Implement\" />
 		<Folder Include="Services\Implement\" />
 		<PackageReference Include="AutoMapper" Version="14.0.0" />
 		<PackageReference Include="FluentValidation" Version="12.0.0" />
