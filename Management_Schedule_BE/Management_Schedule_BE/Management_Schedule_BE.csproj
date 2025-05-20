@@ -22,18 +22,9 @@
 		<Folder Include="Controllers\" />
 		<Folder Include="DTOs\Request\" />
 		<Folder Include="DTOs\Respond\" />
-		<Folder Include="Helpers\Validation\" />
-		<Folder Include="Helpers\" />
-		<Folder Include="Helpers\Mappings\" />
-		<Folder Include="Repositories\Generic\" />
 		<Folder Include="Repositories\Implement\" />
-		<Folder Include="Services\Base\" />
-		<Folder Include="Services\Exceptions\" />
-		<Folder Include="Services\Implement\" />
-		<Folder Include="Services\Interfaces\" />
 		<PackageReference Include="AutoMapper" Version="14.0.0" />
-		<PackageReference Include="FluentValidation" Version="12.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
+		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

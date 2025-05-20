@@ -1,27 +1,61 @@
 using Microsoft.EntityFrameworkCore;
 using Management_Schedule_BE.Data;
 using Management_Schedule_BE.Models;
-
+using Management_Schedule_BE.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Management_Schedule_BE.Helpers.Validators;
+using Management_Schedule_BE.Helpers.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllers();
-
-// Configure DbContext
+#region DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+#endregion
 
+#region AutoMapper
+builder.Services.AddAutoMapper(typeof(CourseMappingProfile));
+builder.Services.AddAutoMapper(typeof(LessonMappingProfile));
+builder.Services.AddAutoMapper(typeof(ClassMappingProfile));
+builder.Services.AddAutoMapper(typeof(StudySessionMappingProfile));
+builder.Services.AddAutoMapper(typeof(ScheduleMappingProfile));
+#endregion
 
+#region FluentValidation
+builder.Services.AddValidatorsFromAssemblyContaining<CreateCourseDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateLessonDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateClassDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateScheduleDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateStudySessionDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateCourseDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateLessonDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateClassDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateScheduleDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateStudySessionDTOValidator>();
+builder.Services.AddFluentValidationAutoValidation();
+#endregion
 
+#region Services
+builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<ILessonService, LessonService>();
+builder.Services.AddScoped<IClassService, ClassService>();
+builder.Services.AddScoped<IStudySessionService, StudySessionService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
+#endregion
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+#region Controllers
+builder.Services.AddControllers();
+#endregion
+
+#region Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+#endregion
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+#region Pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -35,3 +69,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+#endregion
