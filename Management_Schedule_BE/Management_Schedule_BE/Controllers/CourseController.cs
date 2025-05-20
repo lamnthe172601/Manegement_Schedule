@@ -1,0 +1,98 @@
+using Management_Schedule_BE.DTOs;
+using Management_Schedule_BE.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Management_Schedule_BE.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class CourseController : ControllerBase
+    {
+        private readonly ICourseService _courseService;
+
+        public CourseController(ICourseService courseService)
+        {
+            _courseService = courseService;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<CourseDTO>>> GetAllCourses()
+        {
+            try
+            {
+                var courses = await _courseService.GetAllCoursesAsync();
+                return Ok(courses);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CourseDTO>> GetCourseById(int id)
+        {
+            try
+            {
+                var course = await _courseService.GetCourseByIdAsync(id);
+                if (course == null)
+                    return NotFound();
+                return Ok(course);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<CourseDTO>> CreateCourse(CreateCourseDTO courseDto)
+        {
+            try
+            {
+                var course = await _courseService.CreateCourseAsync(courseDto);
+                return CreatedAtAction(nameof(GetCourseById), new { id = course.CourseID }, course);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("Tên khóa học đã tồn tại!"))
+                    return BadRequest(new { message = ex.Message });
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<CourseDTO>> UpdateCourse(int id, UpdateCourseDTO courseDto)
+        {
+            try
+            {
+                var course = await _courseService.UpdateCourseAsync(id, courseDto);
+                if (course == null)
+                    return NotFound();
+                return Ok(course);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("Tên khóa học đã tồn tại!"))
+                    return BadRequest(new { message = ex.Message });
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteCourse(int id)
+        {
+            try
+            {
+                var result = await _courseService.DeleteCourseAsync(id);
+                if (!result)
+                    return NotFound();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
+    }
+} 
