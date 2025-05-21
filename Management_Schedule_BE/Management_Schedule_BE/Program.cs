@@ -6,6 +6,9 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Management_Schedule_BE.Helpers.Validators;
 using Management_Schedule_BE.Helpers.Mappings;
+using Microsoft.AspNetCore.OData;
+using Microsoft.OData.Edm;
+using Microsoft.OData.ModelBuilder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,16 +50,25 @@ builder.Services.AddValidatorsFromAssemblyContaining<UpdateStudySessionDTOValida
 builder.Services.AddFluentValidationAutoValidation();
 #endregion
 
+#region OData
+builder.Services.AddControllers()
+    .AddOData(options => options
+        .Select()
+        .Filter()
+        .OrderBy()
+        .SetMaxTop(100)
+        .Count()
+        .Expand()
+        .AddRouteComponents("api", GetEdmModel())
+    );
+#endregion
+
 #region Services
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<IClassService, ClassService>();
 builder.Services.AddScoped<IStudySessionService, StudySessionService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
-#endregion
-
-#region Controllers
-builder.Services.AddControllers();
 #endregion
 
 #region Swagger
@@ -72,13 +84,33 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseCors();
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
+
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.Run();
 #endregion
+
+static IEdmModel GetEdmModel()
+{
+    var builder = new ODataConventionModelBuilder();
+    
+    // Đăng ký các entity set
+    builder.EntitySet<Schedule>("Schedules");
+    builder.EntitySet<Course>("Courses");
+    builder.EntitySet<Lesson>("Lessons");
+    builder.EntitySet<Class>("Classes");
+    builder.EntitySet<StudySession>("StudySessions");
+    
+    return builder.GetEdmModel();
+}

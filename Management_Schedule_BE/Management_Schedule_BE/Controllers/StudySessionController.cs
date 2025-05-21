@@ -1,12 +1,14 @@
 using Management_Schedule_BE.DTOs;
 using Management_Schedule_BE.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 
 namespace Management_Schedule_BE.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class StudySessionController : ControllerBase
+    public class StudySessionController : ODataController
     {
         private readonly IStudySessionService _studySessionService;
 
@@ -16,6 +18,7 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpGet]
+        [EnableQuery]
         public async Task<ActionResult<IEnumerable<StudySessionDTO>>> GetAllStudySessions()
         {
             try
@@ -30,6 +33,7 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpGet("{id}")]
+        [EnableQuery]
         public async Task<ActionResult<StudySessionDTO>> GetStudySessionById(int id)
         {
             try
