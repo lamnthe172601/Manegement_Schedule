@@ -1,12 +1,14 @@
 using Management_Schedule_BE.DTOs;
 using Management_Schedule_BE.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 
 namespace Management_Schedule_BE.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CourseController : ControllerBase
+    public class CourseController : ODataController
     {
         private readonly ICourseService _courseService;
 
@@ -16,6 +18,7 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpGet]
+        [EnableQuery]
         public async Task<ActionResult<IEnumerable<CourseDTO>>> GetAllCourses()
         {
             try
@@ -30,6 +33,7 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpGet("{id}")]
+        [EnableQuery]
         public async Task<ActionResult<CourseDTO>> GetCourseById(int id)
         {
             try
