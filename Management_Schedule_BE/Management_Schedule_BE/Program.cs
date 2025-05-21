@@ -14,6 +14,17 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 #endregion
 
+#region Cors
+builder.Services.AddCors(options => 
+   options.AddDefaultPolicy(policy => 
+   policy
+         .AllowAnyOrigin()
+         .AllowAnyHeader()
+         .AllowAnyMethod()
+   )
+);
+#endregion
+
 #region AutoMapper
 builder.Services.AddAutoMapper(typeof(CourseMappingProfile));
 builder.Services.AddAutoMapper(typeof(LessonMappingProfile));
@@ -61,6 +72,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors();
 
 app.UseHttpsRedirection();
 
