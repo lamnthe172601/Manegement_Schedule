@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Management_Schedule_BE.Data;
 
-namespace Management_Schedule_BE.Repositories
+namespace Management_Schedule_BE.Repositories.Generic
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
@@ -76,4 +76,4 @@ namespace Management_Schedule_BE.Repositories
             return await _dbSet.CountAsync(expression);
         }
     }
-} 
+}
