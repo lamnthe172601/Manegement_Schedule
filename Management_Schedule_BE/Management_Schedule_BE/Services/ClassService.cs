@@ -32,7 +32,6 @@ namespace Management_Schedule_BE.Helpers.Validators
 
         public async Task<ClassDTO> CreateClassAsync(CreateClassDTO classDto)
         {
-            // Kiểm tra trùng tên trong cùng một khóa học
             bool exists = await _context.Classes.AnyAsync(c => c.ClassName == classDto.ClassName && c.CourseID == classDto.CourseID);
             if (exists)
                 throw new Exception("Tên lớp đã tồn tại trong khóa học này!");
@@ -48,7 +47,6 @@ namespace Management_Schedule_BE.Helpers.Validators
             var c = await _context.Classes.FindAsync(id);
             if (c == null) return null;
 
-            // Kiểm tra trùng tên trong cùng một khóa học (trừ chính nó)
             bool exists = await _context.Classes.AnyAsync(x => x.ClassName == classDto.ClassName && x.CourseID == c.CourseID && x.ClassID != id);
             if (exists)
                 throw new Exception("Tên lớp đã tồn tại trong khóa học này!");

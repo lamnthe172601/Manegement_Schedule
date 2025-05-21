@@ -31,7 +31,6 @@ namespace Management_Schedule_BE.Services
 
         public async Task<ScheduleDTO> CreateScheduleAsync(CreateScheduleDTO dto)
         {
-            // Kiểm tra trùng SessionCode trong cùng Class
             bool exists = await _context.Schedules.AnyAsync(s => s.SessionCode == dto.SessionCode && s.ClassID == dto.ClassID);
             if (exists)
                 throw new Exception("Mã ca học đã tồn tại trong lớp này!");
@@ -47,7 +46,6 @@ namespace Management_Schedule_BE.Services
             var schedule = await _context.Schedules.FindAsync(id);
             if (schedule == null) return null;
 
-            // Kiểm tra trùng SessionCode trong cùng Class (trừ chính nó)
             bool exists = await _context.Schedules.AnyAsync(s => s.SessionCode == dto.SessionCode && s.ClassID == schedule.ClassID && s.ScheduleID != id);
             if (exists)
                 throw new Exception("Mã ca học đã tồn tại trong lớp này!");

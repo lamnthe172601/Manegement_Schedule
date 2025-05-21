@@ -31,7 +31,6 @@ namespace Management_Schedule_BE.Services
 
         public async Task<StudySessionDTO> CreateStudySessionAsync(CreateStudySessionDTO dto)
         {
-            // Kiểm tra trùng tên
             bool exists = await _context.StudySessions.AnyAsync(s => s.DisplayName == dto.DisplayName);
             if (exists)
                 throw new Exception("Tên ca học đã tồn tại!");
@@ -47,7 +46,6 @@ namespace Management_Schedule_BE.Services
             var session = await _context.StudySessions.FindAsync(id);
             if (session == null) return null;
 
-            // Kiểm tra trùng tên (trừ chính nó)
             bool exists = await _context.StudySessions.AnyAsync(s => s.DisplayName == dto.DisplayName && s.StudySessionId != id);
             if (exists)
                 throw new Exception("Tên ca học đã tồn tại!");

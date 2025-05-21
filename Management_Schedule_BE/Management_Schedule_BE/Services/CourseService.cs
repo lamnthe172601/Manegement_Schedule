@@ -31,7 +31,6 @@ namespace Management_Schedule_BE.Services
 
         public async Task<CourseDTO> CreateCourseAsync(CreateCourseDTO courseDto)
         {
-            // Kiểm tra trùng tên
             bool exists = await _context.Courses.AnyAsync(c => c.CourseName == courseDto.CourseName);
             if (exists)
                 throw new Exception("Tên khóa học đã tồn tại!");
@@ -47,7 +46,6 @@ namespace Management_Schedule_BE.Services
             var course = await _context.Courses.FindAsync(id);
             if (course == null) return null;
 
-            // Kiểm tra trùng tên với các khóa học khác
             bool exists = await _context.Courses.AnyAsync(c => c.CourseName == courseDto.CourseName && c.CourseID != id);
             if (exists)
                 throw new Exception("Tên khóa học đã tồn tại!");

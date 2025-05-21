@@ -31,7 +31,6 @@ namespace Management_Schedule_BE.Services
 
         public async Task<LessonDTO> CreateLessonAsync(CreateLessonDTO lessonDto)
         {
-            // Kiểm tra trùng tên trong cùng một khóa học
             bool exists = await _context.Lessons.AnyAsync(l => l.LessonName == lessonDto.LessonName && l.CourseID == lessonDto.CourseID);
             if (exists)
                 throw new Exception("Tên bài học đã tồn tại trong khóa học này!");
@@ -47,7 +46,6 @@ namespace Management_Schedule_BE.Services
             var lesson = await _context.Lessons.FindAsync(id);
             if (lesson == null) return null;
 
-            // Kiểm tra trùng tên trong cùng một khóa học (trừ chính nó)
             bool exists = await _context.Lessons.AnyAsync(l => l.LessonName == lessonDto.LessonName && l.CourseID == lesson.CourseID && l.LessonID != id);
             if (exists)
                 throw new Exception("Tên bài học đã tồn tại trong khóa học này!");
