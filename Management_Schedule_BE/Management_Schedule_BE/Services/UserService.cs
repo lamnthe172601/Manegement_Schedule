@@ -18,44 +18,54 @@ namespace Management_Schedule_BE.Services
             _context = context;
             _mapper = mapper;
         }
-        public async Task<UserDTO> CreateUserAsync(UserCreateDTO userCreateDTO)
+        public UserDTO CreateUserAsync(UserCreateDTO userCreateDTO)
         {
-            if(GetUserByEmailAsync(userCreateDTO.Email) == null)
+            bool exitsEmail = GetUserByEmailAsync(userCreateDTO.Email);
+
+            if (exitsEmail == false)
             {
                 var user = _mapper.Map<User>(userCreateDTO);
                 user.PasswordHash = PasswordHassing.ComputeSha256Hash(user.PasswordHash);
-                _context.Users.AddAsync(user);
-                await _context.SaveChangesAsync();
+                _context.Users.Add(user);
+                _context.SaveChanges();
                 return _mapper.Map<UserDTO>(user);
             }
             return null;
         }
 
-        public Task<bool> DeleteUserAsync(int id)
+        private bool GetUserByEmailAsync(string email)
+        {
+            try
+            {
+              var result =  _context.Users.SingleOrDefault(x => x.Email.ToLower() == email.ToLower());
+                return result != null;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        public IEnumerable<UserDTO> GetAllUserAsync()
+        {
+            var users =  _context.Users.ToListAsync();
+            return _mapper.Map<IEnumerable<UserDTO>>(users);
+        }
+
+        public UserDTO GetUserByEmailAndPasswordAsync(string email, string password)
+        {
+            var passwordHas = PasswordHassing.ComputeSha256Hash(password);
+            var u = _context.Users.FirstOrDefaultAsync(x => x.Email == email & x.PasswordHash == passwordHas);
+            return u == null ? null : _mapper.Map<UserDTO>(u);
+        }
+
+        public UserDTO UpdateUserAsync(int id, UserUpdateDTO classDto)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<UserDTO>> GetAllUserAsync()
-        {
-            var users = await _context.Users.ToListAsync();
-            return _mapper.Map<IEnumerable<UserDTO>>(users);
-        }
-
-        public async Task<UserDTO?> GetUserByEmailAndPasswordAsync(string email, string password)
-        {
-            var passwordHas = PasswordHassing.ComputeSha256Hash(password);
-            var u = await _context.Users.FirstOrDefaultAsync(x => x.Email == email & x.PasswordHash == passwordHas);
-            return u == null ? null : _mapper.Map<UserDTO>(u);
-        }
-
-        public async Task<UserDTO?> GetUserByEmailAsync(string email)
-        {
-            var u = await _context.Users.FirstOrDefaultAsync(x => x.Email == email);
-            return u == null ? null : _mapper.Map<UserDTO>(u);
-        }
-
-        public Task<UserDTO?> UpdateUserAsync(int id, UserUpdateDTO classDto)
+        public bool DeleteUserAsync(int id)
         {
             throw new NotImplementedException();
         }

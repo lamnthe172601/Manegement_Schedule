@@ -23,7 +23,7 @@ namespace Management_Schedule_BE.Models
         [StringLength(255)]
         public string? FullName { get; set; }
 
-        [StringLength(1)]
+        [MaxLength(1)]
         public string? Gender { get; set; } // M, F, O
 
         public DateTime? DateOfBirth { get; set; }

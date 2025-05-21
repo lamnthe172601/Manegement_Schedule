@@ -23,7 +23,7 @@ namespace Management_Schedule_BE.Controllers
             _jwtConfig = jwtConfig;
         }
         [HttpPost("SignUp")]
-        public async Task<IActionResult> SignUp(UserCreateDTO userCreateDTO)
+        public IActionResult SignUp(UserCreateDTO userCreateDTO)
         {
             if(_userService.CreateUserAsync(userCreateDTO) == null)
             {
@@ -32,18 +32,20 @@ namespace Management_Schedule_BE.Controllers
                     message = "duplicate email"
                 });
             }
-            
-            return Ok(new
+            else
             {
-                message = "Register succesfu",
-                StatusCode = 200
-            });
+                return Ok(new
+                {
+                    message = "Register succesfu",
+                    StatusCode = 200
+                });
+            }     
         }
 
         [HttpPost("SignIn")]
-        public async Task<IActionResult> SignIn(UserLogin userLogin)
+        public IActionResult SignIn(UserLogin userLogin)
         {
-            var user = await _userService.GetUserByEmailAndPasswordAsync(userLogin.Email, userLogin.PasswordHash);
+            var user = _userService.GetUserByEmailAndPasswordAsync(userLogin.Email, userLogin.PasswordHash);
             if(user != null)
             {
 

@@ -19,9 +19,12 @@ namespace Management_Schedule_BE.DTOs
     DateTime CreatedAt,
     DateTime ModifiedAt);
 
-    public record UserCreateDTO(string Email,
+    public record UserCreateDTO(
+    [EmailAddress]
+    string Email,
     string PasswordHash,
     string? FullName,
+    [MaxLength(1)]
     string? Gender,
     DateTime? DateOfBirth,
     string? Address,
@@ -29,6 +32,7 @@ namespace Management_Schedule_BE.DTOs
     string? Introduction,
     string? AvatarUrl);
     public record UserUpdateDTO(
+   
     string Email,
     string PasswordHash,
     byte Role,
