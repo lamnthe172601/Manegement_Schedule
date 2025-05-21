@@ -23,7 +23,6 @@ namespace Management_Schedule_BE.Controllers
             _jwtConfig = jwtConfig;
         }
         [HttpPost("SignUp")]
-        [Authorize(Roles = "Student")]
         public async Task<IActionResult> SignUp(UserCreateDTO userCreateDTO)
         {
             if(_userService.CreateUserAsync(userCreateDTO) == null)
