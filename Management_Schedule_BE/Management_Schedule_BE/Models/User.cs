@@ -18,9 +18,7 @@ namespace Management_Schedule_BE.Models
         [Required]
         [StringLength(512)]
         public string? PasswordHash { get; set; }
-
-        [Required]
-        public byte Role { get; set; } // 1=Admin, 2=Teacher, 3=Student
+        public byte Role { get; set; } = 3; // 1=Admin, 2=Teacher, 3=Student
 
         [StringLength(255)]
         public string? FullName { get; set; }
@@ -40,14 +38,9 @@ namespace Management_Schedule_BE.Models
 
         [StringLength(512)]
         public string? AvatarUrl { get; set; }
-
-        [Required]
-        public byte Status { get; set; } // 1=Active, 2=Inactive, 3=Suspended
-
-        [Required]
+        public byte Status { get; set; } = 1; // 1=Active, 2=Inactive, 3=Suspended
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        [Required]
         public DateTime ModifiedAt { get; set; } = DateTime.Now;
 
         // Navigation properties
