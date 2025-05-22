@@ -12,7 +12,8 @@ namespace Management_Schedule_BE.Models
         public int UserID { get; set; }
 
         [Required]
-        [StringLength(255)]
+        [EmailAddress]
+        [MaxLength(255)]
         public string? Email { get; set; }
 
         [Required]

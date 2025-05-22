@@ -20,7 +20,9 @@ namespace Management_Schedule_BE.DTOs
     DateTime ModifiedAt);
 
     public record UserCreateDTO(
+    [Required]
     [EmailAddress]
+    [MaxLength(255)]
     string Email,
     string PasswordHash,
     string? FullName,

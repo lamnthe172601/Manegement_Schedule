@@ -56,7 +56,7 @@ namespace Management_Schedule_BE.Services
         public UserDTO GetUserByEmailAndPasswordAsync(string email, string password)
         {
             var passwordHas = PasswordHassing.ComputeSha256Hash(password);
-            var u = _context.Users.FirstOrDefaultAsync(x => x.Email == email & x.PasswordHash == passwordHas);
+            var u = _context.Users.SingleOrDefault(x => x.Email == email & x.PasswordHash == passwordHas);
             return u == null ? null : _mapper.Map<UserDTO>(u);
         }
 
