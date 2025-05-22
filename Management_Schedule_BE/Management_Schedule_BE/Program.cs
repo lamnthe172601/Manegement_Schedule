@@ -68,6 +68,29 @@ builder.Services.AddControllers()
         .Expand()
         .AddRouteComponents("api", GetEdmModel())
     );
+
+// Custom response cho lỗi validation
+builder.Services.Configure<Microsoft.AspNetCore.Mvc.ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Where(e => e.Value.Errors.Count > 0)
+            .ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value.Errors.Select(x => x.ErrorMessage).ToArray()
+            );
+
+        var responseObj = new
+        {
+            status = "error",
+            message = "Validation failed",
+            errors = errors
+        };
+
+        return new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(responseObj);
+    };
+});
 #endregion
 
 #region Services
@@ -148,6 +171,9 @@ app.UseAuthentication();
 app.UseRouting();
 
 app.UseAuthorization();
+
+// Đăng ký middleware wrap response
+app.UseMiddleware<Management_Schedule_BE.Middlewares.ResponseWrapperMiddleware>();
 
 app.UseEndpoints(endpoints =>
 {

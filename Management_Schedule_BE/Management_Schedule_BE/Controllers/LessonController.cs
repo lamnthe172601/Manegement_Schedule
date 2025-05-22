@@ -40,7 +40,7 @@ namespace Management_Schedule_BE.Controllers
             {
                 var lesson = await _lessonService.GetLessonByIdAsync(id);
                 if (lesson == null)
-                    return NotFound();
+                    return NotFound(new { message = "Không tìm thấy bài học" });
                 return Ok(lesson);
             }
             catch (Exception ex)
@@ -72,7 +72,7 @@ namespace Management_Schedule_BE.Controllers
             {
                 var lesson = await _lessonService.UpdateLessonAsync(id, lessonDto);
                 if (lesson == null)
-                    return NotFound();
+                    return NotFound(new { message = "Không tìm thấy bài học" });
                 return Ok(lesson);
             }
             catch (Exception ex)
@@ -90,8 +90,8 @@ namespace Management_Schedule_BE.Controllers
             {
                 var result = await _lessonService.DeleteLessonAsync(id);
                 if (!result)
-                    return NotFound();
-                return NoContent();
+                    return NotFound(new { message = "Không tìm thấy bài học" });
+                return Ok(new { message = "Xóa bài học thành công" });
             }
             catch (Exception ex)
             {

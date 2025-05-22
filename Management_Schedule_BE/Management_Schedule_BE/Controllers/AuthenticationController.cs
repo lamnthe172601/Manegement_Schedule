@@ -27,18 +27,11 @@ namespace Management_Schedule_BE.Controllers
         {
             if(_userService.CreateUserAsync(userCreateDTO) == null)
             {
-                return Ok(new
-                {
-                    message = "duplicate email"
-                });
+                return BadRequest(new { message = "Email đã tồn tại" });
             }
             else
             {
-                return Ok(new
-                {
-                    message = "Register succesfu",
-                    StatusCode = 200
-                });
+                return Ok(new { message = "Đăng ký thành công" });
             }     
         }
 
@@ -48,30 +41,16 @@ namespace Management_Schedule_BE.Controllers
             var user = _userService.GetUserByEmailAndPasswordAsync(userLogin.Email, userLogin.PasswordHash);
             if(user != null)
             {
-
-                
-
                 string token = _jwtConfig.GenerateToken(user);
-                return Ok(new
-                {
-                    Success = true,
-                    Message = "Authenticate success",
-                    Data = token
-                });
+                return Ok(new { message = "Đăng nhập thành công", data = token });
             }
-            return Ok(new
-            {
-                message = "User or pass is not correct"
-            });
+            return BadRequest(new { message = "Tài khoản hoặc mật khẩu không đúng" });
         }
         [HttpGet("DemoAuthor")]
         [Authorize(Roles = "Student")]
         public IActionResult Demo()
         {
-            return Ok(new
-            {
-                message = "Authorization success"
-            });
+            return Ok(new { message = "Authorization success" });
         }
     }
 }

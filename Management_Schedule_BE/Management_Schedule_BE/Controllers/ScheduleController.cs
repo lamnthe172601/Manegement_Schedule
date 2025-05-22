@@ -40,7 +40,7 @@ namespace Management_Schedule_BE.Controllers
             {
                 var schedule = await _scheduleService.GetScheduleByIdAsync(id);
                 if (schedule == null)
-                    return NotFound();
+                    return NotFound(new { message = "Không tìm thấy lịch" });
                 return Ok(schedule);
             }
             catch (Exception ex)
@@ -72,7 +72,7 @@ namespace Management_Schedule_BE.Controllers
             {
                 var schedule = await _scheduleService.UpdateScheduleAsync(id, dto);
                 if (schedule == null)
-                    return NotFound();
+                    return NotFound(new { message = "Không tìm thấy lịch" });
                 return Ok(schedule);
             }
             catch (Exception ex)
@@ -90,8 +90,8 @@ namespace Management_Schedule_BE.Controllers
             {
                 var result = await _scheduleService.DeleteScheduleAsync(id);
                 if (!result)
-                    return NotFound();
-                return NoContent();
+                    return NotFound(new { message = "Không tìm thấy lịch" });
+                return Ok(new { message = "Xóa lịch thành công" });
             }
             catch (Exception ex)
             {

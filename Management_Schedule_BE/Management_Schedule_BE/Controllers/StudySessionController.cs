@@ -40,7 +40,7 @@ namespace Management_Schedule_BE.Controllers
             {
                 var session = await _studySessionService.GetStudySessionByIdAsync(id);
                 if (session == null)
-                    return NotFound();
+                    return NotFound(new { message = "Không tìm thấy ca học" });
                 return Ok(session);
             }
             catch (Exception ex)
@@ -72,7 +72,7 @@ namespace Management_Schedule_BE.Controllers
             {
                 var session = await _studySessionService.UpdateStudySessionAsync(id, dto);
                 if (session == null)
-                    return NotFound();
+                    return NotFound(new { message = "Không tìm thấy ca học" });
                 return Ok(session);
             }
             catch (Exception ex)
@@ -90,8 +90,8 @@ namespace Management_Schedule_BE.Controllers
             {
                 var result = await _studySessionService.DeleteStudySessionAsync(id);
                 if (!result)
-                    return NotFound();
-                return NoContent();
+                    return NotFound(new { message = "Không tìm thấy ca học" });
+                return Ok(new { message = "Xóa ca học thành công" });
             }
             catch (Exception ex)
             {

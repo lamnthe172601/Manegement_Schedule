@@ -40,7 +40,7 @@ namespace Management_Schedule_BE.Controllers
             {
                 var c = await _classService.GetClassByIdAsync(id);
                 if (c == null)
-                    return NotFound();
+                    return NotFound(new { message = "Không tìm thấy lớp" });
                 return Ok(c);
             }
             catch (Exception ex)
@@ -72,7 +72,7 @@ namespace Management_Schedule_BE.Controllers
             {
                 var c = await _classService.UpdateClassAsync(id, classDto);
                 if (c == null)
-                    return NotFound();
+                    return NotFound(new { message = "Không tìm thấy lớp" });
                 return Ok(c);
             }
             catch (Exception ex)
@@ -90,8 +90,8 @@ namespace Management_Schedule_BE.Controllers
             {
                 var result = await _classService.DeleteClassAsync(id);
                 if (!result)
-                    return NotFound();
-                return NoContent();
+                    return NotFound(new { message = "Không tìm thấy lớp" });
+                return Ok(new { message = "Xóa lớp thành công" });
             }
             catch (Exception ex)
             {

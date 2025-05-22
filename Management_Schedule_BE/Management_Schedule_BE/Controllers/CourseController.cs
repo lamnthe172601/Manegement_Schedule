@@ -40,7 +40,7 @@ namespace Management_Schedule_BE.Controllers
             {
                 var course = await _courseService.GetCourseByIdAsync(id);
                 if (course == null)
-                    return NotFound();
+                    return NotFound(new { message = "Không tìm thấy khóa học" });
                 return Ok(course);
             }
             catch (Exception ex)
@@ -55,7 +55,7 @@ namespace Management_Schedule_BE.Controllers
             try
             {
                 var course = await _courseService.CreateCourseAsync(courseDto);
-                return CreatedAtAction(nameof(GetCourseById), new { id = course.CourseID }, course);
+                return Ok(new {message="Tạo khóa học thành công!"});
             }
             catch (Exception ex)
             {
@@ -72,7 +72,7 @@ namespace Management_Schedule_BE.Controllers
             {
                 var course = await _courseService.UpdateCourseAsync(id, courseDto);
                 if (course == null)
-                    return NotFound();
+                    return NotFound(new { message = "Không tìm thấy khóa học" });
                 return Ok(course);
             }
             catch (Exception ex)
@@ -90,8 +90,8 @@ namespace Management_Schedule_BE.Controllers
             {
                 var result = await _courseService.DeleteCourseAsync(id);
                 if (!result)
-                    return NotFound();
-                return NoContent();
+                    return NotFound(new { message = "Không tìm thấy khóa học" });
+                return Ok(new { message = "Xóa khóa học thành công" });
             }
             catch (Exception ex)
             {
