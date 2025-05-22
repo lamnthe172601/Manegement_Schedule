@@ -89,9 +89,28 @@ namespace Management_Schedule_BE.Middlewares
             else
             {
                 status = "success";
-                // Ưu tiên lấy message động từ response body nếu có
-                data = !string.IsNullOrEmpty(responseBody) ? TryDeserialize(responseBody) : null;
-                message = ExtractMessageFromBody(data) ?? "Thành công";
+                // Nếu object trả về có cả message và data ở cấp 1 thì lấy riêng ra
+                if (!string.IsNullOrEmpty(responseBody))
+                {
+                    var obj = TryDeserialize(responseBody);
+                    if (obj is JsonElement je && je.ValueKind == JsonValueKind.Object &&
+                        je.TryGetProperty("data", out var d) &&
+                        je.TryGetProperty("message", out var m))
+                    {
+                        data = d.ValueKind == JsonValueKind.Null ? null : d;
+                        message = m.GetString() ?? "Thành công";
+                    }
+                    else
+                    {
+                        data = obj;
+                        message = ExtractMessageFromBody(obj) ?? "Thành công";
+                    }
+                }
+                else
+                {
+                    data = null;
+                    message = "Thành công";
+                }
             }
 
             var wrapper = new CommonResponse<object>(status, message, status == "success" ? data : null, status == "error" ? errors : null);

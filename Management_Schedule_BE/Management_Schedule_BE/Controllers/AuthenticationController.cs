@@ -36,6 +36,7 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpPost("SignIn")]
+
         public IActionResult SignIn(UserLogin userLogin)
         {
             var user = _userService.GetUserByEmailAndPasswordAsync(userLogin.Email, userLogin.PasswordHash);
@@ -47,7 +48,7 @@ namespace Management_Schedule_BE.Controllers
             return BadRequest(new { message = "Tài khoản hoặc mật khẩu không đúng" });
         }
         [HttpGet("DemoAuthor")]
-        [Authorize(Roles = "Student")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Demo()
         {
             return Ok(new { message = "Authorization success" });
