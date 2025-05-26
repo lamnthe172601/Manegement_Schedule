@@ -43,7 +43,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             </Breadcrumb>
           </div>
         </header>
-        <div className="p-5 shadow-lg border mx-5 rounded-lg h-full mb-5">
+        <div className="bg-[#F9F9F9] p-5 shadow-lg border mx-5 rounded-lg h-full mb-5">
           {children}
         </div>
       </SidebarInset>

@@ -178,7 +178,7 @@ const UserPage = () => {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Danh sách hội viên</CardTitle>
+          <CardTitle>Danh sách học viên</CardTitle>
           <Button>
             <PlusIcon />
             <Link href="/admin/users/add">Thêm hội viên</Link>
