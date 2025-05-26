@@ -1,0 +1,31 @@
+"use client"
+
+import type React from "react"
+import { Inter } from "next/font/google"
+import { ThemeProvider } from "next-themes"
+import { usePathname } from "next/navigation"
+import Header from "./header"
+import Footer from "./footer"
+
+const inter = Inter({ subsets: ["latin"] })
+
+export default function LayoutGuest({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  const pathname = usePathname()
+
+  // ✅ Ẩn Header nếu path bắt đầu bằng "/guest/dashboard"
+  const shouldHideHeader = pathname.startsWith("/user/dashboard")
+
+  return (
+    <ThemeProvider attribute="class" defaultTheme="light">
+      <div className={`${inter.className} flex flex-col min-h-screen relative`}>
+        {!shouldHideHeader && <Header />}
+        <main className="flex-1">{children}</main>
+        <Footer />
+      </div>
+    </ThemeProvider>
+  )
+}
