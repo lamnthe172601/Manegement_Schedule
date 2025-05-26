@@ -1,71 +1,58 @@
 import { useRouter } from "next/router";
-import { useEffect, ReactNode } from "react";
-import { jwtDecode } from "jwt-decode";
-import { Constants } from "@/lib/constants";
-import AppShell from "@/components/common/layout/sidebar/dashboard";
+import { useEffect, ReactNode, useState } from "react";
 import { useAtomValue } from "jotai/react";
-import { userInfoAtom } from "@/stores/auth";
-import { logout } from "@/lib/utils";
+import AppShell from "@/components/common/layout/sidebar/dashboard";
 import LayoutGuest from "./sidebarGuest/layoutGuest";
+import { userInfoAtom } from "@/stores/auth";
 
 interface AuthWrapperProps {
   children: ReactNode;
 }
-const fakeUser = {
-  name: "Demo User",
-  role: "admin",
-}
+
 const AuthWrapper = ({ children }: AuthWrapperProps) => {
   const router = useRouter();
-  const userData = fakeUser;
+  const userData = useAtomValue(userInfoAtom);
+  const role = userData?.role;
+
   const noLayoutRoutes = ["/login", "/register"];
   const isNoLayoutPage = noLayoutRoutes.includes(router.pathname);
 
-  if (isNoLayoutPage) {
-    return <>{children}</>;
-  }
+  const [allowRender, setAllowRender] = useState(false);
 
-  // const userData = useAtomValue(userInfoAtom);
-  // useEffect(() => {
-  //   const token = localStorage.getItem(Constants.API_TOKEN_KEY);
-  //   const isLoginPage = router.pathname === "/login";
-  //   const isRegisterPage = router.pathname === "/register";
-  //   if (!token) {
-  //     if (!isLoginPage && !isRegisterPage) {
-  //       router.replace("/login");
-  //     }
-  //     return;
-  //   }
+  useEffect(() => {
+    // Chưa đăng nhập mà không phải trang public -> redirect /login
+    if (!role && !isNoLayoutPage) {
+      router.replace("/login");
+      return;
+    }
 
-  //   try {
-  //     const { exp } = jwtDecode<{ exp: number }>(token);
-  //     if (Date.now() >= exp * 1000) {
-  //       localStorage.removeItem(Constants.API_TOKEN_KEY);
-  //       if (!isLoginPage && !isRegisterPage) {
-  //         router.replace("/login");
-  //       }
-  //     } else {
-  //       if (isLoginPage || isRegisterPage) {
-  //         router.replace("/dashboard");
-  //       }
-  //     }
-  //   } catch {
-  //     logout();
-  //   }
-  // }, [router.pathname]);
+    // Không phải admin mà vào admin -> redirect /
+    if (role && role !== "admin" && router.pathname.startsWith("/admin")) {
+      router.replace("/");
+      return;
+    }
 
-  return (
-    <>
-      {userData.role ? (
-        <>
-          <AppShell>{children}</AppShell>
-        </>
-      ) : (
-        <>
-          <LayoutGuest >{children}</LayoutGuest>
-        </>
-      )}
-    </>
+    // Nếu là admin, và vào / hoặc /admin/* => redirect về /dashboard
+    if (role === "admin" && ["/", "/admin", "/admin/dashboard"].includes(router.pathname)) {
+      router.replace("/dashboard");
+      return;
+    }
+
+    // Trường hợp hợp lệ -> cho render
+    setAllowRender(true);
+  }, [role, router.pathname, isNoLayoutPage, router]);
+
+  // Nếu chưa cho phép render thì không render gì cả
+  if (!allowRender && !isNoLayoutPage) return null;
+
+  // Trang không có layout
+  if (isNoLayoutPage) return <>{children}</>;
+
+  // Trang có layout tùy theo role
+  return role === "admin" ? (
+    <AppShell>{children}</AppShell>
+  ) : (
+    <LayoutGuest>{children}</LayoutGuest>
   );
 };
 

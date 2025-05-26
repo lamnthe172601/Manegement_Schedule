@@ -49,7 +49,7 @@ const data = {
   navMain: [
     {
       name: "Dashboard",
-      url: "/dashboard",
+      url: "/admin/dashboards",
       icon: SquareTerminal,
       title: "Dashboard",
       role: ["admin", "staff", "member"],

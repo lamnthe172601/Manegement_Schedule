@@ -2,7 +2,6 @@
 
 import { ChevronRight, type LucideIcon } from "lucide-react"
 import { usePathname } from "next/navigation"
-
 import {
   Collapsible,
   CollapsibleContent,
@@ -21,10 +20,6 @@ import Link from "next/link"
 import { useAtomValue } from "jotai/react"
 import { userInfoAtom } from "@/stores/auth"
 
-const fakeUser = {
-  name: "Demo User",
-  role: "admin",
-}
 export function NavMain({
   items,
 }: {
@@ -42,33 +37,26 @@ export function NavMain({
 }) {
   const pathname = usePathname()
   const user = useAtomValue(userInfoAtom)
-  // const userRole = user?.role
-  const userRole = fakeUser?.role
+  const userRole = user?.role
+
   return (
     <SidebarGroup>
       <SidebarMenu>
         {items
-          ?.filter((item) => userRole && item.role.includes(userRole || ""))
+          ?.filter((item) => userRole && item.role.includes(userRole))
           .map((item) => {
-            // Determine if the main item is active
-            const isActive = pathname && item.url && pathname.includes(item.url)
-            if (item?.items && item?.items.length > 0) {
-              // Filter sub-items by user role
-
-              if (items.length === 0) return null
+            const isActive = pathname && item.url && pathname.includes(item.url) || undefined
+            if (item.items?.length) {
               return (
                 <Collapsible
                   key={item.title}
                   asChild
-                  defaultOpen={isActive || false}
+                  defaultOpen={isActive}
                   className="group/collapsible"
                 >
                   <SidebarMenuItem>
                     <CollapsibleTrigger asChild>
-                      <SidebarMenuButton
-                        tooltip={item.title}
-                        isActive={isActive || false}
-                      >
+                      <SidebarMenuButton tooltip={item.title} isActive={isActive}>
                         {item.icon && <item.icon />}
                         <span>{item.title}</span>
                         <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -76,20 +64,14 @@ export function NavMain({
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                       <SidebarMenuSub>
-                        {items.map((subItem) => {
-                          const isSubActive =
-                            pathname &&
-                            subItem.url &&
-                            pathname.includes(subItem.url)
+                        {item.items.map((subItem) => {
+                          const isSubActive = pathname.includes(subItem.url)
                           return (
                             <SidebarMenuSubItem key={subItem.title}>
-                              <SidebarMenuSubButton
-                                asChild
-                                isActive={isSubActive || false}
-                              >
-                                <a href={subItem.url}>
+                              <SidebarMenuSubButton asChild isActive={isSubActive}>
+                                <Link href={subItem.url}>
                                   <span>{subItem.title}</span>
-                                </a>
+                                </Link>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                           )
@@ -100,13 +82,10 @@ export function NavMain({
                 </Collapsible>
               )
             }
+
             return (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton
-                  asChild
-                  tooltip={item.title}
-                  isActive={isActive || false}
-                >
+                <SidebarMenuButton asChild tooltip={item.title} isActive={isActive}>
                   <Link href={item.url} className="flex items-center w-full">
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
