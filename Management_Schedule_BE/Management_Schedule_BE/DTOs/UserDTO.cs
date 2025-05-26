@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Management_Schedule_BE.DTOs
 {
@@ -34,8 +35,7 @@ namespace Management_Schedule_BE.DTOs
     string? Introduction,
     string? AvatarUrl);
     public record UserUpdateDTO(
-   
-    string Email,
+
     string PasswordHash,
     byte Role,
     string? FullName,
@@ -49,4 +49,5 @@ namespace Management_Schedule_BE.DTOs
     DateTime ModifiedAt
     );
     public record UserLogin(string Email, string PasswordHash);
+    
 }

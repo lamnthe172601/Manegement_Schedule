@@ -4,11 +4,11 @@ namespace Management_Schedule_BE.Services
 {
     public interface IUserService
     {
-        IEnumerable<UserDTO> GetAllUserAsync();
+        IEnumerable<UserDTO> GetAllUser();
        
-        UserDTO CreateUserAsync(UserCreateDTO userCreateDTO);
-        UserDTO UpdateUserAsync(int id, UserUpdateDTO classDto);
-        bool DeleteUserAsync(int id);
-        UserDTO GetUserByEmailAndPasswordAsync(string email, string password);
+        UserDTO CreateUser(UserCreateDTO userCreateDTO);
+        UserDTO UpdateUser(string email, UserUpdateDTO classDto);
+        bool DeleteUser(string email);
+        UserDTO GetUserByEmailAndPassword(string email, string password);
     }
 }

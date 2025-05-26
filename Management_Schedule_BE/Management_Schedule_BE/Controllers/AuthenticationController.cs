@@ -25,7 +25,7 @@ namespace Management_Schedule_BE.Controllers
         [HttpPost("SignUp")]
         public IActionResult SignUp(UserCreateDTO userCreateDTO)
         {
-            if(_userService.CreateUserAsync(userCreateDTO) == null)
+            if(_userService.CreateUser(userCreateDTO) == null)
             {
                 return BadRequest(new { message = "Email đã tồn tại" });
             }
@@ -39,7 +39,7 @@ namespace Management_Schedule_BE.Controllers
 
         public IActionResult SignIn(UserLogin userLogin)
         {
-            var user = _userService.GetUserByEmailAndPasswordAsync(userLogin.Email, userLogin.PasswordHash);
+            var user = _userService.GetUserByEmailAndPassword(userLogin.Email, userLogin.PasswordHash);
             if(user != null)
             {
                 string token = _jwtConfig.GenerateToken(user);

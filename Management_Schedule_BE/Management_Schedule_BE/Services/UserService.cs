@@ -18,7 +18,7 @@ namespace Management_Schedule_BE.Services
             _context = context;
             _mapper = mapper;
         }
-        public UserDTO CreateUserAsync(UserCreateDTO userCreateDTO)
+        public UserDTO CreateUser(UserCreateDTO userCreateDTO)
         {
             bool exitsEmail = GetUserByEmailAsync(userCreateDTO.Email);
 
@@ -37,7 +37,7 @@ namespace Management_Schedule_BE.Services
         {
             try
             {
-              var result =  _context.Users.SingleOrDefault(x => x.Email.ToLower() == email.ToLower());
+                var result = _context.Users.SingleOrDefault(x => x.Email.ToLower() == email.ToLower());
                 return result != null;
             }
             catch
@@ -47,27 +47,47 @@ namespace Management_Schedule_BE.Services
         }
 
 
-        public IEnumerable<UserDTO> GetAllUserAsync()
+        public IEnumerable<UserDTO> GetAllUser()
         {
-            var users =  _context.Users.ToListAsync();
+            var users = _context.Users.ToList();
+            if (users == null || users.Count == 0)
+            {
+                return Enumerable.Empty<UserDTO>();
+            }
             return _mapper.Map<IEnumerable<UserDTO>>(users);
         }
 
-        public UserDTO GetUserByEmailAndPasswordAsync(string email, string password)
+        public UserDTO GetUserByEmailAndPassword(string email, string password)
         {
             var passwordHas = PasswordHassing.ComputeSha256Hash(password);
             var u = _context.Users.SingleOrDefault(x => x.Email == email & x.PasswordHash == passwordHas);
             return u == null ? null : _mapper.Map<UserDTO>(u);
         }
 
-        public UserDTO UpdateUserAsync(int id, UserUpdateDTO classDto)
+        public UserDTO UpdateUser(string email, UserUpdateDTO classDto)
         {
-            throw new NotImplementedException();
+            bool exitsEmail = GetUserByEmailAsync(email);
+            if (exitsEmail != false)
+            {
+                var user = _mapper.Map<User>(classDto);
+                _context.Users.Update(user);
+                _context.SaveChanges();
+                return _mapper.Map<UserDTO>(user);
+            }
+            return null;
         }
 
-        public bool DeleteUserAsync(int id)
+        public bool DeleteUser(string email)
         {
-            throw new NotImplementedException();
+            bool exitsEmail = GetUserByEmailAsync(email);
+            if (exitsEmail)
+            {
+                var result = _context.Users.SingleOrDefault(x => x.Email.ToLower() == email.ToLower());
+                _context.Remove(result);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
         }
     }
 }
