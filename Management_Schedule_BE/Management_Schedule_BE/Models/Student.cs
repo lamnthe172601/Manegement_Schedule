@@ -10,8 +10,6 @@ namespace Management_Schedule_BE.Models
         [Key]
         public int StudentID { get; set; }
 
-        public int? ClassID { get; set; }
-
         [Required]
         public byte Level { get; set; } // 1=Beginner, 2=Elementary, 3=Intermediate, 4=Upper Intermediate, 5=Advanced
 
@@ -31,9 +29,6 @@ namespace Management_Schedule_BE.Models
         [ForeignKey("StudentID")]
         public virtual User? User { get; set; }
 
-        [ForeignKey("ClassID")]
-        public virtual Class? Class { get; set; }
-
-        public virtual ICollection<StudentTuitionHistory>? TuitionHistory { get; set; }
+        public virtual ICollection<StudentClassEnrollment>? ClassEnrollments { get; set; }
     }
 } 

@@ -7,20 +7,26 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="DTOs\Request\**" />
+	  <Compile Remove="DTOs\Respond\**" />
 	  <Compile Remove="Repositories\**" />
 	  <Compile Remove="Services\Interface\**" />
+	  <Content Remove="DTOs\Request\**" />
+	  <Content Remove="DTOs\Respond\**" />
 	  <Content Remove="Repositories\**" />
 	  <Content Remove="Services\Interface\**" />
+	  <EmbeddedResource Remove="DTOs\Request\**" />
+	  <EmbeddedResource Remove="DTOs\Respond\**" />
 	  <EmbeddedResource Remove="Repositories\**" />
 	  <EmbeddedResource Remove="Services\Interface\**" />
+	  <None Remove="DTOs\Request\**" />
+	  <None Remove="DTOs\Respond\**" />
 	  <None Remove="Repositories\**" />
 	  <None Remove="Services\Interface\**" />
 	</ItemGroup>
 
 
 	<ItemGroup>
-		<Folder Include="DTOs\Request\" />
-		<Folder Include="DTOs\Respond\" />
 		<PackageReference Include="AutoMapper" Version="14.0.0" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.16" />

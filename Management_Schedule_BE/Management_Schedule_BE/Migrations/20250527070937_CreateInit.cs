@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Management_Schedule_BE.Migrations
 {
     /// <inheritdoc />
-    public partial class AddNewFields : Migration
+    public partial class CreateInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,33 +28,12 @@ namespace Management_Schedule_BE.Migrations
                     DiscountPercent = table.Column<byte>(type: "tinyint", nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
                     Level = table.Column<byte>(type: "tinyint", nullable: false),
-                    Prerequisites = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Courses", x => x.CourseID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Salaries",
-                columns: table => new
-                {
-                    SalaryID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SalaryName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    BasicSalary = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    Bonus = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    Type = table.Column<byte>(type: "tinyint", nullable: false),
-                    EffectiveDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<byte>(type: "tinyint", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Salaries", x => x.SalaryID);
                 });
 
             migrationBuilder.CreateTable(
@@ -175,6 +154,28 @@ namespace Management_Schedule_BE.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Students",
+                columns: table => new
+                {
+                    StudentID = table.Column<int>(type: "int", nullable: false),
+                    Level = table.Column<byte>(type: "tinyint", nullable: false),
+                    EnrollmentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<byte>(type: "tinyint", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Students", x => x.StudentID);
+                    table.ForeignKey(
+                        name: "FK_Students_Users_StudentID",
+                        column: x => x.StudentID,
+                        principalTable: "Users",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Teachers",
                 columns: table => new
                 {
@@ -199,31 +200,35 @@ namespace Management_Schedule_BE.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Students",
+                name: "StudentClassEnrollments",
                 columns: table => new
                 {
+                    EnrollmentID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     StudentID = table.Column<int>(type: "int", nullable: false),
-                    ClassID = table.Column<int>(type: "int", nullable: true),
-                    Level = table.Column<byte>(type: "tinyint", nullable: false),
+                    ClassID = table.Column<int>(type: "int", nullable: false),
                     EnrollmentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TotalTuitionDue = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    TuitionPaid = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Status = table.Column<byte>(type: "tinyint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Students", x => x.StudentID);
+                    table.PrimaryKey("PK_StudentClassEnrollments", x => x.EnrollmentID);
                     table.ForeignKey(
-                        name: "FK_Students_Classes_ClassID",
+                        name: "FK_StudentClassEnrollments_Classes_ClassID",
                         column: x => x.ClassID,
                         principalTable: "Classes",
-                        principalColumn: "ClassID");
+                        principalColumn: "ClassID",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Students_Users_StudentID",
+                        name: "FK_StudentClassEnrollments_Students_StudentID",
                         column: x => x.StudentID,
-                        principalTable: "Users",
-                        principalColumn: "UserID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "Students",
+                        principalColumn: "StudentID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -268,46 +273,13 @@ namespace Management_Schedule_BE.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TeacherSalaryHistory",
-                columns: table => new
-                {
-                    PaymentID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TeacherID = table.Column<int>(type: "int", nullable: false),
-                    SalaryID = table.Column<int>(type: "int", nullable: false),
-                    AmountPaid = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PaymentMethod = table.Column<byte>(type: "tinyint", nullable: false),
-                    TransactionID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Status = table.Column<byte>(type: "tinyint", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
-                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TeacherSalaryHistory", x => x.PaymentID);
-                    table.ForeignKey(
-                        name: "FK_TeacherSalaryHistory_Salaries_SalaryID",
-                        column: x => x.SalaryID,
-                        principalTable: "Salaries",
-                        principalColumn: "SalaryID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TeacherSalaryHistory_Teachers_TeacherID",
-                        column: x => x.TeacherID,
-                        principalTable: "Teachers",
-                        principalColumn: "TeacherID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "StudentTuitionHistory",
                 columns: table => new
                 {
                     PaymentID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StudentID = table.Column<int>(type: "int", nullable: false),
-                    TuitionID = table.Column<int>(type: "int", nullable: false),
+                    EnrollmentID = table.Column<int>(type: "int", nullable: false),
+                    TuitionID = table.Column<int>(type: "int", nullable: true),
                     AmountPaid = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PaymentMethod = table.Column<byte>(type: "tinyint", nullable: false),
@@ -320,17 +292,16 @@ namespace Management_Schedule_BE.Migrations
                 {
                     table.PrimaryKey("PK_StudentTuitionHistory", x => x.PaymentID);
                     table.ForeignKey(
-                        name: "FK_StudentTuitionHistory_Students_StudentID",
-                        column: x => x.StudentID,
-                        principalTable: "Students",
-                        principalColumn: "StudentID",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_StudentTuitionHistory_StudentClassEnrollments_EnrollmentID",
+                        column: x => x.EnrollmentID,
+                        principalTable: "StudentClassEnrollments",
+                        principalColumn: "EnrollmentID",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_StudentTuitionHistory_Tuitions_TuitionID",
                         column: x => x.TuitionID,
                         principalTable: "Tuitions",
-                        principalColumn: "TuitionID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "TuitionID");
                 });
 
             migrationBuilder.CreateIndex(
@@ -356,12 +327,6 @@ namespace Management_Schedule_BE.Migrations
                 column: "CourseID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Salaries_SalaryName",
-                table: "Salaries",
-                column: "SalaryName",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Schedules_ClassID",
                 table: "Schedules",
                 column: "ClassID");
@@ -377,29 +342,24 @@ namespace Management_Schedule_BE.Migrations
                 column: "TeacherID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_ClassID",
-                table: "Students",
+                name: "IX_StudentClassEnrollments_ClassID",
+                table: "StudentClassEnrollments",
                 column: "ClassID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentTuitionHistory_StudentID",
-                table: "StudentTuitionHistory",
+                name: "IX_StudentClassEnrollments_StudentID",
+                table: "StudentClassEnrollments",
                 column: "StudentID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentTuitionHistory_EnrollmentID",
+                table: "StudentTuitionHistory",
+                column: "EnrollmentID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudentTuitionHistory_TuitionID",
                 table: "StudentTuitionHistory",
                 column: "TuitionID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TeacherSalaryHistory_SalaryID",
-                table: "TeacherSalaryHistory",
-                column: "SalaryID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TeacherSalaryHistory_TeacherID",
-                table: "TeacherSalaryHistory",
-                column: "TeacherID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tuitions_TuitionName",
@@ -427,31 +387,28 @@ namespace Management_Schedule_BE.Migrations
                 name: "StudentTuitionHistory");
 
             migrationBuilder.DropTable(
-                name: "TeacherSalaryHistory");
-
-            migrationBuilder.DropTable(
                 name: "StudySession");
-
-            migrationBuilder.DropTable(
-                name: "Students");
-
-            migrationBuilder.DropTable(
-                name: "Tuitions");
-
-            migrationBuilder.DropTable(
-                name: "Salaries");
 
             migrationBuilder.DropTable(
                 name: "Teachers");
 
             migrationBuilder.DropTable(
+                name: "StudentClassEnrollments");
+
+            migrationBuilder.DropTable(
+                name: "Tuitions");
+
+            migrationBuilder.DropTable(
                 name: "Classes");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Students");
 
             migrationBuilder.DropTable(
                 name: "Courses");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

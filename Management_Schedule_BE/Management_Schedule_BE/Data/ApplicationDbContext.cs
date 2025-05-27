@@ -19,9 +19,8 @@ namespace Management_Schedule_BE.Data
         public DbSet<StudySession> StudySessions { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Tuition> Tuitions { get; set; }
-        public DbSet<Salary> Salaries { get; set; }
         public DbSet<StudentTuitionHistory> StudentTuitionHistories { get; set; }
-        public DbSet<TeacherSalaryHistory> TeacherSalaryHistories { get; set; }
+        public DbSet<StudentClassEnrollment> StudentClassEnrollments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,16 +31,16 @@ namespace Management_Schedule_BE.Data
                 .Property(c => c.Price)
                 .HasColumnType("decimal(10,2)");
 
-            modelBuilder.Entity<Salary>()
-                .Property(s => s.BasicSalary)
-                .HasColumnType("decimal(10,2)");
-
-            modelBuilder.Entity<Salary>()
-                .Property(s => s.Bonus)
-                .HasColumnType("decimal(10,2)");
-
             modelBuilder.Entity<Tuition>()
                 .Property(t => t.Fee)
+                .HasColumnType("decimal(10,2)");
+
+            modelBuilder.Entity<StudentClassEnrollment>()
+                .Property(e => e.TotalTuitionDue)
+                .HasColumnType("decimal(10,2)");
+
+            modelBuilder.Entity<StudentClassEnrollment>()
+                .Property(e => e.TuitionPaid)
                 .HasColumnType("decimal(10,2)");
 
             // Configure User
@@ -76,10 +75,25 @@ namespace Management_Schedule_BE.Data
                 .HasIndex(t => t.TuitionName)
                 .IsUnique();
 
-            // Configure Salary
-            modelBuilder.Entity<Salary>()
-                .HasIndex(s => s.SalaryName)
-                .IsUnique();
+            // Configure StudentClassEnrollment
+            modelBuilder.Entity<StudentClassEnrollment>()
+                .HasOne(e => e.Student)
+                .WithMany(s => s.ClassEnrollments)
+                .HasForeignKey(e => e.StudentID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<StudentClassEnrollment>()
+                .HasOne(e => e.Class)
+                .WithMany()
+                .HasForeignKey(e => e.ClassID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure StudentTuitionHistory
+            modelBuilder.Entity<StudentTuitionHistory>()
+                .HasOne(h => h.Enrollment)
+                .WithMany(e => e.TuitionHistory)
+                .HasForeignKey(h => h.EnrollmentID)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Configure CreatedAt and ModifiedAt for all entities
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
@@ -107,8 +121,8 @@ namespace Management_Schedule_BE.Data
                 .Where(e => e.Entity is User || e.Entity is Teacher || e.Entity is Student || 
                            e.Entity is Course || e.Entity is Class || e.Entity is Lesson || 
                            e.Entity is StudySession || e.Entity is Schedule || e.Entity is Tuition || 
-                           e.Entity is Salary || e.Entity is StudentTuitionHistory || 
-                           e.Entity is TeacherSalaryHistory)
+                           e.Entity is StudentTuitionHistory || e.Entity is StudentClassEnrollment
+                          )
                 .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
 
             foreach (var entityEntry in entries)

@@ -12,10 +12,9 @@ namespace Management_Schedule_BE.Models
         public int PaymentID { get; set; }
 
         [Required]
-        public int StudentID { get; set; }
+        public int EnrollmentID { get; set; }
 
-        [Required]
-        public int TuitionID { get; set; }
+        public int? TuitionID { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(10,2)")]
@@ -40,8 +39,8 @@ namespace Management_Schedule_BE.Models
         public DateTime ModifiedAt { get; set; } = DateTime.Now;
 
         // Navigation properties
-        [ForeignKey("StudentID")]
-        public virtual Student? Student { get; set; }
+        [ForeignKey("EnrollmentID")]
+        public virtual StudentClassEnrollment? Enrollment { get; set; }
 
         [ForeignKey("TuitionID")]
         public virtual Tuition? Tuition { get; set; }

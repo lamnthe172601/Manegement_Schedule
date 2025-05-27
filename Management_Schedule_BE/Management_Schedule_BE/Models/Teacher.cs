@@ -35,6 +35,5 @@ namespace Management_Schedule_BE.Models
         [ForeignKey("TeacherID")]
         public virtual User? User { get; set; }
         public virtual ICollection<Schedule>? Schedules { get; set; }
-        public virtual ICollection<TeacherSalaryHistory>? SalaryHistory { get; set; }
     }
 } 

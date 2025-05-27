@@ -38,7 +38,6 @@ namespace Management_Schedule_BE.Models
         // Navigation properties
         [ForeignKey("CourseID")]
         public virtual Course? Course { get; set; }
-        public virtual ICollection<Student>? Students { get; set; }
         public virtual ICollection<Schedule>? Schedules { get; set; }
     }
 } 

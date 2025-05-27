@@ -189,52 +189,6 @@ namespace Management_Schedule_BE.Migrations
                     b.ToTable("Lessons");
                 });
 
-            modelBuilder.Entity("Management_Schedule_BE.Models.Salary", b =>
-                {
-                    b.Property<int>("SalaryID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SalaryID"));
-
-                    b.Property<decimal>("BasicSalary")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<decimal>("Bonus")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<DateTime>("EffectiveDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<string>("SalaryName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<byte>("Status")
-                        .HasColumnType("tinyint");
-
-                    b.Property<byte>("Type")
-                        .HasColumnType("tinyint");
-
-                    b.HasKey("SalaryID");
-
-                    b.HasIndex("SalaryName")
-                        .IsUnique();
-
-                    b.ToTable("Salaries");
-                });
-
             modelBuilder.Entity("Management_Schedule_BE.Models.Schedule", b =>
                 {
                     b.Property<int>("ScheduleID")
@@ -306,9 +260,6 @@ namespace Management_Schedule_BE.Migrations
                     b.Property<int>("StudentID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ClassID")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -330,9 +281,52 @@ namespace Management_Schedule_BE.Migrations
 
                     b.HasKey("StudentID");
 
+                    b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("Management_Schedule_BE.Models.StudentClassEnrollment", b =>
+                {
+                    b.Property<int>("EnrollmentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EnrollmentID"));
+
+                    b.Property<int>("ClassID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<DateTime>("EnrollmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.Property<int>("StudentID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalTuitionDue")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("TuitionPaid")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.HasKey("EnrollmentID");
+
                     b.HasIndex("ClassID");
 
-                    b.ToTable("Students");
+                    b.HasIndex("StudentID");
+
+                    b.ToTable("StudentClassEnrollments");
                 });
 
             modelBuilder.Entity("Management_Schedule_BE.Models.StudentTuitionHistory", b =>
@@ -351,6 +345,9 @@ namespace Management_Schedule_BE.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<int>("EnrollmentID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ModifiedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -365,19 +362,16 @@ namespace Management_Schedule_BE.Migrations
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint");
 
-                    b.Property<int>("StudentID")
-                        .HasColumnType("int");
-
                     b.Property<string>("TransactionID")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("TuitionID")
+                    b.Property<int?>("TuitionID")
                         .HasColumnType("int");
 
                     b.HasKey("PaymentID");
 
-                    b.HasIndex("StudentID");
+                    b.HasIndex("EnrollmentID");
 
                     b.HasIndex("TuitionID");
 
@@ -463,55 +457,6 @@ namespace Management_Schedule_BE.Migrations
                     b.HasKey("TeacherID");
 
                     b.ToTable("Teachers");
-                });
-
-            modelBuilder.Entity("Management_Schedule_BE.Models.TeacherSalaryHistory", b =>
-                {
-                    b.Property<int>("PaymentID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentID"));
-
-                    b.Property<decimal>("AmountPaid")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<DateTime>("ModifiedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<byte>("PaymentMethod")
-                        .HasColumnType("tinyint");
-
-                    b.Property<int>("SalaryID")
-                        .HasColumnType("int");
-
-                    b.Property<byte>("Status")
-                        .HasColumnType("tinyint");
-
-                    b.Property<int>("TeacherID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TransactionID")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("PaymentID");
-
-                    b.HasIndex("SalaryID");
-
-                    b.HasIndex("TeacherID");
-
-                    b.ToTable("TeacherSalaryHistory");
                 });
 
             modelBuilder.Entity("Management_Schedule_BE.Models.Tuition", b =>
@@ -674,36 +619,47 @@ namespace Management_Schedule_BE.Migrations
 
             modelBuilder.Entity("Management_Schedule_BE.Models.Student", b =>
                 {
-                    b.HasOne("Management_Schedule_BE.Models.Class", "Class")
-                        .WithMany("Students")
-                        .HasForeignKey("ClassID");
-
                     b.HasOne("Management_Schedule_BE.Models.User", "User")
                         .WithOne("Student")
                         .HasForeignKey("Management_Schedule_BE.Models.Student", "StudentID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Management_Schedule_BE.Models.StudentClassEnrollment", b =>
+                {
+                    b.HasOne("Management_Schedule_BE.Models.Class", "Class")
+                        .WithMany()
+                        .HasForeignKey("ClassID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Management_Schedule_BE.Models.Student", "Student")
+                        .WithMany("ClassEnrollments")
+                        .HasForeignKey("StudentID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Class");
 
-                    b.Navigation("User");
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Management_Schedule_BE.Models.StudentTuitionHistory", b =>
                 {
-                    b.HasOne("Management_Schedule_BE.Models.Student", "Student")
+                    b.HasOne("Management_Schedule_BE.Models.StudentClassEnrollment", "Enrollment")
                         .WithMany("TuitionHistory")
-                        .HasForeignKey("StudentID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("EnrollmentID")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Management_Schedule_BE.Models.Tuition", "Tuition")
                         .WithMany("TuitionHistory")
-                        .HasForeignKey("TuitionID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TuitionID");
 
-                    b.Navigation("Student");
+                    b.Navigation("Enrollment");
 
                     b.Navigation("Tuition");
                 });
@@ -719,30 +675,9 @@ namespace Management_Schedule_BE.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Management_Schedule_BE.Models.TeacherSalaryHistory", b =>
-                {
-                    b.HasOne("Management_Schedule_BE.Models.Salary", "Salary")
-                        .WithMany("SalaryHistory")
-                        .HasForeignKey("SalaryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Management_Schedule_BE.Models.Teacher", "Teacher")
-                        .WithMany("SalaryHistory")
-                        .HasForeignKey("TeacherID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Salary");
-
-                    b.Navigation("Teacher");
-                });
-
             modelBuilder.Entity("Management_Schedule_BE.Models.Class", b =>
                 {
                     b.Navigation("Schedules");
-
-                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("Management_Schedule_BE.Models.Course", b =>
@@ -752,12 +687,12 @@ namespace Management_Schedule_BE.Migrations
                     b.Navigation("Lessons");
                 });
 
-            modelBuilder.Entity("Management_Schedule_BE.Models.Salary", b =>
+            modelBuilder.Entity("Management_Schedule_BE.Models.Student", b =>
                 {
-                    b.Navigation("SalaryHistory");
+                    b.Navigation("ClassEnrollments");
                 });
 
-            modelBuilder.Entity("Management_Schedule_BE.Models.Student", b =>
+            modelBuilder.Entity("Management_Schedule_BE.Models.StudentClassEnrollment", b =>
                 {
                     b.Navigation("TuitionHistory");
                 });
@@ -769,8 +704,6 @@ namespace Management_Schedule_BE.Migrations
 
             modelBuilder.Entity("Management_Schedule_BE.Models.Teacher", b =>
                 {
-                    b.Navigation("SalaryHistory");
-
                     b.Navigation("Schedules");
                 });
 
