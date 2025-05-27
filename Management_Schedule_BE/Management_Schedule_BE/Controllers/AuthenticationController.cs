@@ -48,7 +48,7 @@ namespace Management_Schedule_BE.Controllers
             return BadRequest(new { message = "Tài khoản hoặc mật khẩu không đúng" });
         }
         [HttpGet("DemoAuthor")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Student")]
         public IActionResult Demo()
         {
             return Ok(new { message = "Authorization success" });

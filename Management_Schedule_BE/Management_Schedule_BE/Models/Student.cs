@@ -14,7 +14,7 @@ namespace Management_Schedule_BE.Models
         public byte Level { get; set; } // 1=Beginner, 2=Elementary, 3=Intermediate, 4=Upper Intermediate, 5=Advanced
 
         [Required]
-        public DateTime EnrollmentDate { get; set; } = DateTime.Now;
+        public DateTime? EnrollmentDate { get; set; }
 
         [Required]
         public byte Status { get; set; } // 1=Active, 2=Inactive, 3=OnLeave

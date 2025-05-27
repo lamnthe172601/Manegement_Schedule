@@ -100,6 +100,8 @@ builder.Services.AddScoped<IClassService, ClassService>();
 builder.Services.AddScoped<IStudySessionService, StudySessionService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<JWTConfig>();
 #endregion
 
@@ -223,6 +225,7 @@ static IEdmModel GetEdmModel()
     builder.EntitySet<Lesson>("Lessons");
     builder.EntitySet<Class>("Classes");
     builder.EntitySet<StudySession>("StudySessions");
-    
+    builder.EntitySet<StudentClassEnrollment>("StudentClassEnrollments");
+    builder.EntitySet<StudentTuitionHistory>("StudentTuitionHistories");
     return builder.GetEdmModel();
 }

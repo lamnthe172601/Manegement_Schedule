@@ -28,6 +28,34 @@ namespace Management_Schedule_BE.Services
                 user.PasswordHash = PasswordHassing.ComputeSha256Hash(user.PasswordHash);
                 _context.Users.Add(user);
                 _context.SaveChanges();
+
+                // Bổ sung: Nếu là student thì tạo bản ghi student
+                if (user.Role == 3) // 3 = Student
+                {
+                    var student = new Student
+                    {
+                        StudentID = user.UserID, // Giả sử StudentID trùng với UserID
+                        Level = 0, // mặc định Beginner
+                        EnrollmentDate = DateTime.Now,
+                        Status = 1, // Active
+                        CreatedAt = DateTime.Now,
+                        ModifiedAt = DateTime.Now
+                    };
+                    _context.Students.Add(student);
+                    _context.SaveChanges();
+                }
+                // Nếu là teacher thì tạo bản ghi teacher
+                else if (user.Role == 2) // 2 = Teacher
+                {
+                    var teacher = new Teacher
+                    {
+                        TeacherID = user.UserID, // Giả sử TeacherID trùng với UserID
+                        CreatedAt = DateTime.Now,
+                        ModifiedAt = DateTime.Now
+                    };
+                    _context.Teachers.Add(teacher);
+                    _context.SaveChanges();
+                }
                 return _mapper.Map<UserDTO>(user);
             }
             return null;
