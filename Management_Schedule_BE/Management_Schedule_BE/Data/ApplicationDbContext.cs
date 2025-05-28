@@ -112,6 +112,8 @@ namespace Management_Schedule_BE.Data
                         .HasDefaultValueSql("GETDATE()");
                 }
             }
+
+            SeedData.Seed(modelBuilder);
         }
 
         public override int SaveChanges()
