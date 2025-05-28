@@ -16,13 +16,14 @@ export default function LayoutGuest({
 }>) {
   const pathname = usePathname()
 
-  // ✅ Ẩn Header nếu path bắt đầu bằng "/guest/dashboard"
-  const shouldHideHeader = pathname.startsWith("/user/dashboard")
+  // ✅ Ẩn Header nếu path bắt đầu bằng 
+  const noLayoutPages = ["/login", "/register", "/teacher/dashboard", "/student/dashboard"]
 
+  const shouldHideAllLayout = noLayoutPages.some(page => pathname.startsWith(page))
   return (
     <ThemeProvider attribute="class" defaultTheme="light">
       <div className={`${inter.className} flex flex-col min-h-screen relative`}>
-        {!shouldHideHeader && <Header />}
+        {!shouldHideAllLayout && <Header />}
         <main className="flex-1">{children}</main>
         <Footer />
       </div>

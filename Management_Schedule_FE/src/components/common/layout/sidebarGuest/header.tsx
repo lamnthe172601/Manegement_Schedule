@@ -17,17 +17,22 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useAtomValue } from "jotai/react"
 import { userInfoAtom } from "@/stores/auth"
+import { logout } from "@/lib/utils"
 
 export default function Header() {
   const pathname = usePathname()
   const userData = useAtomValue(userInfoAtom) // dùng userData làm check đăng nhập
 
+  console.log("userData", userData)
+  const dashboardLink =
+    userData?.role === "Teacher"
+      ? "/teacher/dashboard/profile"
+      : userData?.role === "Student"
+        ? "/student/dashboard/profile"
+        : "/"; // default nếu cần
+
   // Hàm logout (bạn sửa theo logic thực tế)
-  const handleLogout = () => {
-    // Ví dụ: reset user atom hoặc gọi API logout
-    // setUserInfoAtom(null)
-    console.log("User logged out")
-  }
+
 
   const navItems = [
     { href: "/", label: "TRANG CHỦ" },
@@ -61,7 +66,7 @@ export default function Header() {
             </nav>
             <div className="flex items-center space-x-4">
               {/* User Profile Dropdown */}
-              <DropdownMenu>
+              {/* <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button aria-label="User Profile" className="text-gray-500 hover:text-gray-700">
                     <User size={20} />
@@ -77,7 +82,7 @@ export default function Header() {
                           <Link href="/user/profile">Profile</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href="/user/dashboard/profile">Dashboard</Link>
+                          <Link href="/teacher/dashboard/profile">Dashboard</Link>
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
                       <DropdownMenuSeparator />
@@ -102,9 +107,59 @@ export default function Header() {
                     </>
                   )}
                 </DropdownMenuContent>
-              </DropdownMenu>
+              </DropdownMenu> */}
+              <div>
+                {userData ? (
+                  // Khi đã đăng nhập, hiển thị icon User + tên, có dropdown menu
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        aria-label="User Profile"
+                        className="text-gray-500 hover:text-gray-700 flex items-center space-x-2"
+                      >
+                        <User size={20} />
+                        <span>{userData.role}-{userData.fullName}</span>
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56" align="end">
+                      <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem asChild>
+                          <Link href="/user/profile">Profile</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href={dashboardLink}>Dashboard</Link>
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => logout()}>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Log out
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  // Khi chưa đăng nhập, hiển thị 2 nút đăng nhập và đăng ký
+                  <div className="flex space-x-4">
+                    <Link
+                      href="/login"
+                      className="text-gray-700 hover:text-blue-500 font-semibold"
+                    >
+                      Đăng nhập
+                    </Link>
+                    <Link
+                      href="/register"
+                      className="text-gray-700 hover:text-blue-500 font-semibold"
+                    >
+                      Đăng ký
+                    </Link>
+                  </div>
+                )}
+              </div>
 
-              {/* Shopping Cart Dropdown */}
+
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button aria-label="Shopping Cart" className="text-gray-500 hover:text-gray-700">

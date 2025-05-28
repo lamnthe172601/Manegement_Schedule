@@ -1,7 +1,7 @@
 export class Endpoints {
   static readonly Auth = {
     REGISTER: "auth/register",
-    LOGIN: "auth/login",
+    LOGIN: "Authentication/SignIn",
     LOGOUT: "auth/logout",
     REFRESH: "auth/refresh",
     CHANGE_PASSWORD_FIRST_TIME: "auth/change-password-first-time",
@@ -16,19 +16,19 @@ export class Endpoints {
     GET_BY_USER: "fines/me",
   }
   static readonly Review = {
-    CREATE: "reviews",      
-    GET_BY_USER_BY_BOOK_ID: (id: string) => `reviews/book/${id}/user`,  
+    CREATE: "reviews",
+    GET_BY_USER_BY_BOOK_ID: (id: string) => `reviews/book/${id}/user`,
     GET_ALL: (id: string) => `reviews/book/${id}`,
     UPDATE: (id: string) => `reviews/${id}`,
     DELETE: (id: string) => `reviews/${id}`,
   }
-  static readonly Users = {
-    GET_ALL: "users",
-    GET_ALLV2: "users/v2",
-    GET_BY_ID: (id: string) => `users/${id}`,
-    CREATE: "users",
-    UPDATE: (id: string) => `users/${id}`,
-    DELETE: (id: string) => `users/${id}`,
+  static readonly User = {
+    GET_ALL: "User",
+    GET_ALLV2: "User/v2",
+    GET_BY_ID: (id: string) => `User/${id}`,
+    CREATE: "User",
+    UPDATE: (id: string) => `User/${id}`,
+    DELETE: (id: string) => `User/${id}`,
   }
   static readonly Books = {
     GET_ALL: "books",
@@ -39,9 +39,9 @@ export class Endpoints {
     DELETE: (id: string) => `books/${id}`,
   }
   static readonly Categories = {
-    GET_ALL: 'categories',
+    GET_ALL: "categories",
     GET_BY_ID: (id: string) => `categories/${id}`,
-    CREATE: 'categories',
+    CREATE: "categories",
     UPDATE: (id: string) => `categories/${id}`,
     DELETE: (id: string) => `categories/${id}`,
   }

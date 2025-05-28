@@ -29,10 +29,22 @@ import { useSetAtom } from "jotai/react";
 import { userInfoAtom } from "@/stores/auth";
 import Link from "next/link";
 
+import { jwtDecode } from "jwt-decode";
+
 const formSchema = z.object({
   email: z.string().email("Email không hợp lệ"),
   password: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
 });
+export interface JwtUser {
+  nameid: string;
+  unique_name?: string;
+  email: string;
+  fullName: string;
+  gender: "M" | "F";
+  phone: string;
+  role: string;
+  [key: string]: any;  // cho phép thêm các trường khác
+}
 
 export function LoginForm({
   className,
@@ -47,25 +59,33 @@ export function LoginForm({
   const setUserAtom = useSetAtom(userInfoAtom);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await login(values.email, values.password)
-      .then((response) => {
-        if (response.success) {
-          localStorage.setItem(
-            Constants.API_TOKEN_KEY,
-            response.data.accessToken,
-          );
-          setUserAtom(response.data.user);
-          router.push("/dashboard");
-        }
-      })
-      .catch((error) => {
-        showErrorToast(
-          error?.response?.data?.message ||
-            error?.message ||
-            "Có lỗi xảy ra, vui lòng thử lại sau",
-        );
-      });
+    try {
+      const response = await login(values.email, values.password);
+      console.log("response", response);
+      if (response.status === 'success') {
+        const token = response.data;
+        console.log("token", token);
+        localStorage.setItem(Constants.API_TOKEN_KEY, token);
+
+        // Decode token để lấy thông tin user (payload)
+        const user = jwtDecode<JwtUser>(token);
+        console.log("Decoded user:", user);
+        setUserAtom(user);
+        console.log(userInfoAtom)
+
+        router.push("/");
+      } else {
+        showErrorToast(response.message || "Đăng nhập thất bại");
+      }
+    } catch (error: any) {
+      showErrorToast(
+        error?.response?.data?.message ||
+        error?.message ||
+        "Có lỗi xảy ra, vui lòng thử lại sau",
+      );
+    }
   };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>

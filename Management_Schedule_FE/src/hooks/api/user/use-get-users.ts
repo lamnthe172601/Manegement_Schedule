@@ -3,21 +3,32 @@ import { axiosFetcher } from "@/lib/utils"
 import useSWR from "swr"
 
 export interface User {
-  createdAt: Date
+  userID: number
   email: string
-  full_name: string
-  identity_number: string
-  _id: string
-  is_active: boolean
+  passwordHash: string
+  role: 1 | 2 | 3 // 1: admin, 2: teacher, 3: student
+  fullName: string
+  gender: "M" | "F"
+  dateOfBirth: Date
+  address: string
   phone: string
-  updatedAt: Date
-  role: "staff" | "admin" | "member"
-  is_verified?: boolean
+  introduction: string
+  avatarUrl: string
+  status: number
+  createdAt: Date
+  modifiedAt: Date
 }
-
+export interface JwtUser {
+  nameid: string // userID dưới dạng string hoặc email tùy bạn mapping ở backend
+  email: string
+  fullName: string
+  gender: "M" | "F"
+  phone: string
+  role: string
+}
 const useGetUsers = () => {
   const { data, error, isLoading } = useSWR<User[]>(
-    Endpoints.Users.GET_ALL,
+    Endpoints.User.GET_ALL,
     axiosFetcher,
   )
   return { data, error, isLoading }

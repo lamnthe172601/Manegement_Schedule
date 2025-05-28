@@ -1,12 +1,6 @@
 import * as React from "react";
 import {
-  AudioWaveform,
   Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
   SquareTerminal,
   BookOpen,
   CalendarCheck2,
@@ -28,23 +22,6 @@ import { useAtomValue } from "jotai/react";
 import { userInfoAtom } from "@/stores/auth";
 
 const data = {
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
 
   navMain: [
     {
@@ -52,82 +29,66 @@ const data = {
       url: "/admin/dashboards",
       icon: SquareTerminal,
       title: "Dashboard",
-      role: ["admin", "staff", "member"],
+      role: ["Admin", "staff", "member"],
     },
     {
       name: "Users",
       url: "/admin/users",
       icon: Bot,
       title: "Quản lý người dùng",
-      role: ["admin"],
+      role: ["Admin"],
     },
     {
       name: "Teachers",
       url: "/admin/teachers",
       icon: Bot,
       title: "Quản lý giáo viên",
-      role: ["admin"],
+      role: ["Admin"],
     },
     {
       name: "Students",
       url: "/admin/students",
       icon: Bot,
       title: "Quản lý học sinh",
-      role: ["admin"],
+      role: ["Admin"],
     },
     {
       name: "Courses",
       url: "/admin/manage-course",
       icon: BookOpen,
       title: "Quản Lý Khóa Học",
-      role: ["admin", "staff", "member"],
+      role: ["Admin", "staff", "member"],
     },
     {
       name: "Teaching Schedule",
-      url: "/admin/teaching-schedule",
+      url: "/Admin/teaching-schedule",
       icon: CalendarCheck2,
       title: "Quản lý lịch giảng dạy",
-      role: ["admin", "staff", "member"],
+      role: ["Admin", "staff", "member"],
     },
     {
       name: "Learning Schedule",
       url: "/admin/learning-schedule",
       icon: CalendarClock,
       title: "Quản lý lịch học",
-      role: ["admin", "staff", "member"],
+      role: ["Admin", "staff", "member"],
     },
     {
       name: "Fees & Salary",
       url: "/finance",
       icon: DollarSign,
       title: "Quản lý học phí, tiền lương",
-      role: ["admin", "staff", "member"],
+      role: ["Admin", "staff", "member"],
     },
   ],
 
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
+
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const userData = useAtomValue(userInfoAtom);
   const user = {
-    name: userData?.full_name || "Nguyễn Văn A",
+    name: userData?.fullName || "Nguyễn Văn A",
     email: userData?.email || "default@example.com",
     avatar: "https://picsum.photos/200",
   };

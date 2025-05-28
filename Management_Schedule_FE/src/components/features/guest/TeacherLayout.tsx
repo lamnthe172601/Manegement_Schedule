@@ -1,6 +1,7 @@
 import { Calendar, Settings, User, Users, Wallet, LogOut } from "lucide-react"
 import DashboardLayout from "./layout"
-
+import { useAtomValue } from "jotai/react";
+import { userInfoAtom } from "@/stores/auth";
 export default function TeacherLayout({ children }: { children: React.ReactNode }) {
     const sidebarItems = [
         { icon: User, label: "Trang cá nhân", href: "profile" },
@@ -10,9 +11,9 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
         { icon: Settings, label: "Cài đặt", href: "setting-profile" },
         { icon: LogOut, label: "Đăng xuất", href: "/logout" },
     ]
-
+    const userData = useAtomValue(userInfoAtom);
     return (
-        <DashboardLayout sidebarItems={sidebarItems} userName="GV. Nguyễn Văn A">
+        <DashboardLayout sidebarItems={sidebarItems} userName={userData?.fullName || ""}>
             {children}
         </DashboardLayout>
     )
