@@ -117,5 +117,11 @@ namespace Management_Schedule_BE.Services
             }
             return false;
         }
+
+        public UserDTO GetUserByEmail(string email)
+        {
+            var u = _context.Users.SingleOrDefault(x => x.Email == email);
+            return u == null ? null : _mapper.Map<UserDTO>(u);
+        }
     }
 }

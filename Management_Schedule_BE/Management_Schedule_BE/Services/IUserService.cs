@@ -10,5 +10,6 @@ namespace Management_Schedule_BE.Services
         UserDTO UpdateUser(string email, UserUpdateDTO classDto);
         bool DeleteUser(string email);
         UserDTO GetUserByEmailAndPassword(string email, string password);
+        UserDTO GetUserByEmail(string email);
     }
 }
