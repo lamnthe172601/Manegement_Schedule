@@ -140,5 +140,22 @@ namespace Management_Schedule_BE.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<IEnumerable<ScheduleDTO>> GetSchedulesByTeacherIdAsync(int teacherId)
+        {
+            var teacher = await _context.Teachers.FindAsync(teacherId);
+            if (teacher == null)
+                throw new Exception("Không tìm thấy giáo viên");
+
+            var schedules = await _context.Schedules
+                .Include(s => s.StudySession)
+                .Include(s => s.Class)
+                .Where(s => s.TeacherID == teacherId)
+                .OrderBy(s => s.Date)
+                .ThenBy(s => s.StudySession.StartTime)
+                .ToListAsync();
+
+            return _mapper.Map<IEnumerable<ScheduleDTO>>(schedules);
+        }
     }
 } 

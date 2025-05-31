@@ -114,5 +114,21 @@ namespace Management_Schedule_BE.Controllers
                 return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
             }
         }
+
+        [HttpGet("teacher/{teacherId}")]
+        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedulesByTeacherId(int teacherId)
+        {
+            try
+            {
+                var schedules = await _scheduleService.GetSchedulesByTeacherIdAsync(teacherId);
+                return Ok(schedules);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("Không tìm thấy giáo viên"))
+                    return NotFound(new { message = ex.Message });
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
     }
 } 

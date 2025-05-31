@@ -10,5 +10,6 @@ namespace Management_Schedule_BE.Services
         Task<ScheduleDTO?> UpdateScheduleAsync(int id, UpdateScheduleDTO dto);
         Task<bool> DeleteScheduleAsync(int id);
         Task<bool> UpdateScheduleStatusAsync(int id, byte status);
+        Task<IEnumerable<ScheduleDTO>> GetSchedulesByTeacherIdAsync(int teacherId);
     }
 } 
