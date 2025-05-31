@@ -20,7 +20,9 @@ namespace Management_Schedule_BE.Helpers.Validators
 
         public async Task<IEnumerable<ClassDTO>> GetAllClassesAsync()
         {
-            var classes = await _context.Classes.ToListAsync();
+            var classes = await _context.Classes
+                .Include(s=>s.Schedules)
+                .ToListAsync();
             return _mapper.Map<IEnumerable<ClassDTO>>(classes);
         }
 
@@ -47,7 +49,7 @@ namespace Management_Schedule_BE.Helpers.Validators
             var c = await _context.Classes.FindAsync(id);
             if (c == null) return null;
 
-            bool exists = await _context.Classes.AnyAsync(x => x.ClassName == classDto.ClassName && x.CourseID == c.CourseID && x.ClassID != id);
+            bool exists = await _context.Classes.AnyAsync(c => c.ClassName == classDto.ClassName && c.CourseID == c.CourseID && c.ClassID != id);
             if (exists)
                 throw new Exception("Tên lớp đã tồn tại trong khóa học này!");
 
@@ -63,6 +65,17 @@ namespace Management_Schedule_BE.Helpers.Validators
             if (c == null) return false;
 
             _context.Classes.Remove(c);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdateClassStatusAsync(int id, byte status)
+        {
+            var c = await _context.Classes.FindAsync(id);
+            if (c == null) return false;
+
+            c.Status = status;
+            c.ModifiedAt = DateTime.Now;
             await _context.SaveChangesAsync();
             return true;
         }

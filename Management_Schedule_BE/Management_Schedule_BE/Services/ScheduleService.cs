@@ -65,5 +65,16 @@ namespace Management_Schedule_BE.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> UpdateScheduleStatusAsync(int id, byte status)
+        {
+            var schedule = await _context.Schedules.FindAsync(id);
+            if (schedule == null) return false;
+
+            schedule.Status = status;
+            schedule.ModifiedAt = DateTime.Now;
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 } 

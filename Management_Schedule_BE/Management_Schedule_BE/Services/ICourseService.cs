@@ -9,5 +9,6 @@ namespace Management_Schedule_BE.Services
         Task<CourseDTO> CreateCourseAsync(CreateCourseDTO courseDto);
         Task<CourseDTO?> UpdateCourseAsync(int id, UpdateCourseDTO courseDto);
         Task<bool> DeleteCourseAsync(int id);
+        Task<bool> UpdateCourseSellingStatusAsync(int id, bool isSelling);
     }
 } 

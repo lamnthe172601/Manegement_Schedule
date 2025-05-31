@@ -98,5 +98,21 @@ namespace Management_Schedule_BE.Controllers
                 return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
             }
         }
+
+        [HttpPatch("{id}/selling-status")]
+        public async Task<ActionResult> UpdateCourseSellingStatus(int id, [FromBody] UpdateCourseSellingStatusDTO dto)
+        {
+            try
+            {
+                var result = await _courseService.UpdateCourseSellingStatusAsync(id, dto.isSelling);
+                if (!result)
+                    return NotFound(new { message = "Không tìm thấy khóa học" });
+                return Ok(new { message = dto.isSelling ? "Đã bật trạng thái bán khóa học" : "Đã tắt trạng thái bán khóa học" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
     }
 } 

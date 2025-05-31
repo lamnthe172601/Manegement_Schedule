@@ -33,4 +33,8 @@ namespace Management_Schedule_BE.DTOs
         DateTime CreatedAt,
         DateTime ModifiedAt
     );
+
+    public record UpdateEnrollmentStatusDTO(
+        byte Status // 0=Pending, 1=Active, 2=Completed, 3=Cancelled
+    );
 } 

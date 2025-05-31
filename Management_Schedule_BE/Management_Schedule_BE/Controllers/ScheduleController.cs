@@ -98,5 +98,21 @@ namespace Management_Schedule_BE.Controllers
                 return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
             }
         }
+
+        [HttpPatch("{id}/status")]
+        public async Task<ActionResult> UpdateScheduleStatus(int id, [FromBody] UpdateScheduleStatusDTO dto)
+        {
+            try
+            {
+                var result = await _scheduleService.UpdateScheduleStatusAsync(id, dto.Status);
+                if (!result)
+                    return NotFound(new { message = "Không tìm thấy lịch" });
+                return Ok(new { message = "Cập nhật trạng thái lịch thành công" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
     }
 } 

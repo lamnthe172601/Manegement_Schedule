@@ -95,5 +95,21 @@ namespace Management_Schedule_BE.Controllers
                 return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
             }
         }
+
+        [HttpPatch("{id}/status")]
+        public async Task<ActionResult> UpdateEnrollmentStatus(int id, [FromBody] UpdateEnrollmentStatusDTO dto)
+        {
+            try
+            {
+                var result = await _enrollmentService.UpdateEnrollmentStatusAsync(id, dto.Status);
+                if (!result)
+                    return NotFound(new { message = "Không tìm thấy thông tin đăng ký" });
+                return Ok(new { message = "Cập nhật trạng thái đăng ký thành công" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
     }
 } 
