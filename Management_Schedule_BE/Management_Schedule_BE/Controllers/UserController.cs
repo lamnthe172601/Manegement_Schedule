@@ -69,6 +69,23 @@ namespace Management_Schedule_BE.Controllers
                 data = profile
             });
         }
+        [HttpGet("{email}")]
+        public IActionResult GetUserByEmail(string email)
+        {
+            if (_userService.GetUserByEmail(email) != null)
+            {
+                var data = _userService.GetUserByEmail(email);
+                return Ok(new
+                {
+                    Message = "Successfull",
+                    data = data
+                });
+            }
+            return Ok(new
+            {
+                Message = "fail data not exits"
+            });
+        }
         [HttpDelete("{email}")]
         public IActionResult DeleteUserByEmail(string email)
         {
@@ -100,5 +117,7 @@ namespace Management_Schedule_BE.Controllers
                 Message = "Update sucessfully"
             });
         }
+       
+
     }
 }
