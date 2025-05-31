@@ -29,14 +29,14 @@ namespace Management_Schedule_BE.Controllers
         [HttpPost("SignUp")]
         public IActionResult SignUp(UserCreateDTO userCreateDTO)
         {
-            if(_userService.CreateUser(userCreateDTO) == null)
+            if (_userService.CreateUser(userCreateDTO) == null)
             {
                 return BadRequest(new { message = "Email đã tồn tại" });
             }
             else
             {
                 return Ok(new { message = "Đăng ký thành công" });
-            }     
+            }
         }
 
         [HttpPost("SignIn")]
@@ -44,10 +44,17 @@ namespace Management_Schedule_BE.Controllers
         public IActionResult SignIn(UserLogin userLogin)
         {
             var user = _userService.GetUserByEmailAndPassword(userLogin.Email, userLogin.PasswordHash);
-            if(user != null)
+            if (user != null)
             {
+                if (user.Status == 3)
+                {
+                    return Ok(new { message = "tài khoản đã bị xóa" });
+                }
+
                 string token = _jwtConfig.GenerateToken(user);
                 return Ok(new { message = "Đăng nhập thành công", data = token });
+
+
             }
             return BadRequest(new { message = "Tài khoản hoặc mật khẩu không đúng" });
         }
@@ -55,7 +62,7 @@ namespace Management_Schedule_BE.Controllers
         public async Task<IActionResult> LoginWithGoogle([FromBody] GoogleLoginRequest request)
         {
             var googleClientId = _configuration["Authentication:Google:ClientId"];
-            if(string.IsNullOrEmpty(googleClientId))
+            if (string.IsNullOrEmpty(googleClientId))
             {
                 return BadRequest("Google ClientId is not configured.");
             }
@@ -73,6 +80,10 @@ namespace Management_Schedule_BE.Controllers
 
                 if (user != null)
                 {
+                    if (user.Status == 3)
+                    {
+                        return Ok(new { message = "tài khoản đã bị xóa" });
+                    }
                     string token = _jwtConfig.GenerateToken(user);
                     return Ok(new { message = "Đăng nhập thành công", data = token });
                 }
@@ -87,7 +98,7 @@ namespace Management_Schedule_BE.Controllers
             }
             catch (Exception ex)
             {
-                
+
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -96,8 +107,8 @@ namespace Management_Schedule_BE.Controllers
         {
             if (!ModelState.IsValid)
             {
-                
-                return BadRequest(ModelState); 
+
+                return BadRequest(ModelState);
             }
             try
             {
@@ -105,11 +116,11 @@ namespace Management_Schedule_BE.Controllers
                 await _emailService.SendOtpEmailAsync(request.Email, otp);
                 return Ok(new { Message = "Mã OTP đã được gửi thành công đến email của bạn." });
             }
-            catch (ApplicationException appEx) 
+            catch (ApplicationException appEx)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu.", Details = appEx.Message });
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Đã có lỗi không mong muốn xảy ra. Vui lòng thử lại sau." });
             }

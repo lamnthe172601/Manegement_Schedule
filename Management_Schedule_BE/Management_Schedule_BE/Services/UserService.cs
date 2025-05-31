@@ -111,7 +111,8 @@ namespace Management_Schedule_BE.Services
             if (exitsEmail)
             {
                 var result = _context.Users.SingleOrDefault(x => x.Email.ToLower() == email.ToLower());
-                _context.Remove(result);
+                result.Status = 3;
+                _context.Update(result);
                 _context.SaveChanges();
                 return true;
             }
