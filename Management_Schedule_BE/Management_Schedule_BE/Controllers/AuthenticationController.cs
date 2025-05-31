@@ -73,7 +73,8 @@ namespace Management_Schedule_BE.Controllers
 
                 if (user != null)
                 {
-                    return Ok(new { Message = "Authentication successful!", User = user });
+                    string token = _jwtConfig.GenerateToken(user);
+                    return Ok(new { message = "Đăng nhập thành công", data = token });
                 }
                 else
                 {
