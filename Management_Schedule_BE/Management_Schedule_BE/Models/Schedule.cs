@@ -17,24 +17,12 @@ namespace Management_Schedule_BE.Models
         [Required]
         public int TeacherID { get; set; }
 
-        public int? StudySessionId { get; set; }
-
         [Required]
-        [StringLength(20)]
-        public string SessionCode { get; set; }
-
-        [Required]
-        public byte DayOfWeek { get; set; }
+        public int StudySessionId { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string TimeSlot { get; set; }
-
-        [StringLength(255)]
-        public string? Subject { get; set; }
-
-        [Required]
-        [StringLength(50)]
+        [RegularExpression(@"^Room (01|02|03)$", ErrorMessage = "Phòng học phải là Room 01, Room 02 hoặc Room 03")]
         public string Room { get; set; }
 
         [Required]
@@ -48,6 +36,9 @@ namespace Management_Schedule_BE.Models
         [Required]
         public DateTime ModifiedAt { get; set; } = DateTime.Now;
 
+        [Required]
+        public DateTime Date { get; set; }  // Ngày cụ thể của lịch học
+
         // Navigation properties
         [ForeignKey("ClassID")]
         public virtual Class? Class { get; set; }
@@ -56,6 +47,6 @@ namespace Management_Schedule_BE.Models
         public virtual Teacher? Teacher { get; set; }
 
         [ForeignKey("StudySessionId")]
-        public virtual StudySession? SessionCodeNavigation { get; set; }
+        public virtual StudySession? StudySession { get; set; }
     }
 } 

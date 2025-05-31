@@ -80,13 +80,64 @@ namespace Management_Schedule_BE.Data
             modelBuilder.Entity<StudySession>().HasData(studySessions);
 
             // Seed Schedules
+            var currentDate = DateTime.Now.Date;
             var schedules = new List<Schedule>
             {
-                new Schedule { ScheduleID = 1, ClassID = 1, TeacherID = 2, StudySessionId = 1, SessionCode = "MON-1", DayOfWeek = 2, TimeSlot = "07:30-09:00", Room = "Room 101", Status = 1, CreatedAt = DateTime.Now, ModifiedAt = DateTime.Now },
-                new Schedule { ScheduleID = 2, ClassID = 1, TeacherID = 2, StudySessionId = 3, SessionCode = "WED-3", DayOfWeek = 4, TimeSlot = "13:30-15:00", Room = "Room 101", Status = 1, CreatedAt = DateTime.Now, ModifiedAt = DateTime.Now },
-                new Schedule { ScheduleID = 3, ClassID = 2, TeacherID = 3, StudySessionId = 2, SessionCode = "TUE-2", DayOfWeek = 3, TimeSlot = "09:15-10:45", Room = "Room 102", Status = 1, CreatedAt = DateTime.Now, ModifiedAt = DateTime.Now },
-                new Schedule { ScheduleID = 4, ClassID = 2, TeacherID = 3, StudySessionId = 4, SessionCode = "THU-4", DayOfWeek = 5, TimeSlot = "15:15-16:45", Room = "Room 102", Status = 1, CreatedAt = DateTime.Now, ModifiedAt = DateTime.Now },
-                new Schedule { ScheduleID = 5, ClassID = 3, TeacherID = 2, StudySessionId = 5, SessionCode = "FRI-5", DayOfWeek = 6, TimeSlot = "18:00-19:30", Room = "Room 103", Status = 1, CreatedAt = DateTime.Now, ModifiedAt = DateTime.Now }
+                new Schedule { 
+                    ScheduleID = 1, 
+                    ClassID = 1, 
+                    TeacherID = 2, 
+                    StudySessionId = 1, 
+                    Room = "Room 01", 
+                    Status = 1, 
+                    Date = currentDate.AddDays(1), // Thứ 2
+                    CreatedAt = DateTime.Now, 
+                    ModifiedAt = DateTime.Now 
+                },
+                new Schedule { 
+                    ScheduleID = 2, 
+                    ClassID = 1, 
+                    TeacherID = 2, 
+                    StudySessionId = 3, 
+                    Room = "Room 01", 
+                    Status = 1, 
+                    Date = currentDate.AddDays(3), // Thứ 4
+                    CreatedAt = DateTime.Now, 
+                    ModifiedAt = DateTime.Now 
+                },
+                new Schedule { 
+                    ScheduleID = 3, 
+                    ClassID = 2, 
+                    TeacherID = 3, 
+                    StudySessionId = 2, 
+                    Room = "Room 02", 
+                    Status = 1, 
+                    Date = currentDate.AddDays(2), // Thứ 3
+                    CreatedAt = DateTime.Now, 
+                    ModifiedAt = DateTime.Now 
+                },
+                new Schedule { 
+                    ScheduleID = 4, 
+                    ClassID = 2, 
+                    TeacherID = 3, 
+                    StudySessionId = 4, 
+                    Room = "Room 02", 
+                    Status = 1, 
+                    Date = currentDate.AddDays(4), // Thứ 5
+                    CreatedAt = DateTime.Now, 
+                    ModifiedAt = DateTime.Now 
+                },
+                new Schedule { 
+                    ScheduleID = 5, 
+                    ClassID = 3, 
+                    TeacherID = 2, 
+                    StudySessionId = 5, 
+                    Room = "Room 03", 
+                    Status = 1, 
+                    Date = currentDate.AddDays(5), // Thứ 6
+                    CreatedAt = DateTime.Now, 
+                    ModifiedAt = DateTime.Now 
+                }
             };
             modelBuilder.Entity<Schedule>().HasData(schedules);
 

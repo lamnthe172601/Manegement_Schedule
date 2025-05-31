@@ -1,7 +1,7 @@
 ﻿
 using MailKit.Net.Smtp;
 using MailKit.Security;
-using Management_Schedule_BE.Models.Service;
+using Management_Schedule_BE.DTOs;
 using Microsoft.Extensions.Options;
 using MimeKit;
 

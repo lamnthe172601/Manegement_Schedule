@@ -15,7 +15,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
-using Management_Schedule_BE.Models.Service;
+using Management_Schedule_BE.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
