@@ -92,18 +92,42 @@ namespace Management_Schedule_BE.Services
             return u == null ? null : _mapper.Map<UserDTO>(u);
         }
 
-        public UserDTO UpdateUser(string email, UserUpdateDTO classDto)
+        //public UserDTO UpdateUser(string email, UserUpdateDTO classDto)
+        //{
+        //    bool exitsEmail = GetUserByEmailAsync(email);
+        //    if (exitsEmail != false)
+        //    {
+        //        var user = _mapper.Map<User>(classDto);
+        //        _context.Users.Update(user);
+        //        _context.SaveChanges();
+        //        return _mapper.Map<UserDTO>(user);
+        //    }
+        //    return null;
+        //}
+        public UserDTO? UpdateUser(string email, UserUpdateDTO updateDto)
         {
-            bool exitsEmail = GetUserByEmailAsync(email);
-            if (exitsEmail != false)
-            {
-                var user = _mapper.Map<User>(classDto);
-                _context.Users.Update(user);
-                _context.SaveChanges();
-                return _mapper.Map<UserDTO>(user);
-            }
-            return null;
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null) return null;
+
+            // Chỉ cập nhật các trường nếu được truyền
+            if (!string.IsNullOrEmpty(updateDto.FullName)) user.FullName = updateDto.FullName;
+            if (!string.IsNullOrEmpty(updateDto.Gender)) user.Gender = updateDto.Gender;
+            if (updateDto.DateOfBirth.HasValue) user.DateOfBirth = updateDto.DateOfBirth.Value;
+            if (!string.IsNullOrEmpty(updateDto.Address)) user.Address = updateDto.Address;
+            if (!string.IsNullOrEmpty(updateDto.Phone)) user.Phone = updateDto.Phone;
+            if (!string.IsNullOrEmpty(updateDto.Introduction)) user.Introduction = updateDto.Introduction;
+            if (!string.IsNullOrEmpty(updateDto.AvatarUrl)) user.AvatarUrl = updateDto.AvatarUrl;
+            user.ModifiedAt = updateDto.ModifiedAt;
+
+            // Nếu bạn cho phép cập nhật Role/Status:
+            if (updateDto.Role != 0) user.Role = updateDto.Role;
+            if (updateDto.Status != 0) user.Status = updateDto.Status;
+
+            _context.SaveChanges();
+
+            return _mapper.Map<UserDTO>(user);
         }
+
 
         public bool DeleteUser(string email)
         {

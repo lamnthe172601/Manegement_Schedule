@@ -36,7 +36,7 @@ namespace Management_Schedule_BE.DTOs
     string? AvatarUrl);
     public record UserUpdateDTO(
 
-    string PasswordHash,
+    //string PasswordHash,
     byte Role,
     string? FullName,
     string? Gender,

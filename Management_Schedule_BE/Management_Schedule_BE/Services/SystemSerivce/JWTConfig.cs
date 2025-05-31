@@ -27,11 +27,13 @@ namespace Management_Schedule_BE.Services.SystemSerivce
             var tokenDescription = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]{
-                    new Claim(ClaimTypes.Name, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim("role", role)
+                   new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()), // userID
+            new Claim(ClaimTypes.Name, user.Email),                      // Email
+            new Claim(JwtRegisteredClaimNames.Email, user.Email),        // Email (JWT standard claim)
+            new Claim("fullName", user.FullName ?? ""),                   // fullName
+            new Claim("gender", user.Gender ?? ""),                       // gender
+            new Claim("phone", user.Phone ?? ""),                         // phone
+            new Claim("role", role)       
                     
                     //roles
                 }),
