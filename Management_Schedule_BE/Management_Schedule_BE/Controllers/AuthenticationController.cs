@@ -114,7 +114,11 @@ namespace Management_Schedule_BE.Controllers
             {
                 string otp = EmailService.GenerateOtp();
                 await _emailService.SendOtpEmailAsync(request.Email, otp);
-                return Ok(new { Message = "Mã OTP đã được gửi thành công đến email của bạn." });
+                var data = new {
+                    Otp = otp,
+                    Email = request.Email
+                };
+                return Ok(new { Message = "Mã OTP đã được gửi thành công đến email của bạn.", data = data });
             }
             catch (ApplicationException appEx)
             {
@@ -125,6 +129,8 @@ namespace Management_Schedule_BE.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Đã có lỗi không mong muốn xảy ra. Vui lòng thử lại sau." });
             }
         }
+
+       
 
         [HttpGet("DemoAuthor")]
         [Authorize(Roles = "Student")]

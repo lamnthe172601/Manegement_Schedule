@@ -74,5 +74,21 @@ namespace Management_Schedule_BE.Controllers
                 Message = "Delete fail"
             });
         }
+        [HttpPost("update-password")]
+        public IActionResult UpdatePasswordByEmail([FromBody] UpdatePasswordDTO updatePasswordDTO)
+        {
+            if(updatePasswordDTO.Password != updatePasswordDTO.ConfirmPassword)
+            {
+                return BadRequest(new
+                {
+                    Message = "password and confirm password is not match"
+                });
+            }
+            _userService.UpdatePassword(updatePasswordDTO.Email, updatePasswordDTO.Password);
+            return Ok(new
+            {
+                Message = "Update sucessfully"
+            });
+        }
     }
 }

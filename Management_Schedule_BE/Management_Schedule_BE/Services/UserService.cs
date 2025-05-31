@@ -124,5 +124,14 @@ namespace Management_Schedule_BE.Services
             var u = _context.Users.SingleOrDefault(x => x.Email == email);
             return u == null ? null : _mapper.Map<UserDTO>(u);
         }
+
+        public UserDTO UpdatePassword(string email, string password)
+        {
+            var user = _context.Users.SingleOrDefault(x => x.Email == email);
+            user.PasswordHash = PasswordHassing.ComputeSha256Hash(password);
+            _context.Update(user);
+            _context.SaveChanges();
+            return _mapper.Map<UserDTO>(user);
+        }
     }
 }

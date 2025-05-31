@@ -46,5 +46,12 @@ namespace Management_Schedule_BE.DTOs
     byte Status
     );
     public record UserLogin(string Email, string PasswordHash);
-    
+    public record TeachStudentProfile(
+        string? FullName,
+        string? Address,
+        string? Phone,
+        string? AvatarUrl,
+        DateTime? DateOfBirth,
+        string? Gender
+    );
 }
