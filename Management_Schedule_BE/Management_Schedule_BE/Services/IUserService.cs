@@ -12,5 +12,6 @@ namespace Management_Schedule_BE.Services
         UserDTO GetUserByEmailAndPassword(string email, string password);
         UserDTO GetUserByEmail(string email);
         UserDTO UpdatePassword(string email, string password);
+        TeachStudentProfile UpdateProfile(string email, TeachStudentProfile profile);
     }
 }

@@ -47,6 +47,7 @@ namespace Management_Schedule_BE.DTOs
     );
     public record UserLogin(string Email, string PasswordHash);
     public record TeachStudentProfile(
+        string? Email,
         string? FullName,
         string? Address,
         string? Phone,

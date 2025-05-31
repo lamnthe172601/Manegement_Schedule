@@ -59,6 +59,16 @@ namespace Management_Schedule_BE.Controllers
                 });
             }
         }
+        [HttpPut("profile/{email}")]
+        public IActionResult UpdateProfileByEmail(string email, TeachStudentProfile profile)
+        {
+            _userService.UpdateProfile(email, profile);
+            return Ok(new
+            {
+                message = "Update thành công",
+                data = profile
+            });
+        }
         [HttpDelete("{email}")]
         public IActionResult DeleteUserByEmail(string email)
         {

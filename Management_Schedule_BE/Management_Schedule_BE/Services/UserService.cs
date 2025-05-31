@@ -133,5 +133,14 @@ namespace Management_Schedule_BE.Services
             _context.SaveChanges();
             return _mapper.Map<UserDTO>(user);
         }
+
+        public TeachStudentProfile UpdateProfile(string email, TeachStudentProfile profile)
+        {
+            var user = _context.Users.SingleOrDefault(x => x.Email == email);
+            _mapper.Map(profile, user);
+            _context.Update(user);
+            _context.SaveChanges();
+            return _mapper.Map<TeachStudentProfile>(user);
+        }
     }
 }
