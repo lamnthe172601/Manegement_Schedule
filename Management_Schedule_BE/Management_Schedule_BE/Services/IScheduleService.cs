@@ -9,5 +9,6 @@ namespace Management_Schedule_BE.Services
         Task<ScheduleDTO> CreateScheduleAsync(CreateScheduleDTO dto);
         Task<ScheduleDTO?> UpdateScheduleAsync(int id, UpdateScheduleDTO dto);
         Task<bool> DeleteScheduleAsync(int id);
+        Task<bool> UpdateScheduleStatusAsync(int id, byte status);
     }
 } 

@@ -1,3 +1,4 @@
+using Management_Schedule_BE.Models;
 using System;
 
 namespace Management_Schedule_BE.DTOs
@@ -11,7 +12,8 @@ namespace Management_Schedule_BE.DTOs
         DateTime? EndDate,
         byte Status,
         DateTime CreatedAt,
-        DateTime ModifiedAt
+        DateTime ModifiedAt,
+          ICollection<ScheduleDTO>? Schedules 
     );
 
     public record CreateClassDTO(
@@ -29,5 +31,9 @@ namespace Management_Schedule_BE.DTOs
         DateTime StartDate,
         DateTime? EndDate,
         byte Status
+    );
+
+    public record UpdateClassStatusDTO(
+        byte Status // 1=Active, 2=Completed, 3=Cancelled
     );
 } 

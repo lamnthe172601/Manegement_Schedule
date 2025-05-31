@@ -42,4 +42,8 @@ namespace Management_Schedule_BE.DTOs
         byte Status,
         string? Notes
     );
+
+    public record UpdateScheduleStatusDTO(
+        byte Status // 1=Active, 2=Completed, 3=Cancelled
+    );
 } 

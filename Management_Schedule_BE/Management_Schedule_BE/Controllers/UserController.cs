@@ -59,6 +59,16 @@ namespace Management_Schedule_BE.Controllers
                 });
             }
         }
+        [HttpPut("profile/{email}")]
+        public IActionResult UpdateProfileByEmail(string email, TeachStudentProfile profile)
+        {
+            _userService.UpdateProfile(email, profile);
+            return Ok(new
+            {
+                message = "Update thành công",
+                data = profile
+            });
+        }
         [HttpDelete("{email}")]
         public IActionResult DeleteUserByEmail(string email)
         {
@@ -72,6 +82,22 @@ namespace Management_Schedule_BE.Controllers
             return Ok(new
             {
                 Message = "Delete fail"
+            });
+        }
+        [HttpPost("update-password")]
+        public IActionResult UpdatePasswordByEmail([FromBody] UpdatePasswordDTO updatePasswordDTO)
+        {
+            if(updatePasswordDTO.Password != updatePasswordDTO.ConfirmPassword)
+            {
+                return BadRequest(new
+                {
+                    Message = "password and confirm password is not match"
+                });
+            }
+            _userService.UpdatePassword(updatePasswordDTO.Email, updatePasswordDTO.Password);
+            return Ok(new
+            {
+                Message = "Update sucessfully"
             });
         }
     }

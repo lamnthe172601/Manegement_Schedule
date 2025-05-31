@@ -46,4 +46,8 @@ namespace Management_Schedule_BE.DTOs
         int Duration,
         byte Level
     );
+
+    public record UpdateCourseSellingStatusDTO(
+        bool isSelling
+    );
 } 

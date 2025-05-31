@@ -15,8 +15,11 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
+using Management_Schedule_BE.Models.Service;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 #region DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -103,6 +106,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<JWTConfig>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 #endregion
 
 #region Swagger

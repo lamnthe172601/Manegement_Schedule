@@ -65,5 +65,16 @@ namespace Management_Schedule_BE.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> UpdateCourseSellingStatusAsync(int id, bool isSelling)
+        {
+            var course = await _context.Courses.FindAsync(id);
+            if (course == null) return false;
+
+            course.IsSelling = isSelling;
+            course.ModifiedAt = DateTime.Now;
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 } 

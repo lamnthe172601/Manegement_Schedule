@@ -135,11 +135,36 @@ namespace Management_Schedule_BE.Services
             if (exitsEmail)
             {
                 var result = _context.Users.SingleOrDefault(x => x.Email.ToLower() == email.ToLower());
-                _context.Remove(result);
+                result.Status = 3;
+                _context.Update(result);
                 _context.SaveChanges();
                 return true;
             }
             return false;
+        }
+
+        public UserDTO GetUserByEmail(string email)
+        {
+            var u = _context.Users.SingleOrDefault(x => x.Email == email);
+            return u == null ? null : _mapper.Map<UserDTO>(u);
+        }
+
+        public UserDTO UpdatePassword(string email, string password)
+        {
+            var user = _context.Users.SingleOrDefault(x => x.Email == email);
+            user.PasswordHash = PasswordHassing.ComputeSha256Hash(password);
+            _context.Update(user);
+            _context.SaveChanges();
+            return _mapper.Map<UserDTO>(user);
+        }
+
+        public TeachStudentProfile UpdateProfile(string email, TeachStudentProfile profile)
+        {
+            var user = _context.Users.SingleOrDefault(x => x.Email == email);
+            _mapper.Map(profile, user);
+            _context.Update(user);
+            _context.SaveChanges();
+            return _mapper.Map<TeachStudentProfile>(user);
         }
     }
 }

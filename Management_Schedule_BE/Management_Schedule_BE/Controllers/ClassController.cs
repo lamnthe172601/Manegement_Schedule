@@ -98,5 +98,21 @@ namespace Management_Schedule_BE.Controllers
                 return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
             }
         }
+
+        [HttpPatch("{id}/status")]
+        public async Task<ActionResult> UpdateClassStatus(int id, [FromBody] UpdateClassStatusDTO dto)
+        {
+            try
+            {
+                var result = await _classService.UpdateClassStatusAsync(id, dto.Status);
+                if (!result)
+                    return NotFound(new { message = "Không tìm thấy lớp" });
+                return Ok(new { message = "Cập nhật trạng thái lớp thành công" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
     }
 } 

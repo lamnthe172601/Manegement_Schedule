@@ -12,6 +12,12 @@ namespace Management_Schedule_BE.Helpers.Mappings
             CreateMap<UserCreateDTO, User>();
             CreateMap<UserUpdateDTO, User>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+           
+            CreateMap<TeachStudentProfile, User>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            
+            CreateMap<User, TeachStudentProfile>();
         }
         
     }

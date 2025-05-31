@@ -9,5 +9,6 @@ namespace Management_Schedule_BE.Services
         Task<ClassDTO> CreateClassAsync(CreateClassDTO classDto);
         Task<ClassDTO?> UpdateClassAsync(int id, UpdateClassDTO classDto);
         Task<bool> DeleteClassAsync(int id);
+        Task<bool> UpdateClassStatusAsync(int id, byte status);
     }
 } 

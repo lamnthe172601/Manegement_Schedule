@@ -35,8 +35,6 @@ namespace Management_Schedule_BE.DTOs
     string? Introduction,
     string? AvatarUrl);
     public record UserUpdateDTO(
-
-    //string PasswordHash,
     byte Role,
     string? FullName,
     string? Gender,
@@ -45,9 +43,16 @@ namespace Management_Schedule_BE.DTOs
     string? Phone,
     string? Introduction,
     string? AvatarUrl,
-    byte Status,
-    DateTime ModifiedAt
+    byte Status
     );
     public record UserLogin(string Email, string PasswordHash);
-    
+    public record TeachStudentProfile(
+        string? Email,
+        string? FullName,
+        string? Address,
+        string? Phone,
+        string? AvatarUrl,
+        DateTime? DateOfBirth,
+        string? Gender
+    );
 }
