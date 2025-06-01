@@ -15,11 +15,12 @@ namespace Management_Schedule_BE.Controllers
         {
             _userService = userService;
         }
+
         [HttpGet]
-        public IActionResult GetAllUser()
+        public async Task<IActionResult> GetAllUser()
         {
-            var users = _userService.GetAllUser();
-            if (users == Empty)
+            var users = await _userService.GetAllUserAsync();
+            if (!users.Any())
             {
                 return Ok(new
                 {
@@ -32,53 +33,57 @@ namespace Management_Schedule_BE.Controllers
                 data = users    
             });
         }
+
         [HttpPost]
-        public IActionResult CreateUser(UserCreateDTO userCreateDTO)
+        public async Task<IActionResult> CreateUser([FromForm]UserCreateDTO userCreateDTO)
         {
-            if (_userService.CreateUser(userCreateDTO) == null)
+            var result = await _userService.CreateUserAsync(userCreateDTO);
+            if (result == null)
             {
                 return BadRequest(new { message = "Email đã tồn tại" });
             }
-            else
-            {
-                return Ok(new { message = "Tạo tài khoản thành công" });
-            }
+            return Ok(new { message = "Tạo tài khoản thành công" });
         }
+
         [HttpPut("{email}")]
-        public IActionResult UpdateUserByEmail(string email, UserUpdateDTO userUpdateDTO)
+        public async Task<IActionResult> UpdateUserByEmail(string email, UserUpdateDTO userUpdateDTO)
         {
-            if (_userService.UpdateUser(email, userUpdateDTO) == null)
+            var result = await _userService.UpdateUserAsync(email, userUpdateDTO);
+            if (result == null)
             {
                 return BadRequest(new { message = "Email Không tồn tại" });
             }
-            else
-            {
-                return Ok(new { 
-                    message = "Update thành công",
-                    data = userUpdateDTO
-                });
-            }
+            return Ok(new { 
+                message = "Update thành công",
+                data = userUpdateDTO
+            });
         }
+
         [HttpPut("profile/{email}")]
-        public IActionResult UpdateProfileByEmail(string email, TeachStudentProfile profile)
+        public async Task<IActionResult> UpdateProfileByEmail(string email, TeachStudentProfile profile)
         {
-            _userService.UpdateProfile(email, profile);
+            var result = await _userService.UpdateProfileAsync(email, profile);
+            if (result == null)
+            {
+                return BadRequest(new { message = "Email không tồn tại" });
+            }
             return Ok(new
             {
                 message = "Update thành công",
-                data = profile
+                data = result
             });
         }
+
         [HttpGet("{email}")]
-        public IActionResult GetUserByEmail(string email)
+        public async Task<IActionResult> GetUserByEmail(string email)
         {
-            if (_userService.GetUserByEmail(email) != null)
+            var user = await _userService.GetUserByEmailAsync(email);
+            if (user != null)
             {
-                var data = _userService.GetUserByEmail(email);
                 return Ok(new
                 {
                     Message = "Successfull",
-                    data = data
+                    data = user
                 });
             }
             return Ok(new
@@ -86,10 +91,12 @@ namespace Management_Schedule_BE.Controllers
                 Message = "fail data not exits"
             });
         }
+
         [HttpDelete("{email}")]
-        public IActionResult DeleteUserByEmail(string email)
+        public async Task<IActionResult> DeleteUserByEmail(string email)
         {
-            if (_userService.DeleteUser(email))
+            var result = await _userService.DeleteUserAsync(email);
+            if (result)
             {
                 return Ok(new
                 {
@@ -101,8 +108,9 @@ namespace Management_Schedule_BE.Controllers
                 Message = "Delete fail"
             });
         }
+
         [HttpPost("update-password")]
-        public IActionResult UpdatePasswordByEmail([FromBody] UpdatePasswordDTO updatePasswordDTO)
+        public async Task<IActionResult> UpdatePasswordByEmail([FromBody] UpdatePasswordDTO updatePasswordDTO)
         {
             if(updatePasswordDTO.Password != updatePasswordDTO.ConfirmPassword)
             {
@@ -111,13 +119,15 @@ namespace Management_Schedule_BE.Controllers
                     Message = "password and confirm password is not match"
                 });
             }
-            _userService.UpdatePassword(updatePasswordDTO.Email, updatePasswordDTO.Password);
+            var result = await _userService.UpdatePasswordAsync(updatePasswordDTO.Email, updatePasswordDTO.Password);
+            if (result == null)
+            {
+                return BadRequest(new { message = "Email không tồn tại" });
+            }
             return Ok(new
             {
                 Message = "Update sucessfully"
             });
         }
-       
-
     }
 }

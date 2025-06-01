@@ -4,14 +4,13 @@ namespace Management_Schedule_BE.Services
 {
     public interface IUserService
     {
-        IEnumerable<UserDTO> GetAllUser();
-       
-        UserDTO CreateUser(UserCreateDTO userCreateDTO);
-        UserDTO UpdateUser(string email, UserUpdateDTO classDto);
-        bool DeleteUser(string email);
-        UserDTO GetUserByEmailAndPassword(string email, string password);
-        UserDTO GetUserByEmail(string email);
-        UserDTO UpdatePassword(string email, string password);
-        TeachStudentProfile UpdateProfile(string email, TeachStudentProfile profile);
+        Task<IEnumerable<UserDTO>> GetAllUserAsync();
+        Task<UserDTO?> CreateUserAsync(UserCreateDTO userCreateDTO);
+        Task<UserDTO?> UpdateUserAsync(string email, UserUpdateDTO classDto);
+        Task<bool> DeleteUserAsync(string email);
+        Task<UserDTO?> GetUserByEmailAndPasswordAsync(string email, string password);
+        Task<UserDTO?> GetUserByEmailAsync(string email);
+        Task<UserDTO?> UpdatePasswordAsync(string email, string password);
+        Task<TeachStudentProfile?> UpdateProfileAsync(string email, TeachStudentProfile profile);
     }
 }

@@ -33,7 +33,8 @@ namespace Management_Schedule_BE.DTOs
     string? Address,
     string? Phone,
     string? Introduction,
-    string? AvatarUrl);
+    IFormFile? AvatarUrl = null
+    );
     public record UserUpdateDTO(
     byte Role,
     string? FullName,
@@ -42,8 +43,8 @@ namespace Management_Schedule_BE.DTOs
     string? Address,
     string? Phone,
     string? Introduction,
-    string? AvatarUrl,
-    byte Status
+    byte Status,
+    IFormFile? AvatarUrl = null
     );
     public record UserLogin(string Email, string PasswordHash);
     public record TeachStudentProfile(
@@ -51,8 +52,8 @@ namespace Management_Schedule_BE.DTOs
         string? FullName,
         string? Address,
         string? Phone,
-        string? AvatarUrl,
         DateTime? DateOfBirth,
-        string? Gender
+        string? Gender,
+        IFormFile? AvatarUrl = null
     );
 }
