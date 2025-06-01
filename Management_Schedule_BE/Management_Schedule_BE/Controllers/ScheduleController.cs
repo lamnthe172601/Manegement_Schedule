@@ -130,5 +130,55 @@ namespace Management_Schedule_BE.Controllers
                 return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
             }
         }
+
+        [HttpGet("teacher/{teacherId}/range")]
+        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedulesByTeacherIdAndRange(
+            int teacherId,
+            [FromQuery] DateTime? from,
+            [FromQuery] DateTime? to)
+        {
+            try
+            {
+                var schedules = await _scheduleService.GetSchedulesByTeacherIdAndRangeAsync(teacherId, from, to);
+                return Ok(schedules);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("Không tìm thấy giáo viên"))
+                    return NotFound(new { message = ex.Message });
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
+
+        [HttpGet("teacher/{teacherId}/statusSchedule/{status}")]
+        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedulesByTeacherIdAndStatus(
+            int teacherId, byte status)
+        {
+            try
+            {
+                var schedules = await _scheduleService.GetSchedulesByTeacherIdAndStatusAsync(teacherId, status);
+                return Ok(schedules);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("Không tìm thấy giáo viên"))
+                    return NotFound(new { message = ex.Message });
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
+
+        [HttpGet("date/{date}")]
+        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedulesByDate(DateTime date)
+        {
+            try
+            {
+                var schedules = await _scheduleService.GetSchedulesByDateAsync(date);
+                return Ok(schedules);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
     }
 } 

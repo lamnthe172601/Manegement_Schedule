@@ -157,5 +157,47 @@ namespace Management_Schedule_BE.Services
 
             return _mapper.Map<IEnumerable<ScheduleDTO>>(schedules);
         }
+
+        public async Task<IEnumerable<ScheduleDTO>> GetSchedulesByTeacherIdAndRangeAsync(int teacherId, DateTime? from, DateTime? to)
+        {
+            var teacher = await _context.Teachers.FindAsync(teacherId);
+            if (teacher == null)
+                throw new Exception("Không tìm thấy giáo viên");
+            var query = _context.Schedules
+                .Include(s => s.StudySession)
+                .Include(s => s.Class)
+                .Where(s => s.TeacherID == teacherId);
+            if (from.HasValue)
+                query = query.Where(s => s.Date >= from.Value);
+            if (to.HasValue)
+                query = query.Where(s => s.Date <= to.Value);
+            var schedules = await query.OrderBy(s => s.Date).ThenBy(s => s.StudySession.StartTime).ToListAsync();
+            return _mapper.Map<IEnumerable<ScheduleDTO>>(schedules);
+        }
+
+        public async Task<IEnumerable<ScheduleDTO>> GetSchedulesByTeacherIdAndStatusAsync(int teacherId, byte status)
+        {
+            var teacher = await _context.Teachers.FindAsync(teacherId);
+            if (teacher == null)
+                throw new Exception("Không tìm thấy giáo viên");
+            var schedules = await _context.Schedules
+                .Include(s => s.StudySession)
+                .Include(s => s.Class)
+                .Where(s => s.TeacherID == teacherId && s.Status == status)
+                .OrderBy(s => s.Date).ThenBy(s => s.StudySession.StartTime)
+                .ToListAsync();
+            return _mapper.Map<IEnumerable<ScheduleDTO>>(schedules);
+        }
+
+        public async Task<IEnumerable<ScheduleDTO>> GetSchedulesByDateAsync(DateTime date)
+        {
+            var schedules = await _context.Schedules
+                .Include(s => s.StudySession)
+                .Include(s => s.Class)
+                .Where(s => s.Date.Date == date.Date)
+                .OrderBy(s => s.StudySession.StartTime)
+                .ToListAsync();
+            return _mapper.Map<IEnumerable<ScheduleDTO>>(schedules);
+        }
     }
 } 
