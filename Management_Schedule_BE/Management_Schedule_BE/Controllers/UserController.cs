@@ -46,7 +46,7 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpPut("{email}")]
-        public async Task<IActionResult> UpdateUserByEmail(string email, UserUpdateDTO userUpdateDTO)
+        public async Task<IActionResult> UpdateUserByEmail(string email, [FromForm] UserUpdateDTO userUpdateDTO)
         {
             var result = await _userService.UpdateUserAsync(email, userUpdateDTO);
             if (result == null)
@@ -60,7 +60,7 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpPut("profile/{email}")]
-        public async Task<IActionResult> UpdateProfileByEmail(string email, TeachStudentProfile profile)
+        public async Task<IActionResult> UpdateProfileByEmail(string email, [FromForm] TeachStudentProfile profile)
         {
             var result = await _userService.UpdateProfileAsync(email, profile);
             if (result == null)
