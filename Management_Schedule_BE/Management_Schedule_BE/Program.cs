@@ -120,6 +120,7 @@ builder.Services.AddScoped<JWTConfig>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IStorageService, R2StorageService>();
+builder.Services.AddScoped<ITeacherService, TeacherService>();
 #endregion
 
 #region Swagger
