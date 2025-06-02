@@ -6,6 +6,7 @@ import React from "react"
 import { User } from "@/hooks/api/user/use-get-users"
 import { Textarea } from "@/components/ui/textarea"
 import { format } from "date-fns"
+import axios from "axios"
 
 type Props = {
     open: boolean
@@ -41,7 +42,20 @@ const UserEditDialog: React.FC<Props> = ({ open, onOpenChange, user, onSave }) =
 
     const handleSave = () => {
         if (!formData.userID) return
-        onSave(formData)
+        const formPayload = new FormData()
+        Object.entries(formData).forEach(([key, value]) => {
+            formPayload.append(key, value as any)
+        })
+        axios.put(`/api/user/${formData.userID}`, formPayload, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        })
+            .then(response => {
+                console.log("User updated successfully:", response.data)
+                onSave(formData)
+            })
+            .catch(error => {
+                console.error("Error updating user:", error)
+            })
     }
 
     return (
