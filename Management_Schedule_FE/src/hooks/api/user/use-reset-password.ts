@@ -1,16 +1,19 @@
 import { useAxios } from "@/hooks/api/use-axios"
+import { Endpoints } from "@/lib/endpoints"
 import { useState } from "react"
 
-export const useEditUser = () => {
+export const useResetPassword = () => {
   const axios = useAxios()
   const [loading, setLoading] = useState(false)
-  const editUser = async ({ email, data }: { email: string; data: any }) => {
+  const resetPassword = async (data: any) => {
     console.log(data)
-    console.log(email)
     // return data
     try {
       setLoading(true)
-      const response = await axios.put(`User/${email}`, data)
+      const response = await axios.post(
+        `${Endpoints.Users.RESET_PASSWORD}`,
+        data,
+      )
       return response.data
     } catch (error) {
       throw error
@@ -18,5 +21,5 @@ export const useEditUser = () => {
       setLoading(false)
     }
   }
-  return { editUser, loading }
+  return { resetPassword, loading }
 }

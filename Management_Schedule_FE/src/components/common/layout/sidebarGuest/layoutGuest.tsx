@@ -17,7 +17,7 @@ export default function LayoutGuest({
   const pathname = usePathname()
 
   // ✅ Ẩn Header nếu path bắt đầu bằng 
-  const noLayoutPages = ["/login", "/register", "/teacher/dashboard", "/student/dashboard"]
+  const noLayoutPages = ["/login", "/register", "/teacher/dashboard", "/student/dashboard", "/user/forget-password", "/user/enter-otp", "/user/reset-password"]
 
   const shouldHideAllLayout = noLayoutPages.some(page => pathname.startsWith(page))
   return (

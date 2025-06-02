@@ -20,4 +20,4 @@ const useGetUsersV2 = () => {
   return { data, error, isLoading }
 }
 
-export default useGetUsersV2 
+export default useGetUsersV2

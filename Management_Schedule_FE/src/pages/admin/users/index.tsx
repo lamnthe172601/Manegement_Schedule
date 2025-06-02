@@ -60,17 +60,17 @@ import {
 } from "@/components/common/toast/toast"
 import { useSWRConfig } from "swr"
 import { Endpoints } from "@/lib/endpoints"
+import UserEditDialog from "./UserEditDialog"
+import { useEditUser } from "@/hooks/api/user/use-edit-user"
 
 const PAGE_SIZE = 10
 
 const SORTABLE_COLUMNS = [
-  { key: "full_name", label: "Tên" },
+  { key: "fullName", label: "Tên" },
   { key: "email", label: "Email" },
-  { key: "identity_number", label: "Mã hội viên" },
-  { key: "phone", label: "Số điện thoại" },
-  { key: "role", label: "Vai trò" },
+  { key: "gender", label: "Gender" },
   { key: "createdAt", label: "Ngày tạo" },
-  { key: "is_active", label: "Trạng thái" },
+  { key: "status", label: "Trạng thái" },
 ]
 
 const SORT_ICONS = {
@@ -81,6 +81,8 @@ const SORT_ICONS = {
 
 const UserPage = () => {
   const { data, error, isLoading } = useGetUsers()
+  console.log(data)
+  const { editUser, loading } = useEditUser()
   const { deleteUser, loading: deleting } = useDeleteUser()
   const [page, setPage] = React.useState(1)
   const [search, setSearch] = React.useState("")
@@ -92,14 +94,16 @@ const UserPage = () => {
   const [userToDelete, setUserToDelete] = React.useState<User | null>(null)
   const router = useRouter()
   const { mutate } = useSWRConfig()
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false)
+  const [userToEdit, setUserToEdit] = React.useState<User | null>(null)
 
   // Lọc và tìm kiếm
-  const filtered = (data || []).filter((user) => {
+  const filtered = (data || []).filter((users) => {
     const matchesSearch =
-      user.full_name.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase()) ||
-      user.identity_number.toLowerCase().includes(search.toLowerCase())
-    const matchesRole = role && role !== "all" ? user.role === role : true
+      users.fullName.toLowerCase().includes(search.toLowerCase()) ||
+      users.email.toLowerCase().includes(search.toLowerCase())
+    const matchesRole = role && role !== "all" ? users.role === Number(role) : true
+
     return matchesSearch && matchesRole
   })
 
@@ -112,11 +116,7 @@ const UserPage = () => {
         let aValue: any = (a as any)[sort.key]
         let bValue: any = (b as any)[sort.key]
         // Special handling for role and is_active
-        if (sort.key === "role") {
-          aValue = Constants.roleMap[aValue]
-          bValue = Constants.roleMap[bValue]
-        }
-        if (sort.key === "is_active") {
+        if (sort.key === "status") {
           aValue = aValue ? 1 : 0
           bValue = bValue ? 1 : 0
         }
@@ -160,7 +160,7 @@ const UserPage = () => {
 
   const handleConfirmDelete = async () => {
     if (!userToDelete) return
-    await deleteUser({ id: userToDelete._id })
+    await deleteUser({ id: userToDelete.userID })
       .then(() => {
         showSuccessToast("Xóa hội viên thành công!")
         setDeleteDialogOpen(false)
@@ -173,6 +173,23 @@ const UserPage = () => {
         setUserToDelete(null)
       })
   }
+  const handleSaveEdit = async (updatedUser: Partial<User>) => {
+    if (!updatedUser.userID) return
+    console.log("updatedUser", updatedUser)
+
+    try {
+      await editUser({ email: userToEdit?.email?.toString() ?? "", data: updatedUser })
+      showSuccessToast("Cập nhật hội viên thành công!")
+      mutate(Endpoints.Users.GET_ALL)
+      setEditDialogOpen(false)
+    } catch (err) {
+      console.error(err)
+      showErrorToast("Cập nhật hội viên thất bại!")
+    }
+  }
+  console.log("userToEdit", userToEdit)
+
+
 
   return (
     <Card>
@@ -205,9 +222,10 @@ const UserPage = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tất cả vai trò</SelectItem>
-                <SelectItem value="admin">Quản trị viên</SelectItem>
-                <SelectItem value="staff">Nhân viên</SelectItem>
-                <SelectItem value="member">Thành viên</SelectItem>
+                <SelectItem value="1">Quản trị viên</SelectItem>
+                <SelectItem value="2">Giáo viên</SelectItem>
+                <SelectItem value="3">Học viên</SelectItem>
+
               </SelectContent>
             </Select>
           </div>
@@ -246,6 +264,8 @@ const UserPage = () => {
                       </TableHead>
                     )
                   })}
+                  <TableHead>Số điện thoại</TableHead>
+                  <TableHead>Vai trò</TableHead>
                   <TableHead>Hành động</TableHead>
                 </TableRow>
               </TableHeader>
@@ -258,26 +278,27 @@ const UserPage = () => {
                   </TableRow>
                 ) : (
                   paginated.map((user, idx) => (
-                    <TableRow key={user._id}>
+                    <TableRow key={user.userID}>
                       <TableCell>{(page - 1) * PAGE_SIZE + idx + 1}</TableCell>
-                      <TableCell>{user.full_name}</TableCell>
+                      <TableCell>{user.fullName}</TableCell>
                       <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.identity_number}</TableCell>
-                      <TableCell>{user.phone}</TableCell>
-                      <TableCell>
-                        <Badge>{Constants.roleMap[user.role]}</Badge>
-                      </TableCell>
+                      <TableCell>{user.gender}</TableCell>
+
                       <TableCell>
                         {new Date(user.createdAt).toLocaleDateString("vi-VN")}
                       </TableCell>
                       <TableCell>
-                        {user.is_active ? (
+                        {user.status ? (
                           <Badge variant="default" className="bg-green-600">
                             Hoạt động
                           </Badge>
                         ) : (
                           <Badge variant="destructive">Ngưng hoạt động</Badge>
                         )}
+                      </TableCell>
+                      <TableCell>{user.phone}</TableCell>
+                      <TableCell>
+                        <Badge>{Constants.roleMap[user.role]}</Badge>
                       </TableCell>
                       <TableCell>
                         <DropdownMenu modal={false}>
@@ -289,18 +310,18 @@ const UserPage = () => {
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem
                               onClick={() => {
-                                router.push(`/users/${user._id}/view`)
+                                router.push(`/users/${user.userID}/view`)
                               }}
                             >
                               Chi tiết
                             </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => {
-                                router.push(`/users/${user._id}/edit`)
-                              }}
-                            >
+                            <DropdownMenuItem onClick={() => {
+                              setUserToEdit(user)
+                              setEditDialogOpen(true)
+                            }}>
                               Chỉnh sửa
                             </DropdownMenuItem>
+
                             <DropdownMenuItem
                               variant="destructive"
                               onClick={() => handleDeleteClick(user)}
@@ -364,7 +385,7 @@ const UserPage = () => {
             <DialogTitle>Xác nhận xóa hội viên</DialogTitle>
           </DialogHeader>
           <div>
-            Bạn có chắc chắn muốn xóa hội viên <b>{userToDelete?.full_name}</b>{" "}
+            Bạn có chắc chắn muốn xóa hội viên <b>{userToDelete?.fullName}</b>{" "}
             không?
           </div>
           <DialogFooter>
@@ -385,6 +406,15 @@ const UserPage = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <UserEditDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        user={userToEdit}
+        onSave={handleSaveEdit}
+      />
+
+
+
     </Card>
   )
 }

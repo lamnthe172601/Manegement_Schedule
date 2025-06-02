@@ -13,8 +13,8 @@ export class Constants {
   }
 
   static readonly roleMap: Record<string, string> = {
-    admin: "Quản trị viên",
-    staff: "Nhân viên",
-    member: "Thành viên",
+    1: "Quản trị viên",
+    2: "Giáo viên",
+    3: "Học viên",
   }
 }

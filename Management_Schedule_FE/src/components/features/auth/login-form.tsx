@@ -71,9 +71,15 @@ export function LoginForm({
         const user = jwtDecode<JwtUser>(token);
         console.log("Decoded user:", user);
         setUserAtom(user);
-        console.log(userInfoAtom)
+        if (user.role === "Admin") {
+          router.push("/admin/dashboards");
+        } else {
+          router.push("/")
+        }
+        // Lưu thông tin user vào atom (localStorage
 
-        router.push("/");
+
+
       } else {
         showErrorToast(response.message || "Đăng nhập thất bại");
       }
@@ -153,6 +159,12 @@ export function LoginForm({
                 Bạn chưa có tài khoản?{" "}
                 <Link href="/register" className="underline underline-offset-4">
                   Đăng ký ngay
+                </Link>
+              </div>
+              <div className="mt-4 text-center text-sm">
+                Hay bạn quên mật khẩu ?{" "}
+                <Link href="user/forget-password" className="">
+                  Lấy lại mật khẩu
                 </Link>
               </div>
             </form>

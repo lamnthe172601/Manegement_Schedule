@@ -1,53 +1,77 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-
-const students = [
-  {
-    id: 1,
-    name: "Nguyễn Văn A",
-    avatar: "/avatars/user1.jpg",
-    course: "Giao tiếp cơ bản",
-  },
-  {
-    id: 2,
-    name: "Trần Thị B",
-    avatar: "/avatars/user2.jpg",
-    course: "Phát âm chuẩn Mỹ",
-  },
-  {
-    id: 3,
-    name: "Lê Văn C",
-    avatar: "/avatars/user3.jpg",
-    course: "Giao tiếp nâng cao",
-  },
-];
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import useGetUsers from "@/hooks/api/user/use-get-users";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function StudentListPage() {
+  const { data, error, isLoading } = useGetUsers();
+
+  const teamMembers = data?.filter((user: any) => user.role === 3) || [];
+
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-6">Danh sách học viên</h1>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Học viên</TableHead>
-            <TableHead>Khóa học đang học</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {students.map((student) => (
-            <TableRow key={student.id}>
-              <TableCell className="flex items-center gap-4">
-                <Avatar>
-                  <AvatarImage src={student.avatar} />
-                  <AvatarFallback>{student.name.split(' ')[0][0]}</AvatarFallback>
-                </Avatar>
-                <span>{student.name}</span>
-              </TableCell>
-              <TableCell>{student.course}</TableCell>
+    <div className="container mx-auto py-10">
+      <h1 className="text-3xl font-bold mb-6 text-center">Danh sách học viên</h1>
+
+      <div className="bg-white shadow-lg rounded-lg overflow-hidden border">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-gray-100">
+              <TableHead className="text-base">Học viên</TableHead>
+              <TableHead className="text-base">Khóa học đang học</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, idx) => (
+                <TableRow key={idx}>
+                  <TableCell>
+                    <div className="flex items-center gap-4">
+                      <Skeleton className="h-10 w-10 rounded-full" />
+                      <Skeleton className="h-4 w-[150px]" />
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-[120px]" />
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : teamMembers.length > 0 ? (
+              teamMembers.map((student: any) => (
+                <TableRow
+                  key={student.userID}
+                  className="hover:bg-gray-50 transition-all duration-200"
+                >
+                  <TableCell className="flex items-center gap-4 py-4">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={student.avatar || "/avatars/default.png"} />
+                      <AvatarFallback>
+                        {student.fullName?.split(" ")[0][0]}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="font-medium">{student.fullName}</span>
+                  </TableCell>
+                  <TableCell className="text-sm text-gray-700">
+                    {student.courseName || "Chưa đăng ký"}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={2} className="text-center py-6 text-gray-500">
+                  Không có học viên nào được tìm thấy.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }

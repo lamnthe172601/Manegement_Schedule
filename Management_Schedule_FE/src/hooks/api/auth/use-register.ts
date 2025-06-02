@@ -12,11 +12,12 @@ export const useRegister = () => {
     password: string,
   ) => {
     try {
+      console.log("register", full_name, phone, email, password)
       setLoading(true)
       const response = await axios.post(Endpoints.Auth.REGISTER, {
         email,
-        password,
-        full_name,
+        passwordHash: password,
+        fullName: full_name,
         phone,
       })
       return response.data

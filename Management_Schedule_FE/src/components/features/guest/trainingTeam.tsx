@@ -1,33 +1,14 @@
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import useGetUsers from "@/hooks/api/user/use-get-users"
 export default function TrainingTeamPage() {
-  const teamMembers = [
-    {
-      id: 1,
-      name: "NA",
-      role: "GIẢNG VIÊN",
-      image: "/teacher.jpg",
-      socialLinks: ["facebook", "twitter", "youtube", "instagram"],
-      description: "Trợ giảng chính thức cho học viên",
-    },
-    {
-      id: 2,
-      name: "GV1",
-      role: "GIẢNG VIÊN",
-        image: "/teacher.jpg",
-      socialLinks: ["facebook", "twitter", "youtube", "instagram"],
-      description: "Hỗ trợ giảng dạy cho học viên",
-    },
-    {
-      id: 3,
-      name: "GV2",
-      role: "GIẢNG VIÊN",
-        image: "/teacher.jpg",
-      socialLinks: ["facebook", "twitter", "youtube", "instagram"],
-      description: "Hỗ trợ giảng dạy cho học viên",
-    },
-  ]
+  const { data, error, isLoading } = useGetUsers()
+
+  console.log(data)
+
+  const teamMembers = data?.filter((user: any) => user.role === 2) || []
+  console.log("teamMembers", teamMembers)
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -52,14 +33,14 @@ export default function TrainingTeamPage() {
               <CardContent className="p-0 text-center">
                 <div className="relative w-40 h-40 mx-auto mt-6 mb-4">
                   <Image
-                    src={member.image }
-                    alt={member.name}
+                    src="/teacher.jpg"
+                    alt={member.fullName}
                     fill
                     className="rounded-full object-cover"
                   />
                 </div>
-                <h3 className="font-bold text-lg mb-1">{member.name}</h3>
-                <p className="text-gray-500 text-sm mb-3">{member.role}</p>
+                <h3 className="font-bold text-lg mb-1">{member.fullName}</h3>
+                <p className="text-gray-500 text-sm mb-3">{member.gender == "M" ? "Nam" : "Nữ"}</p>
                 <div className="flex justify-center gap-2 mb-4">
                   <Badge className="bg-blue-500 hover:bg-blue-600 rounded-full w-6 h-6 p-0 flex items-center justify-center">
                     f
@@ -74,7 +55,7 @@ export default function TrainingTeamPage() {
                     i
                   </Badge>
                 </div>
-                <p className="text-sm text-gray-600 mb-6">{member.description}</p>
+                <p className="text-sm text-gray-600 mb-6">{member.introduction}</p>
               </CardContent>
             </Card>
           ))}

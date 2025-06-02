@@ -6,7 +6,7 @@ export interface User {
   userID: number
   email: string
   passwordHash: string
-  role: 1 | 2 | 3 // 1: admin, 2: teacher, 3: student
+  role: number // 1: admin, 2: teacher, 3: student
   fullName: string
   gender: "M" | "F"
   dateOfBirth: Date
@@ -28,7 +28,7 @@ export interface JwtUser {
 }
 const useGetUsers = () => {
   const { data, error, isLoading } = useSWR<User[]>(
-    Endpoints.User.GET_ALL,
+    Endpoints.Users.GET_ALL,
     axiosFetcher,
   )
   return { data, error, isLoading }

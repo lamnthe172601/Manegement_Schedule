@@ -1,9 +1,10 @@
 export class Endpoints {
   static readonly Auth = {
-    REGISTER: "auth/register",
+    REGISTER: "Authentication/SignUp",
     LOGIN: "Authentication/SignIn",
     LOGOUT: "auth/logout",
     REFRESH: "auth/refresh",
+    SENDOTP: "Authentication/send-otp",
     CHANGE_PASSWORD_FIRST_TIME: "auth/change-password-first-time",
   }
   static readonly Fine = {
@@ -22,10 +23,11 @@ export class Endpoints {
     UPDATE: (id: string) => `reviews/${id}`,
     DELETE: (id: string) => `reviews/${id}`,
   }
-  static readonly User = {
+  static readonly Users = {
     GET_ALL: "User",
     GET_ALLV2: "User/v2",
     GET_BY_ID: (id: string) => `User/${id}`,
+    RESET_PASSWORD: `User/update-password`,
     CREATE: "User",
     UPDATE: (id: string) => `User/${id}`,
     DELETE: (id: string) => `User/${id}`,
@@ -37,6 +39,14 @@ export class Endpoints {
     CREATE: "books",
     UPDATE: (id: string) => `books/${id}`,
     DELETE: (id: string) => `books/${id}`,
+  }
+  static readonly Courses = {
+    GET_ALL: "Course",
+    GET_ALL_V2: "Courses/v2",
+    GET_BY_ID: (id: string) => `Courses/${id}`,
+    CREATE: "Courses",
+    UPDATE: (id: string) => `Courses/${id}`,
+    DELETE: (id: string) => `Courses/${id}`,
   }
   static readonly Categories = {
     GET_ALL: "categories",

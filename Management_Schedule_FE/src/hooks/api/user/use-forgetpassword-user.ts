@@ -1,13 +1,16 @@
 import { useAxios } from "@/hooks/api/use-axios"
+import { Endpoints } from "@/lib/endpoints"
 import { useState } from "react"
 
-export const useDeleteUser = () => {
+export const useForgetPassword = () => {
   const axios = useAxios()
   const [loading, setLoading] = useState(false)
-  const deleteUser = async ({ id }: { id: number }) => {
+  const forgetPassword = async (email: string) => {
+    console.log(email)
+    // return data
     try {
       setLoading(true)
-      const response = await axios.delete(`users/${id}`)
+      const response = await axios.post(`${Endpoints.Auth.SENDOTP}`, { email })
       return response.data
     } catch (error) {
       throw error
@@ -15,5 +18,5 @@ export const useDeleteUser = () => {
       setLoading(false)
     }
   }
-  return { deleteUser, loading }
+  return { forgetPassword, loading }
 }

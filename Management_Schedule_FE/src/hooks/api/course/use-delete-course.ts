@@ -1,13 +1,14 @@
 import { useAxios } from "@/hooks/api/use-axios"
 import { useState } from "react"
 
-export const useDeleteUser = () => {
+export const useDeleteBook = () => {
   const axios = useAxios()
   const [loading, setLoading] = useState(false)
-  const deleteUser = async ({ id }: { id: number }) => {
+
+  const deleteBook = async ({ id }: { id: string }) => {
     try {
       setLoading(true)
-      const response = await axios.delete(`users/${id}`)
+      const response = await axios.delete(`books/${id}`)
       return response.data
     } catch (error) {
       throw error
@@ -15,5 +16,6 @@ export const useDeleteUser = () => {
       setLoading(false)
     }
   }
-  return { deleteUser, loading }
+
+  return { deleteBook, loading }
 }

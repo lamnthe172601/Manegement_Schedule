@@ -20,9 +20,12 @@ const AuthWrapper = ({ children }: AuthWrapperProps) => {
     const token = localStorage.getItem(Constants.API_TOKEN_KEY);
     const isLoginPage = router.pathname === "/login";
     const isRegisterPage = router.pathname === "/register";
+    const isForgetPasswordPage = router.pathname === "/user/forget-password";
+    const isEnterOtpPage = router.pathname === "/user/enter-otp";
+    const isChangePasswordPage = router.pathname === "/user/reset-password";
     if (!token) {
-      if (!isLoginPage && !isRegisterPage) {
-        router.replace("/login");
+      if (!isLoginPage && !isRegisterPage && !isForgetPasswordPage && !isEnterOtpPage && !isChangePasswordPage) {
+        router.replace("/");
       }
       return;
     }
