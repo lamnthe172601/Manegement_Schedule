@@ -34,16 +34,8 @@ namespace Management_Schedule_BE.Services
                 var user = _mapper.Map<User>(userCreateDTO);
                 user.PasswordHash = PasswordHassing.ComputeSha256Hash(user.PasswordHash);
 
-                if (userCreateDTO.AvatarUrl != null && userCreateDTO.AvatarUrl.Length > 0)
-                {
-                    user.AvatarUrl = await _storageService.UploadFileAsync(userCreateDTO.AvatarUrl);
-                }
-                else
-                {
-                    
-                    var defaultAvatar = _configuration["R2:PublicUrlBase"] + "/avatar-mac-dinh-4.jpg";
-                    user.AvatarUrl = defaultAvatar;
-                }
+                //write function upload file
+                await UpLoadFileImgAsync(user, userCreateDTO.AvatarUrl, "/avatar-mac-dinh-4.jpg");
 
                 await _context.Users.AddAsync(user);
                 await _context.SaveChangesAsync();
@@ -80,6 +72,28 @@ namespace Management_Schedule_BE.Services
             return null;
         }
 
+        private async Task UpLoadFileImgAsync(User user, IFormFile? avatarUrl, string avtDefault)
+        {
+            try
+            {
+                if (avatarUrl != null && avatarUrl.Length > 0)
+                {
+                    user.AvatarUrl = await _storageService.UploadFileAsync(avatarUrl);
+                }
+                else
+                {
+                    var defaultAvatar = _configuration["R2:PublicUrlBase"] + avtDefault;
+                    user.AvatarUrl = defaultAvatar;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Upload avatar error: " + ex.ToString());
+                throw; 
+            }
+        }
+
+
         private async Task<bool> CheckUserExistsByEmailAsync(string email)
         {
             try
@@ -106,7 +120,7 @@ namespace Management_Schedule_BE.Services
         public async Task<UserDTO?> GetUserByEmailAndPasswordAsync(string email, string password)
         {
             var passwordHash = PasswordHassing.ComputeSha256Hash(password);
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.Email == email && x.PasswordHash == passwordHash);
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Email.ToLower() == email.ToLower() && x.PasswordHash == passwordHash);
             return user == null ? null : _mapper.Map<UserDTO>(user);
         }
 
@@ -115,21 +129,14 @@ namespace Management_Schedule_BE.Services
             bool existsEmail = await CheckUserExistsByEmailAsync(email);
             if (existsEmail)
             {
-                var user = _mapper.Map<User>(classDto);
+                var userFind = await _context.Users.SingleOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
 
-                if (classDto.AvatarUrl != null && classDto.AvatarUrl.Length > 0)
-                {
-                    user.AvatarUrl = await _storageService.UploadFileAsync(classDto.AvatarUrl);
-                }
-                else
-                {
-                    var defaultAvatar = _configuration["R2:PublicUrlBase"] + "/avatar-mac-dinh-4.jpg";
-                    user.AvatarUrl = defaultAvatar;
-                }
+                _mapper.Map(classDto, userFind);
+                await UpLoadFileImgAsync(userFind, classDto.AvatarUrl, "/avatar-mac-dinh-4.jpg");
 
-                _context.Users.Update(user);
+                _context.Users.Update(userFind);
                 await _context.SaveChangesAsync();
-                return _mapper.Map<UserDTO>(user);
+                return _mapper.Map<UserDTO>(userFind);
             }
             return null;
         }
@@ -153,13 +160,14 @@ namespace Management_Schedule_BE.Services
 
         public async Task<UserDTO?> GetUserByEmailAsync(string email)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
+            var user = await _context.Users
+                .SingleOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
             return user == null ? null : _mapper.Map<UserDTO>(user);
         }
 
         public async Task<UserDTO?> UpdatePasswordAsync(string email, string password)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
             if (user != null)
             {
                 user.PasswordHash = PasswordHassing.ComputeSha256Hash(password);
@@ -172,18 +180,10 @@ namespace Management_Schedule_BE.Services
 
         public async Task<TeachStudentProfile?> UpdateProfileAsync(string email, TeachStudentProfile profile)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
             if (user != null)
             {
-                if (profile.AvatarUrl != null && profile.AvatarUrl.Length > 0)
-                {
-                    user.AvatarUrl = await _storageService.UploadFileAsync(profile.AvatarUrl);
-                }
-                else
-                {
-                    var defaultAvatar = _configuration["R2:PublicUrlBase"] + "/avatar-mac-dinh-4.jpg";
-                    user.AvatarUrl = defaultAvatar;
-                }
+                await UpLoadFileImgAsync(user, profile.AvatarUrl, "/avatar-mac-dinh-4.jpg");
 
                 _mapper.Map(profile, user);
                 _context.Update(user);

@@ -1,9 +1,11 @@
-﻿
-using Amazon.S3.Model;
+﻿using Amazon.S3.Model;
 using Amazon.S3;
 using Microsoft.Extensions.Options;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 using Management_Schedule_BE.DTOs;
+using Minio;
+using Minio.DataModel;
+using Minio.DataModel.Args;
 
 namespace Management_Schedule_BE.Services.SystemSerivce.StoreService
 {
@@ -19,32 +21,32 @@ namespace Management_Schedule_BE.Services.SystemSerivce.StoreService
         }
 
         public async Task<string?> UploadFileAsync(IFormFile file)
-        {
-            if (file == null || file.Length == 0) return null;
-
-            // Tạo một tên file duy nhất để tránh bị trùng lặp
+        {           
             var fileName = $"{Guid.NewGuid()}-{file.FileName}";
+            var endpoint = _r2Config.Endpoint.Replace("https://", "").Replace("http://", "");
+            var accessKey = _r2Config.AccessKey;
+            var secretKey = _r2Config.SecretKey;
+            var bucketName = _r2Config.BucketName;
+            var publicUrlBase = _r2Config.PublicUrlBase;
 
-            var request = new PutObjectRequest
+            var minio = new MinioClient()
+                .WithEndpoint(endpoint)
+                .WithCredentials(accessKey, secretKey)
+                .WithSSL(true)
+                .Build();
+
+            using (var stream = file.OpenReadStream())
             {
-                BucketName = _r2Config.BucketName,
-                Key = fileName,
-                InputStream = file.OpenReadStream(),
-                ContentType = file.ContentType
-            };
-            // Cho phép truy cập công khai file này
-            request.Metadata.Add("x-amz-acl", "public-read");
+                var putObjectArgs = new PutObjectArgs()
+                    .WithBucket(bucketName)
+                    .WithObject(fileName)
+                    .WithStreamData(stream)
+                    .WithObjectSize(stream.Length)
+                    .WithContentType(file.ContentType);
 
-
-            var response = await _s3Client.PutObjectAsync(request);
-
-            if (response.HttpStatusCode == System.Net.HttpStatusCode.OK)
-            {
-                // Trả về URL công khai của file
-                return $"{_r2Config.PublicUrlBase}/{fileName}";
+                await minio.PutObjectAsync(putObjectArgs, CancellationToken.None);
             }
-
-            return null;
+            return $"{publicUrlBase}/{fileName}";
         }
     }
 }
