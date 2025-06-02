@@ -137,8 +137,6 @@ namespace Management_Schedule_BE.Services
                 _context.Users.Update(userFind);
                 await _context.SaveChangesAsync();
                 return _mapper.Map<UserDTO>(userFind);
-<<<<<<< HEAD
-=======
             }
             return null;
         }
@@ -176,53 +174,11 @@ namespace Management_Schedule_BE.Services
                 _context.Update(user);
                 await _context.SaveChangesAsync();
                 return _mapper.Map<UserDTO>(user);
->>>>>>> dccf09a3d81300770d5ec6d366da57b957fc6b2c
             }
             return null;
         }
 
-<<<<<<< HEAD
-        //public UserDTO UpdateUser(string email, UserUpdateDTO classDto)
-        //{
-        //    bool exitsEmail =  GetUserByEmailAsync(email);
-        //    if (exitsEmail != false)
-        //    {
-        //        var user = _mapper.Map<User>(classDto);
-        //        _context.Users.Update(user);
-        //        _context.SaveChanges();
-        //        return _mapper.Map<UserDTO>(user);
-        //    }
-        //    return null;
-        //}
-        //public UserDTO? UpdateUser(string email, UserUpdateDTO updateDto)
-        //{
-        //    var user = _context.Users.FirstOrDefault(u => u.Email == email);
-        //    if (user == null) return null;
-
-        //    // Chỉ cập nhật các trường nếu được truyền
-        //    if (!string.IsNullOrEmpty(updateDto.FullName)) user.FullName = updateDto.FullName;
-        //    if (!string.IsNullOrEmpty(updateDto.Gender)) user.Gender = updateDto.Gender;
-        //    if (updateDto.DateOfBirth.HasValue) user.DateOfBirth = updateDto.DateOfBirth.Value;
-        //    if (!string.IsNullOrEmpty(updateDto.Address)) user.Address = updateDto.Address;
-        //    if (!string.IsNullOrEmpty(updateDto.Phone)) user.Phone = updateDto.Phone;
-        //    if (!string.IsNullOrEmpty(updateDto.Introduction)) user.Introduction = updateDto.Introduction;
-        //    if (!string.IsNullOrEmpty(updateDto.AvatarUrl)) user.AvatarUrl = updateDto.AvatarUrl;
-        //    user.ModifiedAt = updateDto.ModifiedAt;
-
-        //    // Nếu bạn cho phép cập nhật Role/Status:
-        //    if (updateDto.Role != 0) user.Role = updateDto.Role;
-        //    if (updateDto.Status != 0) user.Status = updateDto.Status;
-
-        //    _context.SaveChanges();
-
-        //    return _mapper.Map<UserDTO>(user);
-        //}
-
-
-        public bool DeleteUser(string email)
-=======
         public async Task<TeachStudentProfile?> UpdateProfileAsync(string email, TeachStudentProfile profile)
->>>>>>> dccf09a3d81300770d5ec6d366da57b957fc6b2c
         {
             var user = await _context.Users.SingleOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
             if (user != null)
