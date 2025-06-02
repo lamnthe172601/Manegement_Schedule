@@ -15,11 +15,22 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
-using Management_Schedule_BE.Models.Service;
+using Management_Schedule_BE.DTOs;
+using Amazon.Runtime;
+using Amazon.S3;
+using Management_Schedule_BE.Services.SystemSerivce.StoreService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.Configure<R2Config>(builder.Configuration.GetSection("R2"));
+var r2Config = builder.Configuration.GetSection("R2").Get<R2Config>();
+
+#region s3Client with DI
+var s3Config = new AmazonS3Config { ServiceURL = r2Config.Endpoint };
+var credentials = new BasicAWSCredentials(r2Config.AccessKey, r2Config.SecretKey);
+builder.Services.AddSingleton<IAmazonS3>(new AmazonS3Client(credentials, s3Config));
+#endregion
 
 #region DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -107,6 +118,9 @@ builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<JWTConfig>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IStorageService, R2StorageService>();
+builder.Services.AddScoped<ITeacherService, TeacherService>();
 #endregion
 
 #region Swagger

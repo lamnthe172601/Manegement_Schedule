@@ -27,23 +27,20 @@ namespace Management_Schedule_BE.Controllers
             _emailService = emailService;
         }
         [HttpPost("SignUp")]
-        public IActionResult SignUp(UserCreateDTO userCreateDTO)
+        public async Task<IActionResult> SignUp([FromForm]UserCreateDTO userCreateDTO)
         {
-            if (_userService.CreateUser(userCreateDTO) == null)
+            var result = await _userService.CreateUserAsync(userCreateDTO);
+            if (result == null)
             {
                 return BadRequest(new { message = "Email đã tồn tại" });
             }
-            else
-            {
-                return Ok(new { message = "Đăng ký thành công" });
-            }
+            return Ok(new { message = "Đăng ký thành công" });
         }
 
         [HttpPost("SignIn")]
-
-        public IActionResult SignIn(UserLogin userLogin)
+        public async Task<IActionResult> SignIn(UserLogin userLogin)
         {
-            var user = _userService.GetUserByEmailAndPassword(userLogin.Email, userLogin.PasswordHash);
+            var user = await _userService.GetUserByEmailAndPasswordAsync(userLogin.Email, userLogin.PasswordHash);
             if (user != null)
             {
                 if (user.Status == 3)
@@ -53,8 +50,6 @@ namespace Management_Schedule_BE.Controllers
 
                 string token = _jwtConfig.GenerateToken(user);
                 return Ok(new { message = "Đăng nhập thành công", data = token });
-
-
             }
             return BadRequest(new { message = "Tài khoản hoặc mật khẩu không đúng" });
         }
@@ -76,7 +71,7 @@ namespace Management_Schedule_BE.Controllers
                 var payload = await GoogleJsonWebSignature.ValidateAsync(request.IdToken, validationSettings);
                 //process logic
                 //check emails exits in database
-                var user = _userService.GetUserByEmail(payload.Email);
+                var user = await _userService.GetUserByEmailAsync(payload.Email);
 
                 if (user != null)
                 {
@@ -98,7 +93,6 @@ namespace Management_Schedule_BE.Controllers
             }
             catch (Exception ex)
             {
-
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }

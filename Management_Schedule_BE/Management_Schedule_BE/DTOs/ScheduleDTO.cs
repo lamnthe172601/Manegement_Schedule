@@ -6,41 +6,32 @@ namespace Management_Schedule_BE.DTOs
         int ScheduleID,
         int ClassID,
         int TeacherID,
-        int? StudySessionId,
-        string SessionCode,
-        byte DayOfWeek,
-        string TimeSlot,
-        string? Subject,
+        int StudySessionId,
         string Room,
         byte Status,
         string? Notes,
         DateTime CreatedAt,
-        DateTime ModifiedAt
+        DateTime ModifiedAt,
+        DateTime Date
     );
 
     public record CreateScheduleDTO(
         int ClassID,
         int TeacherID,
-        int? StudySessionId,
-        string SessionCode,
-        byte DayOfWeek,
-        string TimeSlot,
-        string? Subject,
+        int StudySessionId,
         string Room,
         byte Status,
-        string? Notes
+        string? Notes,
+        DateTime Date
     );
 
     public record UpdateScheduleDTO(
         int TeacherID,
-        int? StudySessionId,
-        string SessionCode,
-        byte DayOfWeek,
-        string TimeSlot,
-        string? Subject,
+        int StudySessionId,
         string Room,
         byte Status,
-        string? Notes
+        string? Notes,
+        DateTime Date
     );
 
     public record UpdateScheduleStatusDTO(

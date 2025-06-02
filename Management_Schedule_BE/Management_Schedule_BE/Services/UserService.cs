@@ -3,7 +3,9 @@ using Management_Schedule_BE.Data;
 using Management_Schedule_BE.DTOs;
 using Management_Schedule_BE.Helpers;
 using Management_Schedule_BE.Models;
+using Management_Schedule_BE.Services.SystemSerivce.StoreService;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 
 namespace Management_Schedule_BE.Services
@@ -12,60 +14,91 @@ namespace Management_Schedule_BE.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IStorageService _storageService;
+        private readonly IConfiguration _configuration;
 
-        public UserService(ApplicationDbContext context, IMapper mapper)
+        public UserService(ApplicationDbContext context, IMapper mapper, IStorageService storageService, IConfiguration configuration)
         {
             _context = context;
             _mapper = mapper;
+            _storageService = storageService;
+            _configuration = configuration;
         }
-        public UserDTO CreateUser(UserCreateDTO userCreateDTO)
-        {
-            bool exitsEmail = GetUserByEmailAsync(userCreateDTO.Email);
 
-            if (exitsEmail == false)
+        public async Task<UserDTO?> CreateUserAsync(UserCreateDTO userCreateDTO)
+        {
+            bool existsEmail = await CheckUserExistsByEmailAsync(userCreateDTO.Email);
+
+            if (!existsEmail)
             {
                 var user = _mapper.Map<User>(userCreateDTO);
                 user.PasswordHash = PasswordHassing.ComputeSha256Hash(user.PasswordHash);
-                _context.Users.Add(user);
-                _context.SaveChanges();
+
+                //write function upload file
+                await UpLoadFileImgAsync(user, userCreateDTO.AvatarUrl, "/avatar-mac-dinh-4.jpg");
+
+                await _context.Users.AddAsync(user);
+                await _context.SaveChangesAsync();
 
                 // Bổ sung: Nếu là student thì tạo bản ghi student
                 if (user.Role == 3) // 3 = Student
                 {
                     var student = new Student
                     {
-                        StudentID = user.UserID, // Giả sử StudentID trùng với UserID
-                        Level = 0, // mặc định Beginner
+                        StudentID = user.UserID,
+                        Level = 0,
                         EnrollmentDate = DateTime.Now,
-                        Status = 1, // Active
+                        Status = 1,
                         CreatedAt = DateTime.Now,
                         ModifiedAt = DateTime.Now
                     };
-                    _context.Students.Add(student);
-                    _context.SaveChanges();
+                    await _context.Students.AddAsync(student);
+                    await _context.SaveChangesAsync();
                 }
                 // Nếu là teacher thì tạo bản ghi teacher
                 else if (user.Role == 2) // 2 = Teacher
                 {
                     var teacher = new Teacher
                     {
-                        TeacherID = user.UserID, // Giả sử TeacherID trùng với UserID
+                        TeacherID = user.UserID,
                         CreatedAt = DateTime.Now,
                         ModifiedAt = DateTime.Now
                     };
-                    _context.Teachers.Add(teacher);
-                    _context.SaveChanges();
+                    await _context.Teachers.AddAsync(teacher);
+                    await _context.SaveChangesAsync();
                 }
                 return _mapper.Map<UserDTO>(user);
             }
             return null;
         }
 
-        private bool GetUserByEmailAsync(string email)
+        private async Task UpLoadFileImgAsync(User user, IFormFile? avatarUrl, string avtDefault)
         {
             try
             {
-                var result = _context.Users.SingleOrDefault(x => x.Email.ToLower() == email.ToLower());
+                if (avatarUrl != null && avatarUrl.Length > 0)
+                {
+                    user.AvatarUrl = await _storageService.UploadFileAsync(avatarUrl);
+                }
+                else
+                {
+                    var defaultAvatar = _configuration["R2:PublicUrlBase"] + avtDefault;
+                    user.AvatarUrl = defaultAvatar;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Upload avatar error: " + ex.ToString());
+                throw; 
+            }
+        }
+
+
+        private async Task<bool> CheckUserExistsByEmailAsync(string email)
+        {
+            try
+            {
+                var result = await _context.Users.SingleOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
                 return result != null;
             }
             catch
@@ -74,22 +107,21 @@ namespace Management_Schedule_BE.Services
             }
         }
 
-
-        public IEnumerable<UserDTO> GetAllUser()
+        public async Task<IEnumerable<UserDTO>> GetAllUserAsync()
         {
-            var users = _context.Users.ToList();
-            if (users == null || users.Count == 0)
+            var users = await _context.Users.ToListAsync();
+            if (users == null || !users.Any())
             {
                 return Enumerable.Empty<UserDTO>();
             }
             return _mapper.Map<IEnumerable<UserDTO>>(users);
         }
 
-        public UserDTO GetUserByEmailAndPassword(string email, string password)
+        public async Task<UserDTO?> GetUserByEmailAndPasswordAsync(string email, string password)
         {
-            var passwordHas = PasswordHassing.ComputeSha256Hash(password);
-            var u = _context.Users.SingleOrDefault(x => x.Email == email & x.PasswordHash == passwordHas);
-            return u == null ? null : _mapper.Map<UserDTO>(u);
+            var passwordHash = PasswordHassing.ComputeSha256Hash(password);
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Email.ToLower() == email.ToLower() && x.PasswordHash == passwordHash);
+            return user == null ? null : _mapper.Map<UserDTO>(user);
         }
 
         public async Task<UserDTO?> UpdateUserAsync(string email, UserUpdateDTO classDto)
@@ -105,10 +137,51 @@ namespace Management_Schedule_BE.Services
                 _context.Users.Update(userFind);
                 await _context.SaveChangesAsync();
                 return _mapper.Map<UserDTO>(userFind);
+<<<<<<< HEAD
+=======
             }
             return null;
         }
 
+        public async Task<bool> DeleteUserAsync(string email)
+        {
+            bool existsEmail = await CheckUserExistsByEmailAsync(email);
+            if (existsEmail)
+            {
+                var result = await _context.Users.SingleOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
+                if (result != null)
+                {
+                    result.Status = 3;
+                    _context.Update(result);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public async Task<UserDTO?> GetUserByEmailAsync(string email)
+        {
+            var user = await _context.Users
+                .SingleOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
+            return user == null ? null : _mapper.Map<UserDTO>(user);
+        }
+
+        public async Task<UserDTO?> UpdatePasswordAsync(string email, string password)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
+            if (user != null)
+            {
+                user.PasswordHash = PasswordHassing.ComputeSha256Hash(password);
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+                return _mapper.Map<UserDTO>(user);
+>>>>>>> dccf09a3d81300770d5ec6d366da57b957fc6b2c
+            }
+            return null;
+        }
+
+<<<<<<< HEAD
         //public UserDTO UpdateUser(string email, UserUpdateDTO classDto)
         //{
         //    bool exitsEmail =  GetUserByEmailAsync(email);
@@ -147,41 +220,21 @@ namespace Management_Schedule_BE.Services
 
 
         public bool DeleteUser(string email)
+=======
+        public async Task<TeachStudentProfile?> UpdateProfileAsync(string email, TeachStudentProfile profile)
+>>>>>>> dccf09a3d81300770d5ec6d366da57b957fc6b2c
         {
-            bool exitsEmail = GetUserByEmailAsync(email);
-            if (exitsEmail)
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
+            if (user != null)
             {
-                var result = _context.Users.SingleOrDefault(x => x.Email.ToLower() == email.ToLower());
-                result.Status = 3;
-                _context.Update(result);
-                _context.SaveChanges();
-                return true;
+                await UpLoadFileImgAsync(user, profile.AvatarUrl, "/avatar-mac-dinh-4.jpg");
+
+                _mapper.Map(profile, user);
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+                return _mapper.Map<TeachStudentProfile>(user);
             }
-            return false;
-        }
-
-        public UserDTO GetUserByEmail(string email)
-        {
-            var u = _context.Users.SingleOrDefault(x => x.Email == email);
-            return u == null ? null : _mapper.Map<UserDTO>(u);
-        }
-
-        public UserDTO UpdatePassword(string email, string password)
-        {
-            var user = _context.Users.SingleOrDefault(x => x.Email == email);
-            user.PasswordHash = PasswordHassing.ComputeSha256Hash(password);
-            _context.Update(user);
-            _context.SaveChanges();
-            return _mapper.Map<UserDTO>(user);
-        }
-
-        public TeachStudentProfile UpdateProfile(string email, TeachStudentProfile profile)
-        {
-            var user = _context.Users.SingleOrDefault(x => x.Email == email);
-            _mapper.Map(profile, user);
-            _context.Update(user);
-            _context.SaveChanges();
-            return _mapper.Map<TeachStudentProfile>(user);
+            return null;
         }
     }
 }
