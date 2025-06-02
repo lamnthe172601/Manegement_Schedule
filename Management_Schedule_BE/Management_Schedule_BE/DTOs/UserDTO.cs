@@ -10,7 +10,7 @@ namespace Management_Schedule_BE.DTOs
     string? PasswordHash,
     byte Role,
     string? FullName,
-    string? Gender,
+    
     DateTime? DateOfBirth,
     string? Address,
     string? Phone,
@@ -18,7 +18,8 @@ namespace Management_Schedule_BE.DTOs
     string? AvatarUrl,
     byte Status,
     DateTime CreatedAt,
-    DateTime ModifiedAt);
+    DateTime ModifiedAt,
+    string? Gender = "M");
 
     public record UserCreateDTO(
     [Required]
@@ -28,22 +29,23 @@ namespace Management_Schedule_BE.DTOs
     string PasswordHash,
     string? FullName,
     [MaxLength(1)]
-    string? Gender,
     DateTime? DateOfBirth,
     string? Address,
     string? Phone,
     string? Introduction,
+    string? Gender = "M",
     IFormFile? AvatarUrl = null
     );
     public record UserUpdateDTO(
     byte Role,
     string? FullName,
-    string? Gender,
+    
     DateTime? DateOfBirth,
     string? Address,
     string? Phone,
     string? Introduction,
     byte Status,
+    string? Gender = "M",
     IFormFile? AvatarUrl = null
     );
     public record UserLogin(string Email, string PasswordHash);
@@ -53,7 +55,7 @@ namespace Management_Schedule_BE.DTOs
         string? Address,
         string? Phone,
         DateTime? DateOfBirth,
-        string? Gender,
+        string? Gender = "M",
         IFormFile? AvatarUrl = null
     );
 }
