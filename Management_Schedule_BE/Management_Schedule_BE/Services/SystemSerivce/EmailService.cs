@@ -22,7 +22,10 @@ namespace Management_Schedule_BE.Services.SystemSerivce
                 .Select(s => s[_random.Next(s.Length)]).ToArray());
         }
         public async Task SendOtpEmailAsync(string toEmail, string otp)
+
         {
+            Console.WriteLine($"Sending OTP '{otp}' to '{toEmail}'");
+
             // 1. Tạo đối tượng MimeMessage
             var emailMessage = new MimeMessage();
 

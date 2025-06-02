@@ -92,9 +92,26 @@ namespace Management_Schedule_BE.Services
             return u == null ? null : _mapper.Map<UserDTO>(u);
         }
 
+        public async Task<UserDTO?> UpdateUserAsync(string email, UserUpdateDTO classDto)
+        {
+            bool existsEmail = await CheckUserExistsByEmailAsync(email);
+            if (existsEmail)
+            {
+                var userFind = await _context.Users.SingleOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
+
+                _mapper.Map(classDto, userFind);
+                await UpLoadFileImgAsync(userFind, classDto.AvatarUrl, "/avatar-mac-dinh-4.jpg");
+
+                _context.Users.Update(userFind);
+                await _context.SaveChangesAsync();
+                return _mapper.Map<UserDTO>(userFind);
+            }
+            return null;
+        }
+
         //public UserDTO UpdateUser(string email, UserUpdateDTO classDto)
         //{
-        //    bool exitsEmail = GetUserByEmailAsync(email);
+        //    bool exitsEmail =  GetUserByEmailAsync(email);
         //    if (exitsEmail != false)
         //    {
         //        var user = _mapper.Map<User>(classDto);
@@ -104,29 +121,29 @@ namespace Management_Schedule_BE.Services
         //    }
         //    return null;
         //}
-        public UserDTO? UpdateUser(string email, UserUpdateDTO updateDto)
-        {
-            var user = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null) return null;
+        //public UserDTO? UpdateUser(string email, UserUpdateDTO updateDto)
+        //{
+        //    var user = _context.Users.FirstOrDefault(u => u.Email == email);
+        //    if (user == null) return null;
 
-            // Chỉ cập nhật các trường nếu được truyền
-            if (!string.IsNullOrEmpty(updateDto.FullName)) user.FullName = updateDto.FullName;
-            if (!string.IsNullOrEmpty(updateDto.Gender)) user.Gender = updateDto.Gender;
-            if (updateDto.DateOfBirth.HasValue) user.DateOfBirth = updateDto.DateOfBirth.Value;
-            if (!string.IsNullOrEmpty(updateDto.Address)) user.Address = updateDto.Address;
-            if (!string.IsNullOrEmpty(updateDto.Phone)) user.Phone = updateDto.Phone;
-            if (!string.IsNullOrEmpty(updateDto.Introduction)) user.Introduction = updateDto.Introduction;
-            if (!string.IsNullOrEmpty(updateDto.AvatarUrl)) user.AvatarUrl = updateDto.AvatarUrl;
-            user.ModifiedAt = updateDto.ModifiedAt;
+        //    // Chỉ cập nhật các trường nếu được truyền
+        //    if (!string.IsNullOrEmpty(updateDto.FullName)) user.FullName = updateDto.FullName;
+        //    if (!string.IsNullOrEmpty(updateDto.Gender)) user.Gender = updateDto.Gender;
+        //    if (updateDto.DateOfBirth.HasValue) user.DateOfBirth = updateDto.DateOfBirth.Value;
+        //    if (!string.IsNullOrEmpty(updateDto.Address)) user.Address = updateDto.Address;
+        //    if (!string.IsNullOrEmpty(updateDto.Phone)) user.Phone = updateDto.Phone;
+        //    if (!string.IsNullOrEmpty(updateDto.Introduction)) user.Introduction = updateDto.Introduction;
+        //    if (!string.IsNullOrEmpty(updateDto.AvatarUrl)) user.AvatarUrl = updateDto.AvatarUrl;
+        //    user.ModifiedAt = updateDto.ModifiedAt;
 
-            // Nếu bạn cho phép cập nhật Role/Status:
-            if (updateDto.Role != 0) user.Role = updateDto.Role;
-            if (updateDto.Status != 0) user.Status = updateDto.Status;
+        //    // Nếu bạn cho phép cập nhật Role/Status:
+        //    if (updateDto.Role != 0) user.Role = updateDto.Role;
+        //    if (updateDto.Status != 0) user.Status = updateDto.Status;
 
-            _context.SaveChanges();
+        //    _context.SaveChanges();
 
-            return _mapper.Map<UserDTO>(user);
-        }
+        //    return _mapper.Map<UserDTO>(user);
+        //}
 
 
         public bool DeleteUser(string email)
