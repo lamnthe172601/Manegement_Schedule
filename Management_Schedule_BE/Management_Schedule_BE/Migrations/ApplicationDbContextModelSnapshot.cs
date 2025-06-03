@@ -75,11 +75,11 @@ namespace Management_Schedule_BE.Migrations
                             ClassID = 1,
                             ClassName = "Basic English A1",
                             CourseID = 1,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4567),
-                            EndDate = new DateTime(2025, 8, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4566),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7070),
+                            EndDate = new DateTime(2025, 9, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7069),
                             MaxStudents = 20,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4567),
-                            StartDate = new DateTime(2025, 2, 28, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4565),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7071),
+                            StartDate = new DateTime(2025, 3, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7068),
                             Status = (byte)1
                         },
                         new
@@ -87,11 +87,11 @@ namespace Management_Schedule_BE.Migrations
                             ClassID = 2,
                             ClassName = "Basic English A2",
                             CourseID = 1,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4572),
-                            EndDate = new DateTime(2025, 9, 30, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4571),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7076),
+                            EndDate = new DateTime(2025, 10, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7075),
                             MaxStudents = 20,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4573),
-                            StartDate = new DateTime(2025, 3, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4571),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7076),
+                            StartDate = new DateTime(2025, 4, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7074),
                             Status = (byte)1
                         },
                         new
@@ -99,11 +99,11 @@ namespace Management_Schedule_BE.Migrations
                             ClassID = 3,
                             ClassName = "Conversation English B1",
                             CourseID = 2,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4576),
-                            EndDate = new DateTime(2025, 10, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4575),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7080),
+                            EndDate = new DateTime(2025, 11, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7079),
                             MaxStudents = 15,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4576),
-                            StartDate = new DateTime(2025, 4, 30, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4574),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7080),
+                            StartDate = new DateTime(2025, 5, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7078),
                             Status = (byte)1
                         },
                         new
@@ -111,11 +111,11 @@ namespace Management_Schedule_BE.Migrations
                             ClassID = 4,
                             ClassName = "Business English B2",
                             CourseID = 3,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4579),
-                            EndDate = new DateTime(2025, 11, 30, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4578),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7083),
+                            EndDate = new DateTime(2025, 12, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7082),
                             MaxStudents = 15,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4579),
-                            StartDate = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4578),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7083),
+                            StartDate = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7082),
                             Status = (byte)1
                         },
                         new
@@ -123,11 +123,11 @@ namespace Management_Schedule_BE.Migrations
                             ClassID = 5,
                             ClassName = "IELTS Preparation C1",
                             CourseID = 4,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4583),
-                            EndDate = new DateTime(2025, 12, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4582),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7086),
+                            EndDate = new DateTime(2026, 1, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7085),
                             MaxStudents = 10,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4583),
-                            StartDate = new DateTime(2025, 6, 30, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4581),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7087),
+                            StartDate = new DateTime(2025, 7, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7085),
                             Status = (byte)1
                         });
                 });
@@ -198,7 +198,7 @@ namespace Management_Schedule_BE.Migrations
                         {
                             CourseID = 1,
                             CourseName = "Tiếng Anh Cơ Bản",
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4531),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7028),
                             Description = "Khóa học tiếng Anh cho người mới bắt đầu",
                             DiscountPercent = (byte)0,
                             Duration = 48,
@@ -207,14 +207,14 @@ namespace Management_Schedule_BE.Migrations
                             IsPro = false,
                             IsSelling = true,
                             Level = (byte)1,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4531),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7029),
                             Price = 2000000m
                         },
                         new
                         {
                             CourseID = 2,
                             CourseName = "Tiếng Anh Giao Tiếp",
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4536),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7033),
                             Description = "Khóa học tiếng Anh giao tiếp cơ bản",
                             DiscountPercent = (byte)10,
                             Duration = 60,
@@ -223,14 +223,14 @@ namespace Management_Schedule_BE.Migrations
                             IsPro = false,
                             IsSelling = true,
                             Level = (byte)2,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4536),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7034),
                             Price = 2500000m
                         },
                         new
                         {
                             CourseID = 3,
                             CourseName = "Tiếng Anh Thương Mại",
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4539),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7036),
                             Description = "Khóa học tiếng Anh thương mại",
                             DiscountPercent = (byte)0,
                             Duration = 72,
@@ -239,14 +239,14 @@ namespace Management_Schedule_BE.Migrations
                             IsPro = true,
                             IsSelling = true,
                             Level = (byte)3,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4539),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7037),
                             Price = 3000000m
                         },
                         new
                         {
                             CourseID = 4,
                             CourseName = "IELTS Preparation",
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4542),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7039),
                             Description = "Khóa học luyện thi IELTS",
                             DiscountPercent = (byte)5,
                             Duration = 96,
@@ -255,14 +255,14 @@ namespace Management_Schedule_BE.Migrations
                             IsPro = true,
                             IsSelling = true,
                             Level = (byte)4,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4542),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7040),
                             Price = 5000000m
                         },
                         new
                         {
                             CourseID = 5,
                             CourseName = "TOEIC Master",
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4545),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7042),
                             Description = "Khóa học luyện thi TOEIC",
                             DiscountPercent = (byte)0,
                             Duration = 84,
@@ -271,7 +271,7 @@ namespace Management_Schedule_BE.Migrations
                             IsPro = true,
                             IsSelling = true,
                             Level = (byte)3,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4545),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7043),
                             Price = 4000000m
                         });
                 });
@@ -338,12 +338,12 @@ namespace Management_Schedule_BE.Migrations
                             LessonID = 1,
                             ContentUrl = "lesson1.mp4",
                             CourseID = 1,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4678),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7216),
                             Description = "Giới thiệu về khóa học",
                             Duration = 45,
                             IsPublished = true,
                             LessonName = "Bài 1: Giới thiệu",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4679),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7217),
                             Position = 1,
                             Type = (byte)1
                         },
@@ -352,12 +352,12 @@ namespace Management_Schedule_BE.Migrations
                             LessonID = 2,
                             ContentUrl = "lesson2.mp4",
                             CourseID = 1,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4685),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7221),
                             Description = "Cách chào hỏi trong tiếng Anh",
                             Duration = 45,
                             IsPublished = true,
                             LessonName = "Bài 2: Chào hỏi",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4685),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7221),
                             Position = 2,
                             Type = (byte)1
                         },
@@ -366,12 +366,12 @@ namespace Management_Schedule_BE.Migrations
                             LessonID = 3,
                             ContentUrl = "lesson3.mp4",
                             CourseID = 1,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4688),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7224),
                             Description = "Học về số đếm trong tiếng Anh",
                             Duration = 45,
                             IsPublished = true,
                             LessonName = "Bài 3: Số đếm",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4688),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7224),
                             Position = 3,
                             Type = (byte)1
                         },
@@ -380,12 +380,12 @@ namespace Management_Schedule_BE.Migrations
                             LessonID = 4,
                             ContentUrl = "lesson4.mp4",
                             CourseID = 1,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4690),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7226),
                             Description = "Bài tập thực hành",
                             Duration = 45,
                             IsPublished = true,
                             LessonName = "Bài 4: Thực hành",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4691),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7227),
                             Position = 4,
                             Type = (byte)2
                         },
@@ -394,12 +394,12 @@ namespace Management_Schedule_BE.Migrations
                             LessonID = 5,
                             ContentUrl = "lesson5.mp4",
                             CourseID = 1,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4693),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7229),
                             Description = "Bài kiểm tra kiến thức",
                             Duration = 45,
                             IsPublished = true,
                             LessonName = "Bài 5: Kiểm tra",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4693),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7229),
                             Position = 5,
                             Type = (byte)3
                         });
@@ -461,9 +461,9 @@ namespace Management_Schedule_BE.Migrations
                         {
                             ScheduleID = 1,
                             ClassID = 1,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4645),
-                            Date = new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Local),
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4646),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7152),
+                            Date = new DateTime(2025, 6, 4, 0, 0, 0, 0, DateTimeKind.Local),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7153),
                             Room = "Room 01",
                             Status = (byte)1,
                             StudySessionId = 1,
@@ -473,9 +473,9 @@ namespace Management_Schedule_BE.Migrations
                         {
                             ScheduleID = 2,
                             ClassID = 1,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4649),
-                            Date = new DateTime(2025, 6, 3, 0, 0, 0, 0, DateTimeKind.Local),
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4650),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7157),
+                            Date = new DateTime(2025, 6, 6, 0, 0, 0, 0, DateTimeKind.Local),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7157),
                             Room = "Room 01",
                             Status = (byte)1,
                             StudySessionId = 3,
@@ -485,9 +485,9 @@ namespace Management_Schedule_BE.Migrations
                         {
                             ScheduleID = 3,
                             ClassID = 2,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4652),
-                            Date = new DateTime(2025, 6, 2, 0, 0, 0, 0, DateTimeKind.Local),
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4653),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7191),
+                            Date = new DateTime(2025, 6, 5, 0, 0, 0, 0, DateTimeKind.Local),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7191),
                             Room = "Room 02",
                             Status = (byte)1,
                             StudySessionId = 2,
@@ -497,9 +497,9 @@ namespace Management_Schedule_BE.Migrations
                         {
                             ScheduleID = 4,
                             ClassID = 2,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4655),
-                            Date = new DateTime(2025, 6, 4, 0, 0, 0, 0, DateTimeKind.Local),
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4655),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7193),
+                            Date = new DateTime(2025, 6, 7, 0, 0, 0, 0, DateTimeKind.Local),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7194),
                             Room = "Room 02",
                             Status = (byte)1,
                             StudySessionId = 4,
@@ -509,9 +509,9 @@ namespace Management_Schedule_BE.Migrations
                         {
                             ScheduleID = 5,
                             ClassID = 3,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4657),
-                            Date = new DateTime(2025, 6, 5, 0, 0, 0, 0, DateTimeKind.Local),
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4658),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7196),
+                            Date = new DateTime(2025, 6, 8, 0, 0, 0, 0, DateTimeKind.Local),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7196),
                             Room = "Room 03",
                             Status = (byte)1,
                             StudySessionId = 5,
@@ -552,64 +552,64 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             StudentID = 4,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4479),
-                            EnrollmentDate = new DateTime(2024, 11, 30, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4472),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6972),
+                            EnrollmentDate = new DateTime(2024, 12, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6961),
                             Level = (byte)1,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4480),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6972),
                             Status = (byte)1
                         },
                         new
                         {
                             StudentID = 5,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4485),
-                            EnrollmentDate = new DateTime(2024, 12, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4484),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6977),
+                            EnrollmentDate = new DateTime(2025, 1, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6975),
                             Level = (byte)2,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4486),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6977),
                             Status = (byte)1
                         },
                         new
                         {
                             StudentID = 6,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4488),
-                            EnrollmentDate = new DateTime(2025, 1, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4487),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6980),
+                            EnrollmentDate = new DateTime(2025, 2, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6979),
                             Level = (byte)1,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4489),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6980),
                             Status = (byte)1
                         },
                         new
                         {
                             StudentID = 7,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4491),
-                            EnrollmentDate = new DateTime(2025, 2, 28, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4490),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6982),
+                            EnrollmentDate = new DateTime(2025, 3, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6982),
                             Level = (byte)3,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4492),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6983),
                             Status = (byte)1
                         },
                         new
                         {
                             StudentID = 8,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4494),
-                            EnrollmentDate = new DateTime(2025, 3, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4493),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6985),
+                            EnrollmentDate = new DateTime(2025, 4, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6984),
                             Level = (byte)2,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4494),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6986),
                             Status = (byte)1
                         },
                         new
                         {
                             StudentID = 9,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4498),
-                            EnrollmentDate = new DateTime(2025, 4, 30, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4497),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6989),
+                            EnrollmentDate = new DateTime(2025, 5, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6988),
                             Level = (byte)1,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4498),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6989),
                             Status = (byte)1
                         },
                         new
                         {
                             StudentID = 10,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4500),
-                            EnrollmentDate = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4500),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6991),
+                            EnrollmentDate = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6991),
                             Level = (byte)2,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4501),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6992),
                             Status = (byte)1
                         });
                 });
@@ -663,9 +663,9 @@ namespace Management_Schedule_BE.Migrations
                         {
                             EnrollmentID = 1,
                             ClassID = 1,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4755),
-                            EnrollmentDate = new DateTime(2025, 2, 28, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4753),
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4756),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7257),
+                            EnrollmentDate = new DateTime(2025, 3, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7255),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7258),
                             Status = (byte)1,
                             StudentID = 4,
                             TotalTuitionDue = 2000000m,
@@ -675,9 +675,9 @@ namespace Management_Schedule_BE.Migrations
                         {
                             EnrollmentID = 2,
                             ClassID = 1,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4760),
-                            EnrollmentDate = new DateTime(2025, 2, 28, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4759),
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4761),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7263),
+                            EnrollmentDate = new DateTime(2025, 3, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7261),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7263),
                             Status = (byte)1,
                             StudentID = 5,
                             TotalTuitionDue = 2000000m,
@@ -687,9 +687,9 @@ namespace Management_Schedule_BE.Migrations
                         {
                             EnrollmentID = 3,
                             ClassID = 2,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4764),
-                            EnrollmentDate = new DateTime(2025, 3, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4763),
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4764),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7266),
+                            EnrollmentDate = new DateTime(2025, 4, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7265),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7267),
                             Status = (byte)1,
                             StudentID = 6,
                             TotalTuitionDue = 2000000m,
@@ -699,9 +699,9 @@ namespace Management_Schedule_BE.Migrations
                         {
                             EnrollmentID = 4,
                             ClassID = 2,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4768),
-                            EnrollmentDate = new DateTime(2025, 3, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4767),
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4768),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7270),
+                            EnrollmentDate = new DateTime(2025, 4, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7269),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7270),
                             Status = (byte)1,
                             StudentID = 7,
                             TotalTuitionDue = 2000000m,
@@ -711,9 +711,9 @@ namespace Management_Schedule_BE.Migrations
                         {
                             EnrollmentID = 5,
                             ClassID = 3,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4771),
-                            EnrollmentDate = new DateTime(2025, 4, 30, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4770),
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4772),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7273),
+                            EnrollmentDate = new DateTime(2025, 5, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7272),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7274),
                             Status = (byte)1,
                             StudentID = 8,
                             TotalTuitionDue = 2500000m,
@@ -774,10 +774,10 @@ namespace Management_Schedule_BE.Migrations
                         {
                             PaymentID = 1,
                             AmountPaid = 1000000m,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4937),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7394),
                             EnrollmentID = 1,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4938),
-                            PaymentDate = new DateTime(2025, 3, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4936),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7395),
+                            PaymentDate = new DateTime(2025, 4, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7392),
                             PaymentMethod = (byte)1,
                             Status = (byte)2,
                             TuitionID = 1
@@ -786,10 +786,10 @@ namespace Management_Schedule_BE.Migrations
                         {
                             PaymentID = 2,
                             AmountPaid = 1000000m,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4943),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7400),
                             EnrollmentID = 2,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4943),
-                            PaymentDate = new DateTime(2025, 3, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4942),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7401),
+                            PaymentDate = new DateTime(2025, 4, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7399),
                             PaymentMethod = (byte)2,
                             Status = (byte)2,
                             TuitionID = 1
@@ -798,10 +798,10 @@ namespace Management_Schedule_BE.Migrations
                         {
                             PaymentID = 3,
                             AmountPaid = 1000000m,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4946),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7404),
                             EnrollmentID = 2,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4947),
-                            PaymentDate = new DateTime(2025, 4, 30, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4945),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7404),
+                            PaymentDate = new DateTime(2025, 5, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7403),
                             PaymentMethod = (byte)2,
                             Status = (byte)2,
                             TuitionID = 2
@@ -810,10 +810,10 @@ namespace Management_Schedule_BE.Migrations
                         {
                             PaymentID = 4,
                             AmountPaid = 1000000m,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4949),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7407),
                             EnrollmentID = 3,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4950),
-                            PaymentDate = new DateTime(2025, 4, 30, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4949),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7407),
+                            PaymentDate = new DateTime(2025, 5, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7406),
                             PaymentMethod = (byte)1,
                             Status = (byte)2,
                             TuitionID = 1
@@ -822,10 +822,10 @@ namespace Management_Schedule_BE.Migrations
                         {
                             PaymentID = 5,
                             AmountPaid = 1000000m,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4952),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7410),
                             EnrollmentID = 4,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4953),
-                            PaymentDate = new DateTime(2025, 4, 30, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4952),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7410),
+                            PaymentDate = new DateTime(2025, 5, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7409),
                             PaymentMethod = (byte)3,
                             Status = (byte)2,
                             TuitionID = 1
@@ -876,51 +876,51 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             StudySessionId = 1,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4605),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7110),
                             Description = "Ca học sáng",
                             DisplayName = "Ca 1",
                             EndTime = "09:00",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4605),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7111),
                             StartTime = "07:30"
                         },
                         new
                         {
                             StudySessionId = 2,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4608),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7114),
                             Description = "Ca học sáng",
                             DisplayName = "Ca 2",
                             EndTime = "10:45",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4609),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7115),
                             StartTime = "09:15"
                         },
                         new
                         {
                             StudySessionId = 3,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4611),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7116),
                             Description = "Ca học chiều",
                             DisplayName = "Ca 3",
                             EndTime = "15:00",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4611),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7117),
                             StartTime = "13:30"
                         },
                         new
                         {
                             StudySessionId = 4,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4613),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7119),
                             Description = "Ca học chiều",
                             DisplayName = "Ca 4",
                             EndTime = "16:45",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4614),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7119),
                             StartTime = "15:15"
                         },
                         new
                         {
                             StudySessionId = 5,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4615),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7121),
                             Description = "Ca học tối",
                             DisplayName = "Ca 5",
                             EndTime = "19:30",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4616),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7121),
                             StartTime = "18:00"
                         });
                 });
@@ -968,17 +968,17 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             TeacherID = 2,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4438),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6926),
                             FacebookUrl = "facebook.com/teacher1",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4438),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6927),
                             ProfileImageUrl = "teacher1.jpg"
                         },
                         new
                         {
                             TeacherID = 3,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4442),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6930),
                             FacebookUrl = "facebook.com/teacher2",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4442),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6931),
                             ProfileImageUrl = "teacher2.jpg"
                         });
                 });
@@ -1029,10 +1029,10 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             TuitionID = 1,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4791),
-                            DueDate = new DateTime(2025, 6, 30, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4790),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7294),
+                            DueDate = new DateTime(2025, 7, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7293),
                             Fee = 1000000m,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4792),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7295),
                             Status = (byte)1,
                             TuitionName = "Học phí tháng 1",
                             Type = (byte)1
@@ -1040,10 +1040,10 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             TuitionID = 2,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4796),
-                            DueDate = new DateTime(2025, 7, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4795),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7299),
+                            DueDate = new DateTime(2025, 8, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7298),
                             Fee = 1000000m,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4796),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7299),
                             Status = (byte)1,
                             TuitionName = "Học phí tháng 2",
                             Type = (byte)1
@@ -1051,10 +1051,10 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             TuitionID = 3,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4799),
-                            DueDate = new DateTime(2025, 8, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4798),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7302),
+                            DueDate = new DateTime(2025, 9, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7301),
                             Fee = 1000000m,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4799),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7302),
                             Status = (byte)1,
                             TuitionName = "Học phí tháng 3",
                             Type = (byte)1
@@ -1062,10 +1062,10 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             TuitionID = 4,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4802),
-                            DueDate = new DateTime(2025, 9, 30, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4801),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7305),
+                            DueDate = new DateTime(2025, 10, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7304),
                             Fee = 1000000m,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4802),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7305),
                             Status = (byte)1,
                             TuitionName = "Học phí tháng 4",
                             Type = (byte)1
@@ -1073,10 +1073,10 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             TuitionID = 5,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4805),
-                            DueDate = new DateTime(2025, 10, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4804),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7308),
+                            DueDate = new DateTime(2025, 11, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7307),
                             Fee = 1000000m,
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4805),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(7308),
                             Status = (byte)1,
                             TuitionName = "Học phí tháng 5",
                             Type = (byte)1
@@ -1154,12 +1154,12 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             UserID = 1,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4280),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6792),
                             DateOfBirth = new DateTime(1990, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@example.com",
                             FullName = "Admin User",
                             Gender = "M",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4292),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6808),
                             PasswordHash = "hashed_password",
                             Phone = "0123456789",
                             Role = (byte)1,
@@ -1168,12 +1168,12 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             UserID = 2,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4306),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6823),
                             DateOfBirth = new DateTime(1985, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "teacher1@example.com",
                             FullName = "Nguyễn Văn A",
                             Gender = "M",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4306),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6824),
                             PasswordHash = "hashed_password",
                             Phone = "0123456781",
                             Role = (byte)2,
@@ -1182,12 +1182,12 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             UserID = 3,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4346),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6826),
                             DateOfBirth = new DateTime(1988, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "teacher2@example.com",
                             FullName = "Trần Thị B",
                             Gender = "F",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4347),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6827),
                             PasswordHash = "hashed_password",
                             Phone = "0123456782",
                             Role = (byte)2,
@@ -1196,12 +1196,12 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             UserID = 4,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4349),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6829),
                             DateOfBirth = new DateTime(2000, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "student1@example.com",
                             FullName = "Lê Văn C",
                             Gender = "M",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4350),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6829),
                             PasswordHash = "hashed_password",
                             Phone = "0123456783",
                             Role = (byte)3,
@@ -1210,12 +1210,12 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             UserID = 5,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4352),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6831),
                             DateOfBirth = new DateTime(2001, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "student2@example.com",
                             FullName = "Phạm Thị D",
                             Gender = "F",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4352),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6832),
                             PasswordHash = "hashed_password",
                             Phone = "0123456784",
                             Role = (byte)3,
@@ -1224,12 +1224,12 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             UserID = 6,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4358),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6839),
                             DateOfBirth = new DateTime(2002, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "student3@example.com",
                             FullName = "Hoàng Văn E",
                             Gender = "M",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4358),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6840),
                             PasswordHash = "hashed_password",
                             Phone = "0123456785",
                             Role = (byte)3,
@@ -1238,12 +1238,12 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             UserID = 7,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4360),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6841),
                             DateOfBirth = new DateTime(2000, 12, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "student4@example.com",
                             FullName = "Đỗ Thị F",
                             Gender = "F",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4360),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6842),
                             PasswordHash = "hashed_password",
                             Phone = "0123456786",
                             Role = (byte)3,
@@ -1252,12 +1252,12 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             UserID = 8,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4362),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6843),
                             DateOfBirth = new DateTime(2001, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "student5@example.com",
                             FullName = "Vũ Văn G",
                             Gender = "M",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4362),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6844),
                             PasswordHash = "hashed_password",
                             Phone = "0123456787",
                             Role = (byte)3,
@@ -1266,12 +1266,12 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             UserID = 9,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4364),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6845),
                             DateOfBirth = new DateTime(2002, 7, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "student6@example.com",
                             FullName = "Ngô Thị H",
                             Gender = "F",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4364),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6846),
                             PasswordHash = "hashed_password",
                             Phone = "0123456788",
                             Role = (byte)3,
@@ -1280,12 +1280,12 @@ namespace Management_Schedule_BE.Migrations
                         new
                         {
                             UserID = 10,
-                            CreatedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4367),
+                            CreatedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6849),
                             DateOfBirth = new DateTime(2000, 11, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "student7@example.com",
                             FullName = "Đặng Văn I",
                             Gender = "M",
-                            ModifiedAt = new DateTime(2025, 5, 31, 21, 38, 42, 500, DateTimeKind.Local).AddTicks(4367),
+                            ModifiedAt = new DateTime(2025, 6, 3, 16, 6, 13, 697, DateTimeKind.Local).AddTicks(6850),
                             PasswordHash = "hashed_password",
                             Phone = "0123456790",
                             Role = (byte)3,
