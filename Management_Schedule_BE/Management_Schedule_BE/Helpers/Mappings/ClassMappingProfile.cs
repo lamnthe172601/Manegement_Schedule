@@ -1,5 +1,5 @@
 using AutoMapper;
-using Management_Schedule_BE.DTOs;
+using Management_Schedule_BE.DTOs.ClassDTOs;
 using Management_Schedule_BE.Models;
 
 namespace Management_Schedule_BE.Helpers.Mappings

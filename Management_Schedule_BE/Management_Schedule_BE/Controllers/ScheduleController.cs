@@ -19,7 +19,7 @@ namespace Management_Schedule_BE.Controllers
 
         [HttpGet]
         [EnableQuery]
-        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetAllSchedules()
+        public async Task<ActionResult<IEnumerable<DetailedScheduleDTO>>> GetAllSchedules()
         {
             try
             {
@@ -177,6 +177,58 @@ namespace Management_Schedule_BE.Controllers
             }
             catch (Exception ex)
             {
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
+
+        [HttpGet("student/{studentId}")]
+        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedulesByStudentId(int studentId)
+        {
+            try
+            {
+                var schedules = await _scheduleService.GetSchedulesByStudentIdAsync(studentId);
+                return Ok(schedules);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("Không tìm thấy học sinh"))
+                    return NotFound(new { message = ex.Message });
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
+
+        [HttpGet("student/{studentId}/range")]
+        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedulesByStudentIdAndRange(
+            int studentId,
+            [FromQuery] DateTime? from,
+            [FromQuery] DateTime? to)
+        {
+            try
+            {
+                var schedules = await _scheduleService.GetSchedulesByStudentIdAndRangeAsync(studentId, from, to);
+                return Ok(schedules);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("Không tìm thấy học sinh"))
+                    return NotFound(new { message = ex.Message });
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
+
+        [HttpGet("student/{studentId}/statusSchedule/{status}")]
+        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedulesByStudentIdAndStatus(
+            int studentId, byte status)
+        {
+            try
+            {
+                var schedules = await _scheduleService.GetSchedulesByStudentIdAndStatusAsync(studentId, status);
+                return Ok(schedules);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("Không tìm thấy học sinh"))
+                    return NotFound(new { message = ex.Message });
                 return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
             }
         }

@@ -18,10 +18,35 @@ namespace Management_Schedule_BE.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ScheduleDTO>> GetAllSchedulesAsync()
+        public async Task<IEnumerable<DetailedScheduleDTO>> GetAllSchedulesAsync()
         {
-            var schedules = await _context.Schedules.ToListAsync();
-            return _mapper.Map<IEnumerable<ScheduleDTO>>(schedules);
+            var schedules = await _context.Schedules
+                .Include(s => s.StudySession)
+                .Include(s => s.Class)
+                    .ThenInclude(c => c.Course)
+                .Include(s => s.Teacher)
+                    .ThenInclude(t => t.User)
+                .ToListAsync();
+
+            return schedules.Select(s => new DetailedScheduleDTO(
+                s.ScheduleID,
+                s.ClassID,
+                s.TeacherID,
+                s.StudySessionId,
+                s.Room,
+                s.Status,
+                s.Notes,
+                s.CreatedAt,
+                s.ModifiedAt,
+                s.Date,
+                s.Teacher.User.FullName,
+                s.Teacher.User.AvatarUrl ?? "",
+                s.StudySession.DisplayName,
+                s.StudySession.StartTime,
+                s.StudySession.EndTime,
+                s.Class.ClassName,
+                s.Class.Course.CourseName
+            ));
         }
 
         public async Task<ScheduleDTO?> GetScheduleByIdAsync(int id)
@@ -141,7 +166,7 @@ namespace Management_Schedule_BE.Services
             return true;
         }
 
-        public async Task<IEnumerable<ScheduleDTO>> GetSchedulesByTeacherIdAsync(int teacherId)
+        public async Task<IEnumerable<TeacherScheduleViewDTO>> GetSchedulesByTeacherIdAsync(int teacherId)
         {
             var teacher = await _context.Teachers.FindAsync(teacherId);
             if (teacher == null)
@@ -150,15 +175,25 @@ namespace Management_Schedule_BE.Services
             var schedules = await _context.Schedules
                 .Include(s => s.StudySession)
                 .Include(s => s.Class)
+                    .ThenInclude(c => c.Course)
                 .Where(s => s.TeacherID == teacherId)
                 .OrderBy(s => s.Date)
                 .ThenBy(s => s.StudySession.StartTime)
+                .Select(s => new TeacherScheduleViewDTO
+                {
+                    ClassName = s.Class.ClassName,
+                    CourseName = s.Class.Course.CourseName,
+                    StudySessionName = s.StudySession.DisplayName,
+                    StartTime = s.StudySession.StartTime,
+                    EndTime = s.StudySession.EndTime,
+                    Room = s.Room
+                })
                 .ToListAsync();
 
-            return _mapper.Map<IEnumerable<ScheduleDTO>>(schedules);
+            return schedules;
         }
 
-        public async Task<IEnumerable<ScheduleDTO>> GetSchedulesByTeacherIdAndRangeAsync(int teacherId, DateTime? from, DateTime? to)
+        public async Task<IEnumerable<TeacherScheduleViewDTO>> GetSchedulesByTeacherIdAndRangeAsync(int teacherId, DateTime? from, DateTime? to)
         {
             var teacher = await _context.Teachers.FindAsync(teacherId);
             if (teacher == null)
@@ -166,16 +201,29 @@ namespace Management_Schedule_BE.Services
             var query = _context.Schedules
                 .Include(s => s.StudySession)
                 .Include(s => s.Class)
+                    .ThenInclude(c => c.Course)
                 .Where(s => s.TeacherID == teacherId);
             if (from.HasValue)
                 query = query.Where(s => s.Date >= from.Value);
             if (to.HasValue)
                 query = query.Where(s => s.Date <= to.Value);
-            var schedules = await query.OrderBy(s => s.Date).ThenBy(s => s.StudySession.StartTime).ToListAsync();
-            return _mapper.Map<IEnumerable<ScheduleDTO>>(schedules);
+            var schedules = await query
+                .OrderBy(s => s.Date)
+                .ThenBy(s => s.StudySession.StartTime)
+                .Select(s => new TeacherScheduleViewDTO
+                {
+                    ClassName = s.Class.ClassName,
+                    CourseName = s.Class.Course.CourseName,
+                    StudySessionName = s.StudySession.DisplayName,
+                    StartTime = s.StudySession.StartTime,
+                    EndTime = s.StudySession.EndTime,
+                    Room = s.Room
+                })
+                .ToListAsync();
+            return schedules;
         }
 
-        public async Task<IEnumerable<ScheduleDTO>> GetSchedulesByTeacherIdAndStatusAsync(int teacherId, byte status)
+        public async Task<IEnumerable<TeacherScheduleViewDTO>> GetSchedulesByTeacherIdAndStatusAsync(int teacherId, byte status)
         {
             var teacher = await _context.Teachers.FindAsync(teacherId);
             if (teacher == null)
@@ -183,10 +231,21 @@ namespace Management_Schedule_BE.Services
             var schedules = await _context.Schedules
                 .Include(s => s.StudySession)
                 .Include(s => s.Class)
+                    .ThenInclude(c => c.Course)
                 .Where(s => s.TeacherID == teacherId && s.Status == status)
-                .OrderBy(s => s.Date).ThenBy(s => s.StudySession.StartTime)
+                .OrderBy(s => s.Date)
+                .ThenBy(s => s.StudySession.StartTime)
+                .Select(s => new TeacherScheduleViewDTO
+                {
+                    ClassName = s.Class.ClassName,
+                    CourseName = s.Class.Course.CourseName,
+                    StudySessionName = s.StudySession.DisplayName,
+                    StartTime = s.StudySession.StartTime,
+                    EndTime = s.StudySession.EndTime,
+                    Room = s.Room
+                })
                 .ToListAsync();
-            return _mapper.Map<IEnumerable<ScheduleDTO>>(schedules);
+            return schedules;
         }
 
         public async Task<IEnumerable<ScheduleDTO>> GetSchedulesByDateAsync(DateTime date)
@@ -198,6 +257,118 @@ namespace Management_Schedule_BE.Services
                 .OrderBy(s => s.StudySession.StartTime)
                 .ToListAsync();
             return _mapper.Map<IEnumerable<ScheduleDTO>>(schedules);
+        }
+
+        public async Task<IEnumerable<StudentScheduleViewDTO>> GetSchedulesByStudentIdAsync(int studentId)
+        {
+            var student = await _context.Students.FindAsync(studentId);
+            if (student == null)
+                throw new Exception("Không tìm thấy học sinh");
+
+            var classIds = await _context.StudentClassEnrollments
+                .Where(e => e.StudentID == studentId && e.Status == 1)
+                .Select(e => e.ClassID)
+                .ToListAsync();
+
+            var schedules = await _context.Schedules
+                .Where(s => classIds.Contains(s.ClassID))
+                .Include(s => s.StudySession)
+                .Include(s => s.Class)
+                    .ThenInclude(c => c.Course)
+                .Include(s => s.Teacher)
+                    .ThenInclude(t => t.User)
+                .OrderBy(s => s.Date)
+                .ThenBy(s => s.StudySession.StartTime)
+                .Select(s => new StudentScheduleViewDTO
+                {
+                    ClassName = s.Class.ClassName,
+                    CourseName = s.Class.Course.CourseName,
+                    StudySessionName = s.StudySession.DisplayName,
+                    StartTime = s.StudySession.StartTime,
+                    EndTime = s.StudySession.EndTime,
+                    TeacherName = s.Teacher.User.FullName,
+                    Room = s.Room
+                })
+                .ToListAsync();
+
+            return schedules;
+        }
+
+        public async Task<IEnumerable<StudentScheduleViewDTO>> GetSchedulesByStudentIdAndRangeAsync(int studentId, DateTime? from, DateTime? to)
+        {
+            var student = await _context.Students.FindAsync(studentId);
+            if (student == null)
+                throw new Exception("Không tìm thấy học sinh");
+
+            var classIds = await _context.StudentClassEnrollments
+                .Where(e => e.StudentID == studentId && e.Status == 1)
+                .Select(e => e.ClassID)
+                .ToListAsync();
+
+            var query = _context.Schedules
+                .Where(s => classIds.Contains(s.ClassID));
+
+            if (from.HasValue)
+                query = query.Where(s => s.Date >= from.Value);
+            if (to.HasValue)
+                query = query.Where(s => s.Date <= to.Value);
+
+            var schedules = await query
+                .Include(s => s.StudySession)
+                .Include(s => s.Class)
+                    .ThenInclude(c => c.Course)
+                .Include(s => s.Teacher)
+                    .ThenInclude(t => t.User)
+                .OrderBy(s => s.Date)
+                .ThenBy(s => s.StudySession.StartTime)
+                .Select(s => new StudentScheduleViewDTO
+                {
+                    ClassName = s.Class.ClassName,
+                    CourseName = s.Class.Course.CourseName,
+                    StudySessionName = s.StudySession.DisplayName,
+                    StartTime = s.StudySession.StartTime,
+                    EndTime = s.StudySession.EndTime,
+                    TeacherName = s.Teacher.User.FullName,
+                    Room = s.Room
+                })
+                .ToListAsync();
+
+            return schedules;
+        }
+
+        public async Task<IEnumerable<StudentScheduleViewDTO>> GetSchedulesByStudentIdAndStatusAsync(int studentId, byte status)
+        {
+            var student = await _context.Students.FindAsync(studentId);
+            if (student == null)
+                throw new Exception("Không tìm thấy học sinh");
+
+            var classIds = await _context.StudentClassEnrollments
+                .Where(e => e.StudentID == studentId && e.Status == 1)
+                .Select(e => e.ClassID)
+                .ToListAsync();
+
+            var schedules = await _context.Schedules
+                .Where(s => classIds.Contains(s.ClassID) && s.Status == status)
+                .Include(s => s.StudySession)
+                .Include(s => s.Class)
+                    .ThenInclude(c => c.Course)
+                .Include(s => s.Teacher)
+                    .ThenInclude(t => t.User)
+                .OrderBy(s => s.Date)
+                .ThenBy(s => s.StudySession.StartTime)
+                .Select(s => new StudentScheduleViewDTO
+                {
+                    ClassName = s.Class.ClassName,
+                    CourseName = s.Class.Course.CourseName,
+                    StudySessionName = s.StudySession.DisplayName,
+                    StartTime = s.StudySession.StartTime,
+                    EndTime = s.StudySession.EndTime,
+                    TeacherName = s.Teacher.User.FullName,
+                    Room = s.Room
+                })
+                .ToListAsync();
+
+            return schedules;
         }
     }
 } 

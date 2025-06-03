@@ -1,3 +1,4 @@
+using Management_Schedule_BE.Models;
 using System;
 
 namespace Management_Schedule_BE.DTOs
@@ -13,6 +14,7 @@ namespace Management_Schedule_BE.DTOs
         DateTime CreatedAt,
         DateTime ModifiedAt,
         DateTime Date
+        
     );
 
     public record CreateScheduleDTO(

@@ -19,7 +19,7 @@ namespace Management_Schedule_BE.Controllers
 
         [HttpGet]
         [EnableQuery]
-        public async Task<ActionResult<IEnumerable<ClassDTO>>> GetAllClasses()
+        public async Task<ActionResult<IEnumerable<DetailedClassDTO>>> GetAllClasses()
         {
             try
             {

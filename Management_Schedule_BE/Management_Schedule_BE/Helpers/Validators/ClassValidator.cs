@@ -1,5 +1,5 @@
 using FluentValidation;
-using Management_Schedule_BE.DTOs;
+using Management_Schedule_BE.DTOs.ClassDTOs;
 
 namespace Management_Schedule_BE.Helpers.Validators
 {

@@ -12,8 +12,7 @@ namespace Management_Schedule_BE.DTOs
         DateTime? EndDate,
         byte Status,
         DateTime CreatedAt,
-        DateTime ModifiedAt,
-          ICollection<ScheduleDTO>? Schedules 
+        DateTime ModifiedAt
     );
 
     public record CreateClassDTO(

@@ -1,6 +1,7 @@
 using AutoMapper;
 using Management_Schedule_BE.Data;
 using Management_Schedule_BE.DTOs;
+using Management_Schedule_BE.DTOs.ClassDTOs;
 using Management_Schedule_BE.Models;
 using Management_Schedule_BE.Services;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +19,24 @@ namespace Management_Schedule_BE.Helpers.Validators
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ClassDTO>> GetAllClassesAsync()
+        public async Task<IEnumerable<DetailedClassDTO>> GetAllClassesAsync()
         {
             var classes = await _context.Classes
-                .Include(s=>s.Schedules)
+                .Include(c => c.Course)
                 .ToListAsync();
-            return _mapper.Map<IEnumerable<ClassDTO>>(classes);
+
+            return classes.Select(c => new DetailedClassDTO(
+                c.ClassID,
+                c.ClassName,
+                c.CourseID,
+                c.MaxStudents,
+                c.StartDate,
+                c.EndDate,
+                c.Status,
+                c.CreatedAt,
+                c.ModifiedAt,
+                c.Course.CourseName
+            ));
         }
 
         public async Task<ClassDTO?> GetClassByIdAsync(int id)
