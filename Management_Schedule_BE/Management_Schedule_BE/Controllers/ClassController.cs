@@ -1,4 +1,5 @@
 using Management_Schedule_BE.DTOs;
+using Management_Schedule_BE.DTOs.ClassDTOs;
 using Management_Schedule_BE.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
@@ -111,6 +112,22 @@ namespace Management_Schedule_BE.Controllers
             }
             catch (Exception ex)
             {
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
+
+        [HttpGet("student/{studentId}/enrolled")]
+        public async Task<ActionResult<IEnumerable<StudentEnrolledClassDTO>>> GetStudentEnrolledClasses(int studentId)
+        {
+            try
+            {
+                var classes = await _classService.GetStudentEnrolledClassesAsync(studentId);
+                return Ok(classes);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("Không tìm thấy học sinh"))
+                    return NotFound(new { message = ex.Message });
                 return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
             }
         }

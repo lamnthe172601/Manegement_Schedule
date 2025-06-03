@@ -116,7 +116,8 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpGet("teacher/{teacherId}")]
-        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedulesByTeacherId(int teacherId)
+        [EnableQuery]
+        public async Task<ActionResult<IEnumerable<TeacherScheduleViewDTO>>> GetSchedulesByTeacherId(int teacherId)
         {
             try
             {
@@ -132,7 +133,8 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpGet("teacher/{teacherId}/range")]
-        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedulesByTeacherIdAndRange(
+        [EnableQuery]
+        public async Task<ActionResult<IEnumerable<TeacherScheduleViewDTO>>> GetSchedulesByTeacherIdAndRange(
             int teacherId,
             [FromQuery] DateTime? from,
             [FromQuery] DateTime? to)
@@ -151,7 +153,8 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpGet("teacher/{teacherId}/statusSchedule/{status}")]
-        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedulesByTeacherIdAndStatus(
+        [EnableQuery]
+        public async Task<ActionResult<IEnumerable<TeacherScheduleViewDTO>>> GetSchedulesByTeacherIdAndStatus(
             int teacherId, byte status)
         {
             try
@@ -168,7 +171,8 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpGet("date/{date}")]
-        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedulesByDate(DateTime date)
+        [EnableQuery]
+        public async Task<ActionResult<IEnumerable<TeacherScheduleViewDTO>>> GetSchedulesByDate(DateTime date)
         {
             try
             {
@@ -182,7 +186,8 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpGet("student/{studentId}")]
-        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedulesByStudentId(int studentId)
+        [EnableQuery]
+        public async Task<ActionResult<IEnumerable<StudentScheduleViewDTO>>> GetSchedulesByStudentId(int studentId)
         {
             try
             {
@@ -198,7 +203,8 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpGet("student/{studentId}/range")]
-        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedulesByStudentIdAndRange(
+        [EnableQuery]
+        public async Task<ActionResult<IEnumerable<StudentScheduleViewDTO>>> GetSchedulesByStudentIdAndRange(
             int studentId,
             [FromQuery] DateTime? from,
             [FromQuery] DateTime? to)
@@ -217,7 +223,8 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpGet("student/{studentId}/statusSchedule/{status}")]
-        public async Task<ActionResult<IEnumerable<ScheduleDTO>>> GetSchedulesByStudentIdAndStatus(
+        [EnableQuery]
+        public async Task<ActionResult<IEnumerable<TeacherScheduleViewDTO>>> GetSchedulesByStudentIdAndStatus(
             int studentId, byte status)
         {
             try

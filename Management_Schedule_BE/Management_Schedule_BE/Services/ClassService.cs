@@ -92,5 +92,39 @@ namespace Management_Schedule_BE.Helpers.Validators
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<IEnumerable<StudentEnrolledClassDTO>> GetStudentEnrolledClassesAsync(int studentId)
+        {
+            var student = await _context.Students.FindAsync(studentId);
+            if (student == null)
+                throw new Exception("Không tìm thấy học sinh");
+
+            var enrolledClasses = await _context.StudentClassEnrollments
+                .Include(e => e.Class)
+                    .ThenInclude(c => c.Course)
+                .Where(e => e.StudentID == studentId && e.Status == 1) // Status 1 = Active
+                .Select(e => new
+                {
+                    Class = e.Class,
+                    Course = e.Class.Course,
+                    EnrolledCount = _context.StudentClassEnrollments
+                        .Count(en => en.ClassID == e.ClassID && en.Status == 1)
+                })
+                .Select(x => new StudentEnrolledClassDTO(
+                    x.Class.ClassName,
+                    x.Class.CourseID,
+                    x.Course.CourseName,
+                    x.Class.MaxStudents,
+                    x.EnrolledCount,
+                    x.Class.StartDate,
+                    x.Class.EndDate,
+                    x.Course.Duration,
+                    x.Course.Price,
+                    x.Course.Level
+                ))
+                .ToListAsync();
+
+            return enrolledClasses;
+        }
     }
 }

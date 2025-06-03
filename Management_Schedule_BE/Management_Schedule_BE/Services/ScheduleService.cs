@@ -181,12 +181,16 @@ namespace Management_Schedule_BE.Services
                 .ThenBy(s => s.StudySession.StartTime)
                 .Select(s => new TeacherScheduleViewDTO
                 {
+                    ClassID = s.ClassID,
                     ClassName = s.Class.ClassName,
+                    CourseID = s.Class.CourseID,
                     CourseName = s.Class.Course.CourseName,
+                    StudySessionId = s.StudySessionId,
                     StudySessionName = s.StudySession.DisplayName,
                     StartTime = s.StudySession.StartTime,
                     EndTime = s.StudySession.EndTime,
-                    Room = s.Room
+                    Room = s.Room,
+                    Date = s.Date
                 })
                 .ToListAsync();
 
@@ -212,12 +216,16 @@ namespace Management_Schedule_BE.Services
                 .ThenBy(s => s.StudySession.StartTime)
                 .Select(s => new TeacherScheduleViewDTO
                 {
+                    ClassID = s.ClassID,
                     ClassName = s.Class.ClassName,
+                    CourseID = s.Class.CourseID,
                     CourseName = s.Class.Course.CourseName,
+                    StudySessionId = s.StudySessionId,
                     StudySessionName = s.StudySession.DisplayName,
                     StartTime = s.StudySession.StartTime,
                     EndTime = s.StudySession.EndTime,
-                    Room = s.Room
+                    Room = s.Room,
+                    Date = s.Date
                 })
                 .ToListAsync();
             return schedules;
@@ -237,12 +245,16 @@ namespace Management_Schedule_BE.Services
                 .ThenBy(s => s.StudySession.StartTime)
                 .Select(s => new TeacherScheduleViewDTO
                 {
+                    ClassID = s.ClassID,
                     ClassName = s.Class.ClassName,
+                    CourseID = s.Class.CourseID,
                     CourseName = s.Class.Course.CourseName,
+                    StudySessionId = s.StudySessionId,
                     StudySessionName = s.StudySession.DisplayName,
                     StartTime = s.StudySession.StartTime,
                     EndTime = s.StudySession.EndTime,
-                    Room = s.Room
+                    Room = s.Room,
+                    Date = s.Date
                 })
                 .ToListAsync();
             return schedules;
@@ -281,13 +293,17 @@ namespace Management_Schedule_BE.Services
                 .ThenBy(s => s.StudySession.StartTime)
                 .Select(s => new StudentScheduleViewDTO
                 {
+                    ClassID = s.ClassID,
                     ClassName = s.Class.ClassName,
+                    CourseID = s.Class.CourseID,
                     CourseName = s.Class.Course.CourseName,
+                    StudySessionId = s.StudySessionId,
                     StudySessionName = s.StudySession.DisplayName,
                     StartTime = s.StudySession.StartTime,
                     EndTime = s.StudySession.EndTime,
                     TeacherName = s.Teacher.User.FullName,
-                    Room = s.Room
+                    Room = s.Room,
+                    Date = s.Date
                 })
                 .ToListAsync();
 
@@ -323,13 +339,17 @@ namespace Management_Schedule_BE.Services
                 .ThenBy(s => s.StudySession.StartTime)
                 .Select(s => new StudentScheduleViewDTO
                 {
+                    ClassID = s.ClassID,
                     ClassName = s.Class.ClassName,
+                    CourseID = s.Class.CourseID,
                     CourseName = s.Class.Course.CourseName,
+                    StudySessionId = s.StudySessionId,
                     StudySessionName = s.StudySession.DisplayName,
                     StartTime = s.StudySession.StartTime,
                     EndTime = s.StudySession.EndTime,
                     TeacherName = s.Teacher.User.FullName,
-                    Room = s.Room
+                    Room = s.Room,
+                    Date = s.Date
                 })
                 .ToListAsync();
 
@@ -358,13 +378,17 @@ namespace Management_Schedule_BE.Services
                 .ThenBy(s => s.StudySession.StartTime)
                 .Select(s => new StudentScheduleViewDTO
                 {
+                    ClassID = s.ClassID,
                     ClassName = s.Class.ClassName,
+                    CourseID = s.Class.CourseID,
                     CourseName = s.Class.Course.CourseName,
+                    StudySessionId = s.StudySessionId,
                     StudySessionName = s.StudySession.DisplayName,
                     StartTime = s.StudySession.StartTime,
                     EndTime = s.StudySession.EndTime,
                     TeacherName = s.Teacher.User.FullName,
-                    Room = s.Room
+                    Room = s.Room,
+                    Date = s.Date
                 })
                 .ToListAsync();
 

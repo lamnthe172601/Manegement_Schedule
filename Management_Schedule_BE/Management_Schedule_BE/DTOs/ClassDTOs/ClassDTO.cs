@@ -1,7 +1,7 @@
 using Management_Schedule_BE.Models;
 using System;
 
-namespace Management_Schedule_BE.DTOs
+namespace Management_Schedule_BE.DTOs.ClassDTOs
 {
     public record ClassDTO(
         int ClassID,
@@ -35,4 +35,4 @@ namespace Management_Schedule_BE.DTOs
     public record UpdateClassStatusDTO(
         byte Status // 1=Active, 2=Completed, 3=Cancelled
     );
-} 
+}
