@@ -66,21 +66,8 @@ namespace Management_Schedule_BE.Services
             return $"{vnp_Url}?{queryString}&vnp_SecureHash={vnp_SecureHash}";
         }
 
-        public async Task<VNPayReturnDTO> HandleVNPayReturnAsync(Dictionary<string, string> vnpayData)
+        public async Task<VNPayReturnDTO> ProcessVNPayReturnAsync(Dictionary<string, string> vnpayData)
         {
-            var vnpayConfig = _configuration.GetSection("VNPay");
-            var vnp_HashSecret = vnpayConfig["HashSecret"];
-
-            var vnp_SecureHash = vnpayData["vnp_SecureHash"];
-            vnpayData.Remove("vnp_SecureHash");
-            vnpayData.Remove("vnp_SecureHashType");
-
-            var signData = string.Join("&", vnpayData.Select(kv => $"{kv.Key}={kv.Value}"));
-            var checkSignature = HmacSHA512(vnp_HashSecret, signData);
-
-            if (checkSignature != vnp_SecureHash)
-                return new VNPayReturnDTO("97", "Invalid signature");
-
             var vnp_ResponseCode = vnpayData["vnp_ResponseCode"];
             var vnp_TxnRef = vnpayData["vnp_TxnRef"];
             var vnp_Amount = decimal.Parse(vnpayData["vnp_Amount"]) / 100;
@@ -88,10 +75,22 @@ namespace Management_Schedule_BE.Services
 
             if (vnp_ResponseCode == "00")
             {
+                // Lấy thông tin đăng ký
+                var enrollmentId = int.Parse(vnp_OrderInfo.Split('_')[1]);
+                var enrollment = await _context.StudentClassEnrollments.FindAsync(enrollmentId);
+                
+                if (enrollment == null)
+                    return new VNPayReturnDTO("01", "Không tìm thấy thông tin đăng ký");
+
+                // Kiểm tra số tiền thanh toán
+                var remainingAmount = enrollment.TotalTuitionDue - enrollment.TuitionPaid;
+                if (vnp_Amount > remainingAmount)
+                    return new VNPayReturnDTO("02", "Số tiền thanh toán vượt quá số tiền còn lại phải trả");
+
                 // Tạo bản ghi thanh toán
                 var payment = new StudentTuitionHistory
                 {
-                    EnrollmentID = int.Parse(vnp_OrderInfo.Split('_')[1]),
+                    EnrollmentID = enrollmentId,
                     AmountPaid = vnp_Amount,
                     PaymentDate = DateTime.Now,
                     PaymentMethod = 3, // Credit Card
@@ -102,14 +101,10 @@ namespace Management_Schedule_BE.Services
                 _context.StudentTuitionHistories.Add(payment);
 
                 // Cập nhật trạng thái đăng ký
-                var enrollment = await _context.StudentClassEnrollments.FindAsync(payment.EnrollmentID);
-                if (enrollment != null)
+                enrollment.TuitionPaid += vnp_Amount;
+                if (enrollment.TuitionPaid >= enrollment.TotalTuitionDue)
                 {
-                    enrollment.TuitionPaid += vnp_Amount;
-                    if (enrollment.TuitionPaid >= enrollment.TotalTuitionDue)
-                    {
-                        enrollment.Status = 1; // Active
-                    }
+                    enrollment.Status = 1; // Active
                 }
 
                 await _context.SaveChangesAsync();

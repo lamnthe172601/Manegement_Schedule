@@ -87,6 +87,24 @@ namespace Management_Schedule_BE.Helpers.Validators
             var c = await _context.Classes.FindAsync(id);
             if (c == null) return false;
 
+            // Kiểm tra trạng thái hợp lệ
+            if (status < 0 || status > 3)
+                throw new Exception("Trạng thái không hợp lệ!");
+
+            // Kiểm tra số học sinh đã đăng ký khi cập nhật trạng thái
+            if (status == 1) // Active
+            {
+                var enrolledCount = await _context.StudentClassEnrollments
+                    .CountAsync(e => e.ClassID == id && e.Status == 1);
+                
+                if (enrolledCount > c.MaxStudents)
+                    throw new Exception("Số lượng học sinh đã đăng ký vượt quá số lượng tối đa cho phép!");
+            }
+
+            // Kiểm tra trạng thái hiện tại
+            if (c.Status == 3) // Cancelled
+                throw new Exception("Không thể cập nhật trạng thái của lớp đã hủy!");
+
             c.Status = status;
             c.ModifiedAt = DateTime.Now;
             await _context.SaveChangesAsync();

@@ -23,6 +23,24 @@ namespace Management_Schedule_BE.Services
             if (@class == null)
                 return null;
 
+            // Kiểm tra xem học sinh đã đăng ký vào lớp học này chưa
+            var existingEnrollment = await _context.StudentClassEnrollments
+                .FirstOrDefaultAsync(e => e.StudentID == studentId && e.ClassID == enrollmentDto.ClassID);
+
+            if (existingEnrollment != null)
+            {
+                throw new Exception("Học sinh đã đăng ký vào lớp học này!");
+            }
+
+            // Kiểm tra số lượng học sinh trong lớp
+            var currentEnrolledCount = await _context.StudentClassEnrollments
+                .CountAsync(e => e.ClassID == enrollmentDto.ClassID && e.Status == 1); // Status 1 = Active
+
+            if (currentEnrolledCount >= @class.MaxStudents)
+            {
+                throw new Exception("Lớp học đã đủ số lượng học sinh!");
+            }
+
             var enrollment = new StudentClassEnrollment
             {
                 StudentID = studentId,
@@ -111,6 +129,21 @@ namespace Management_Schedule_BE.Services
             var enrollment = await _context.StudentClassEnrollments.FindAsync(enrollmentId);
             if (enrollment == null)
                 return false;
+
+            // Kiểm tra trạng thái hợp lệ
+            if (status < 0 || status > 3)
+                throw new Exception("Trạng thái không hợp lệ!");
+
+            // Kiểm tra số tiền đã thanh toán khi cập nhật trạng thái thành Active
+            if (status == 1) // Active
+            {
+                if (enrollment.TuitionPaid < enrollment.TotalTuitionDue)
+                    throw new Exception("Không thể kích hoạt đăng ký khi chưa thanh toán đủ học phí!");
+            }
+
+            // Kiểm tra trạng thái hiện tại
+            if (enrollment.Status == 3) // Cancelled
+                throw new Exception("Không thể cập nhật trạng thái của đăng ký đã hủy!");
 
             enrollment.Status = status;
             enrollment.ModifiedAt = DateTime.Now;

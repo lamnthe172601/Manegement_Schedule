@@ -50,7 +50,7 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ScheduleDTO>> CreateSchedule(CreateScheduleDTO dto)
+        public async Task<ActionResult> CreateSchedule(CreateScheduleDTO dto)
         {
             try
             {

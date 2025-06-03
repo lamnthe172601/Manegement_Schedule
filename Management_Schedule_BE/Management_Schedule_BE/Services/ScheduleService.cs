@@ -57,44 +57,51 @@ namespace Management_Schedule_BE.Services
 
         public async Task<ScheduleDTO> CreateScheduleAsync(CreateScheduleDTO dto)
         {
-            // Kiểm tra phòng học hợp lệ
-            if (!ValidRooms.Contains(dto.Room))
-                throw new Exception("Phòng học không hợp lệ. Chỉ được sử dụng Room 01, Room 02 hoặc Room 03");
+            // Kiểm tra xem có lịch trùng không
+            var existingSchedule = await _context.Schedules
+                .FirstOrDefaultAsync(s => 
+                    s.Date == dto.Date && 
+                    s.StudySessionId == dto.StudySessionId && 
+                    (s.ClassID == dto.ClassID || s.TeacherID == dto.TeacherID || s.Room == dto.Room));
 
-            // Kiểm tra trùng lịch giáo viên
-            bool teacherConflict = await _context.Schedules.AnyAsync(s => 
-                s.TeacherID == dto.TeacherID && 
-                s.Date == dto.Date && 
-                s.StudySessionId == dto.StudySessionId && 
-                s.Status != 3);
+            if (existingSchedule != null)
+            {
+                if (existingSchedule.ClassID == dto.ClassID)
+                    throw new Exception("Lớp học này đã có lịch học trong ca học này!");
+                if (existingSchedule.TeacherID == dto.TeacherID)
+                    throw new Exception("Giáo viên này đã có lịch dạy trong ca học này!");
+                if (existingSchedule.Room == dto.Room)
+                    throw new Exception("Phòng học này đã được sử dụng trong ca học này!");
+            }
 
-            if (teacherConflict)
-                throw new Exception("Giáo viên đã có lịch dạy trong khung giờ này!");
+            var schedule = new Schedule
+            {
+                ClassID = dto.ClassID,
+                TeacherID = dto.TeacherID,
+                StudySessionId = dto.StudySessionId,
+                Date = dto.Date,
+                Room = dto.Room,
+                Status = 1, // Active
+                CreatedAt = DateTime.Now,
+                ModifiedAt = DateTime.Now
+            };
 
-            // Kiểm tra trùng phòng học
-            bool roomConflict = await _context.Schedules.AnyAsync(s => 
-                s.Room == dto.Room && 
-                s.Date == dto.Date && 
-                s.StudySessionId == dto.StudySessionId && 
-                s.Status != 3);
-
-            if (roomConflict)
-                throw new Exception("Phòng học đã được sử dụng trong khung giờ này!");
-
-            // Kiểm tra trùng lịch lớp học
-            bool classConflict = await _context.Schedules.AnyAsync(s => 
-                s.ClassID == dto.ClassID && 
-                s.Date == dto.Date && 
-                s.StudySessionId == dto.StudySessionId && 
-                s.Status != 3);
-
-            if (classConflict)
-                throw new Exception("Lớp học đã có lịch học trong khung giờ này!");
-
-            var schedule = _mapper.Map<Schedule>(dto);
             _context.Schedules.Add(schedule);
             await _context.SaveChangesAsync();
-            return _mapper.Map<ScheduleDTO>(schedule);
+
+            return new ScheduleDTO(
+                schedule.ScheduleID,
+                schedule.ClassID,
+                schedule.TeacherID,
+                schedule.StudySessionId,                
+                schedule.Room,
+                schedule.Status,
+                schedule.Notes,
+                schedule.CreatedAt,
+                schedule.ModifiedAt,
+                schedule.Date
+
+            );
         }
 
         public async Task<ScheduleDTO?> UpdateScheduleAsync(int id, UpdateScheduleDTO dto)
@@ -106,43 +113,51 @@ namespace Management_Schedule_BE.Services
             if (!ValidRooms.Contains(dto.Room))
                 throw new Exception("Phòng học không hợp lệ. Chỉ được sử dụng Room 01, Room 02 hoặc Room 03");
 
-            // Kiểm tra trùng lịch giáo viên
-            bool teacherConflict = await _context.Schedules.AnyAsync(s => 
-                s.TeacherID == dto.TeacherID && 
-                s.Date == dto.Date && 
-                s.StudySessionId == dto.StudySessionId && 
-                s.Status != 3 &&
-                s.ScheduleID != id);
+            // Kiểm tra trùng lịch
+            var existingSchedule = await _context.Schedules
+                .FirstOrDefaultAsync(s => 
+                    s.ScheduleID != id && // Loại trừ lịch hiện tại
+                    s.Date == dto.Date && 
+                    s.StudySessionId == dto.StudySessionId && 
+                    (s.ClassID == dto.ClassID || s.TeacherID == dto.TeacherID || s.Room == dto.Room));
 
-            if (teacherConflict)
-                throw new Exception("Giáo viên đã có lịch dạy trong khung giờ này!");
+            if (existingSchedule != null)
+            {
+                if (existingSchedule.ClassID == dto.ClassID)
+                    throw new Exception("Lớp học này đã có lịch học trong ca học này!");
+                if (existingSchedule.TeacherID == dto.TeacherID)
+                    throw new Exception("Giáo viên này đã có lịch dạy trong ca học này!");
+                if (existingSchedule.Room == dto.Room)
+                    throw new Exception("Phòng học này đã được sử dụng trong ca học này!");
+            }
 
-            // Kiểm tra trùng phòng học
-            bool roomConflict = await _context.Schedules.AnyAsync(s => 
-                s.Room == dto.Room && 
-                s.Date == dto.Date && 
-                s.StudySessionId == dto.StudySessionId && 
-                s.Status != 3 &&
-                s.ScheduleID != id);
+            // Kiểm tra trạng thái
+            if (schedule.Status == 3) // 3 = Cancelled
+                throw new Exception("Không thể cập nhật lịch đã hủy!");
 
-            if (roomConflict)
-                throw new Exception("Phòng học đã được sử dụng trong khung giờ này!");
-
-            // Kiểm tra trùng lịch lớp học
-            bool classConflict = await _context.Schedules.AnyAsync(s => 
-                s.ClassID == schedule.ClassID && 
-                s.Date == dto.Date && 
-                s.StudySessionId == dto.StudySessionId && 
-                s.Status != 3 &&
-                s.ScheduleID != id);
-
-            if (classConflict)
-                throw new Exception("Lớp học đã có lịch học trong khung giờ này!");
-
-            _mapper.Map(dto, schedule);
+            // Cập nhật thông tin
+            schedule.ClassID = dto.ClassID;
+            schedule.TeacherID = dto.TeacherID;
+            schedule.StudySessionId = dto.StudySessionId;
+            schedule.Date = dto.Date;
+            schedule.Room = dto.Room;
+            schedule.Status = dto.Status;
             schedule.ModifiedAt = DateTime.Now;
+
             await _context.SaveChangesAsync();
-            return _mapper.Map<ScheduleDTO>(schedule);
+
+            return new ScheduleDTO(
+                schedule.ScheduleID,
+                schedule.ClassID,
+                schedule.TeacherID,
+                schedule.StudySessionId,
+                schedule.Room,
+                schedule.Status,
+                schedule.Notes,
+                schedule.CreatedAt,
+                schedule.ModifiedAt,
+                schedule.Date
+            );
         }
 
         public async Task<bool> DeleteScheduleAsync(int id)

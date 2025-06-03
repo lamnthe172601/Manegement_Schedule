@@ -43,7 +43,7 @@ namespace Management_Schedule_BE.Controllers
             try
             {
                 var vnpayData = Request.Query.ToDictionary(x => x.Key, x => x.Value.ToString());
-                var result = await _paymentService.HandleVNPayReturnAsync(vnpayData);
+                var result = await _paymentService.ProcessVNPayReturnAsync(vnpayData);
                 return Ok(result);
             }
             catch (Exception ex)
