@@ -82,7 +82,7 @@ const SORT_ICONS = {
 const UserPage = () => {
   const { data, error, isLoading } = useGetUsers()
   console.log(data)
-  const { editUser, loading } = useEditUser()
+  const { editUser } = useEditUser()
   const { deleteUser, loading: deleting } = useDeleteUser()
   const [page, setPage] = React.useState(1)
   const [search, setSearch] = React.useState("")
@@ -288,13 +288,9 @@ const UserPage = () => {
                         {new Date(user.createdAt).toLocaleDateString("vi-VN")}
                       </TableCell>
                       <TableCell>
-                        {user.status ? (
-                          <Badge variant="default" className="bg-green-600">
-                            Hoạt động
-                          </Badge>
-                        ) : (
-                          <Badge variant="destructive">Ngưng hoạt động</Badge>
-                        )}
+                        <Badge className={
+                          user.status == 1 ? "bg-green-600" : user.status == 2 ? "bg-red-600" : "bg-gray-600"
+                        }>{Constants.statusMap[user.status]}</Badge>
                       </TableCell>
                       <TableCell>{user.phone}</TableCell>
                       <TableCell>

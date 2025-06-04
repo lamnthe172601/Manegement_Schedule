@@ -60,8 +60,15 @@ const data = {
       role: ["Admin", "staff", "member"],
     },
     {
+      name: "Classes",
+      url: "/admin/classes",
+      icon: BookOpen,
+      title: "Quản Lý Lớp Học",
+      role: ["Admin", "staff"],
+    },
+    {
       name: "Teaching Schedule",
-      url: "/Admin/teaching-schedule",
+      url: "/admin/teaching-schedule",
       icon: CalendarCheck2,
       title: "Quản lý lịch giảng dạy",
       role: ["Admin", "staff", "member"],

@@ -6,7 +6,6 @@ import React from "react"
 import { User } from "@/hooks/api/user/use-get-users"
 import { Textarea } from "@/components/ui/textarea"
 import { format } from "date-fns"
-import axios from "axios"
 
 type Props = {
     open: boolean
@@ -42,20 +41,7 @@ const UserEditDialog: React.FC<Props> = ({ open, onOpenChange, user, onSave }) =
 
     const handleSave = () => {
         if (!formData.userID) return
-        const formPayload = new FormData()
-        Object.entries(formData).forEach(([key, value]) => {
-            formPayload.append(key, value as any)
-        })
-        axios.put(`/api/user/${formData.userID}`, formPayload, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-        })
-            .then(response => {
-                console.log("User updated successfully:", response.data)
-                onSave(formData)
-            })
-            .catch(error => {
-                console.error("Error updating user:", error)
-            })
+        onSave(formData)
     }
 
     return (
@@ -101,25 +87,37 @@ const UserEditDialog: React.FC<Props> = ({ open, onOpenChange, user, onSave }) =
                         <Textarea value={formData.introduction || ""} onChange={(e) => handleChange("introduction", e.target.value)} />
                     </div>
                     <div className="col-span-2">
-                        <Label>Avatar URL</Label>
-                        <Input value={formData.avatarUrl || ""} onChange={(e) => handleChange("avatarUrl", e.target.value)} />
+                        <Label>Avatar</Label>
+                        <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                                const file = e.target.files?.[0]
+                                if (file) {
+                                    handleChange("avatarUrl", file)
+                                }
+                            }}
+                        />
                     </div>
+
                     <div>
                         <Label>Trạng thái</Label>
                         <select
                             className="w-full border rounded px-3 py-2"
-                            value={formData.status?.toString() || "0"}
+                            value={formData.status?.toString() || "1"}
                             onChange={(e) => handleChange("status", Number(e.target.value))}
                         >
-                            <option value={0}>Khóa</option>
                             <option value={1}>Hoạt động</option>
+                            <option value={2}>Không hoạt động</option>
+                            <option value={3}>Khóa</option>
+
                         </select>
                     </div>
                     <div>
                         <Label>Role</Label>
                         <select
                             className="w-full border rounded px-3 py-2"
-                            value={formData.role?.toString() || "0"}
+                            value={formData.role?.toString() || "3"}
                             onChange={(e) => handleChange("role", Number(e.target.value))}
                         >
                             <option value={2}>Teacher</option>
