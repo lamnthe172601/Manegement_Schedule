@@ -185,12 +185,14 @@ namespace Management_Schedule_BE.Services
             return true;
         }
 
-        public async Task<bool> UpdateScheduleStatusAsync(int id, byte status)
+        public async Task<bool> UpdateScheduleStatusAsync(int id, byte status, string? notes = null)
         {
             var schedule = await _context.Schedules.FindAsync(id);
             if (schedule == null) return false;
 
             schedule.Status = status;
+            if (notes != null)
+                schedule.Notes = notes;
             schedule.ModifiedAt = DateTime.Now;
             await _context.SaveChangesAsync();
             return true;
@@ -550,6 +552,9 @@ namespace Management_Schedule_BE.Services
             var schedule = await _context.Schedules.FindAsync(scheduleId);
             if (schedule == null)
                 throw new Exception("Không tìm thấy lịch học!");
+            var teacher = await _context.Teachers.FindAsync(teacherId);
+            if (teacher == null)
+                throw new Exception("Không tìm thấy giáo viên!");
             // Kiểm tra trùng lịch giáo viên
             bool conflict = await _context.Schedules.AnyAsync(s =>
                 s.TeacherID == teacherId &&

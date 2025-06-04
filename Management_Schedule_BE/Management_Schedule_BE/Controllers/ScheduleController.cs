@@ -104,7 +104,7 @@ namespace Management_Schedule_BE.Controllers
         {
             try
             {
-                var result = await _scheduleService.UpdateScheduleStatusAsync(id, dto.Status);
+                var result = await _scheduleService.UpdateScheduleStatusAsync(id, dto.Status, dto.Notes);
                 if (!result)
                     return NotFound(new { message = "Không tìm thấy lịch" });
                 return Ok(new { message = "Cập nhật trạng thái lịch thành công" });
