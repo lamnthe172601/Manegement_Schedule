@@ -59,9 +59,9 @@ namespace Management_Schedule_BE.Services
         {
             // Kiểm tra xem có lịch trùng không
             var existingSchedule = await _context.Schedules
-                .FirstOrDefaultAsync(s => 
-                    s.Date == dto.Date && 
-                    s.StudySessionId == dto.StudySessionId && 
+                .FirstOrDefaultAsync(s =>
+                s.Date == dto.Date &&
+                s.StudySessionId == dto.StudySessionId &&
                     (s.ClassID == dto.ClassID || s.TeacherID == dto.TeacherID || s.Room == dto.Room));
 
             if (existingSchedule != null)
@@ -93,7 +93,7 @@ namespace Management_Schedule_BE.Services
                 schedule.ScheduleID,
                 schedule.ClassID,
                 schedule.TeacherID,
-                schedule.StudySessionId,                
+                schedule.StudySessionId,
                 schedule.Room,
                 schedule.Status,
                 schedule.Notes,
@@ -115,10 +115,10 @@ namespace Management_Schedule_BE.Services
 
             // Kiểm tra trùng lịch
             var existingSchedule = await _context.Schedules
-                .FirstOrDefaultAsync(s => 
+                .FirstOrDefaultAsync(s =>
                     s.ScheduleID != id && // Loại trừ lịch hiện tại
-                    s.Date == dto.Date && 
-                    s.StudySessionId == dto.StudySessionId && 
+                s.Date == dto.Date &&
+                s.StudySessionId == dto.StudySessionId &&
                     (s.ClassID == dto.ClassID || s.TeacherID == dto.TeacherID || s.Room == dto.Room));
 
             if (existingSchedule != null)
@@ -412,9 +412,11 @@ namespace Management_Schedule_BE.Services
 
         public async Task AutoGenerateSchedulesAsync(AutoGenerateScheduleDTO dto)
         {
-            var classEntity = await _context.Classes.FindAsync(dto.ClassID);
+            var classEntity = await _context.Classes.Include(c => c.Course).FirstOrDefaultAsync(c => c.ClassID == dto.ClassID);
             if (classEntity == null)
                 throw new Exception("Không tìm thấy lớp học");
+            if (classEntity.Course == null)
+                throw new Exception("Lớp học chưa được gán khóa học!");
 
             var validRooms = new[] { "Room 01", "Room 02", "Room 03" };
             if (!validRooms.Contains(dto.Room))
@@ -431,40 +433,41 @@ namespace Management_Schedule_BE.Services
             int needToCreate = slotCount - currentSchedules;
             if (needToCreate <= 0) return;
 
+            // Tìm ngày lớn nhất của lịch đã có (slot cuối cùng)
+            var lastSchedule = await _context.Schedules
+                .Where(s => s.ClassID == dto.ClassID)
+                .OrderByDescending(s => s.Date)
+                .FirstOrDefaultAsync();
+            var currentDate = lastSchedule != null ? lastSchedule.Date.AddDays(1) : dto.StartDate.Date;
+
             var schedules = new List<Schedule>();
-            var currentDate = dto.StartDate.Date;
             int created = 0;
             while (created < needToCreate)
             {
-                if (dto.DaysOfWeekSessions.TryGetValue(currentDate.DayOfWeek, out var sessionIds))
+                if (dto.DaysOfWeekSessions.TryGetValue(currentDate.DayOfWeek, out var sessionId))
                 {
-                    foreach (var sessionId in sessionIds)
+                    if (sessionId == 0) { currentDate = currentDate.AddDays(1); continue; } // Bỏ qua slot không xếp lịch
+                    if (!validSessionIds.Contains(sessionId))
+                        throw new Exception($"StudySessionId {sessionId} không tồn tại trong hệ thống!");
+                    // Kiểm tra trùng lịch phòng, lớp, ca học
+                    bool conflict = await _context.Schedules.AnyAsync(s =>
+                        s.Date == currentDate &&
+                        s.StudySessionId == sessionId &&
+                        (s.ClassID == dto.ClassID || s.Room == dto.Room));
+                    if (conflict)
+                    { currentDate = currentDate.AddDays(1); continue; }
+                    schedules.Add(new Schedule
                     {
-                        if (sessionId == 0) continue; // Bỏ qua slot không xếp lịch
-                        if (!validSessionIds.Contains(sessionId))
-                            throw new Exception($"StudySessionId {sessionId} không tồn tại trong hệ thống!");
-                        // Kiểm tra trùng lịch phòng, lớp, ca học
-                        bool conflict = await _context.Schedules.AnyAsync(s =>
-                            s.Date == currentDate &&
-                            s.StudySessionId == sessionId &&
-                            (s.ClassID == dto.ClassID || s.Room == dto.Room));
-                        if (conflict)
-                            continue;
-                        schedules.Add(new Schedule
-                        {
-                            ClassID = dto.ClassID,
-                            TeacherID = null, // Để trống giáo viên
-                            StudySessionId = sessionId,
-                            Date = currentDate,
-                            Room = dto.Room,
-                            Status = 1, // Active
-                            CreatedAt = DateTime.Now,
-                            ModifiedAt = DateTime.Now
-                        });
-                        created++;
-                        if (created >= needToCreate)
-                            break;
-                    }
+                        ClassID = dto.ClassID,
+                        TeacherID = null, // Để trống giáo viên
+                        StudySessionId = sessionId,
+                        Date = currentDate,
+                        Room = dto.Room,
+                        Status = 1, // Active
+                        CreatedAt = DateTime.Now,
+                        ModifiedAt = DateTime.Now
+                    });
+                    created++;
                 }
                 currentDate = currentDate.AddDays(1);
             }
@@ -511,4 +514,4 @@ namespace Management_Schedule_BE.Services
             await _context.SaveChangesAsync();
         }
     }
-} 
+}
