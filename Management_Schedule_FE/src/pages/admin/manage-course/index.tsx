@@ -1,4 +1,3 @@
-import useGetUsers, { User } from "@/hooks/api/user/use-get-users"
 import React from "react"
 import {
   Table,
@@ -44,7 +43,6 @@ import {
   ChevronDownIcon,
   MinusIcon,
 } from "lucide-react"
-import { useRouter } from "next/router"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import {
@@ -55,7 +53,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 
-import { mutate, useSWRConfig } from "swr"
+import { mutate } from "swr"
 import useGetCourses, { Course } from "@/hooks/api/course/use-get-course"
 import { Slider } from "@/components/ui/slider"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -90,7 +88,6 @@ const CoursePage = () => {
   const [courseToView, setCourseToView] = React.useState<Course | null>(null)
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
   const [courseToDelete, setCourseToDelete] = React.useState<Course | null>(null)
-  const router = useRouter()
   const { editCourse, loading } = useEditCourse()
   const [editForm, setEditForm] = React.useState<Partial<Course>>({})
   const [editDialogOpen, setEditDialogOpen] = React.useState(false)
@@ -317,6 +314,7 @@ const CoursePage = () => {
                   })}
                   <TableHead>Ngày tạo</TableHead>
                   <TableHead>Trạng thái</TableHead>
+                  <TableHead>Tình trạng</TableHead>
                   <TableHead>Hành động</TableHead>
                 </TableRow>
               </TableHeader>
@@ -337,10 +335,17 @@ const CoursePage = () => {
                       <TableCell>{course.duration}</TableCell>
                       <TableCell>{new Date(course.createdAt).toLocaleDateString("vi-VN")}</TableCell>
                       <TableCell>
-                        {course.isComingSoon ? (
-                          <Badge className="bg-green-600">Hoạt động</Badge>
+                        {course.isSelling ? (
+                          <Badge className="bg-green-600">Có bán </Badge>
                         ) : (
-                          <Badge variant="destructive">Ngưng hoạt động</Badge>
+                          <Badge variant="destructive">Đéo bán</Badge>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {course.isComingSoon ? (
+                          <Badge className="bg-green-600">Săp ra mắt </Badge>
+                        ) : (
+                          <Badge variant="destructive">Ra mắt</Badge>
                         )}
                       </TableCell>
                       <TableCell>
