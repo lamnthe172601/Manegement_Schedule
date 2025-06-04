@@ -409,5 +409,98 @@ namespace Management_Schedule_BE.Services
 
             return schedules;
         }
+
+        public async Task AutoGenerateSchedulesAsync(AutoGenerateScheduleDTO dto)
+        {
+            var classEntity = await _context.Classes.FindAsync(dto.ClassID);
+            if (classEntity == null)
+                throw new Exception("Không tìm thấy lớp học");
+
+            var validRooms = new[] { "Room 01", "Room 02", "Room 03" };
+            if (!validRooms.Contains(dto.Room))
+                throw new Exception("Phòng học không hợp lệ. Chỉ được sử dụng Room 01, Room 02 hoặc Room 03");
+
+            // Lấy danh sách StudySessionId hợp lệ
+            var validSessionIds = await _context.StudySessions.Select(s => s.StudySessionId).ToListAsync();
+
+            var schedules = new List<Schedule>();
+            var currentDate = dto.StartDate.Date;
+            int created = 0;
+            while (created < dto.SlotCount)
+            {
+                if (dto.DaysOfWeekSessions.TryGetValue(currentDate.DayOfWeek, out var sessionIds))
+                {
+                    foreach (var sessionId in sessionIds)
+                    {
+                        if (sessionId == 0) continue; // Bỏ qua slot không xếp lịch
+                        if (!validSessionIds.Contains(sessionId))
+                            throw new Exception($"StudySessionId {sessionId} không tồn tại trong hệ thống!");
+                        // Kiểm tra trùng lịch phòng, lớp, ca học
+                        bool conflict = await _context.Schedules.AnyAsync(s =>
+                            s.Date == currentDate &&
+                            s.StudySessionId == sessionId &&
+                            (s.ClassID == dto.ClassID || s.Room == dto.Room));
+                        if (conflict)
+                            continue;
+                        schedules.Add(new Schedule
+                        {
+                            ClassID = dto.ClassID,
+                            TeacherID = null, // Để trống giáo viên
+                            StudySessionId = sessionId,
+                            Date = currentDate,
+                            Room = dto.Room,
+                            Status = 1, // Active
+                            CreatedAt = DateTime.Now,
+                            ModifiedAt = DateTime.Now
+                        });
+                        created++;
+                        if (created >= dto.SlotCount)
+                            break;
+                    }
+                }
+                currentDate = currentDate.AddDays(1);
+            }
+            _context.Schedules.AddRange(schedules);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AssignTeacherToClassAsync(int classId, int teacherId)
+        {
+            var schedules = await _context.Schedules.Where(s => s.ClassID == classId).ToListAsync();
+            if (!schedules.Any())
+                throw new Exception("Không tìm thấy lịch học nào cho lớp này!");
+            foreach (var schedule in schedules)
+            {
+                // Kiểm tra trùng lịch giáo viên
+                bool conflict = await _context.Schedules.AnyAsync(s =>
+                    s.TeacherID == teacherId &&
+                    s.Date == schedule.Date &&
+                    s.StudySessionId == schedule.StudySessionId &&
+                    s.ScheduleID != schedule.ScheduleID);
+                if (conflict)
+                    throw new Exception($"Giáo viên đã có lịch dạy vào ngày {schedule.Date:yyyy-MM-dd}, ca {schedule.StudySessionId}!");
+                schedule.TeacherID = teacherId;
+                schedule.ModifiedAt = DateTime.Now;
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AssignTeacherToScheduleAsync(int scheduleId, int teacherId)
+        {
+            var schedule = await _context.Schedules.FindAsync(scheduleId);
+            if (schedule == null)
+                throw new Exception("Không tìm thấy lịch học!");
+            // Kiểm tra trùng lịch giáo viên
+            bool conflict = await _context.Schedules.AnyAsync(s =>
+                s.TeacherID == teacherId &&
+                s.Date == schedule.Date &&
+                s.StudySessionId == schedule.StudySessionId &&
+                s.ScheduleID != schedule.ScheduleID);
+            if (conflict)
+                throw new Exception($"Giáo viên đã có lịch dạy vào ngày {schedule.Date:yyyy-MM-dd}, ca {schedule.StudySessionId}!");
+            schedule.TeacherID = teacherId;
+            schedule.ModifiedAt = DateTime.Now;
+            await _context.SaveChangesAsync();
+        }
     }
 } 

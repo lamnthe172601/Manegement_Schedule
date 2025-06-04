@@ -53,7 +53,7 @@ namespace Management_Schedule_BE.DTOs
         public string Room { get; init; }
         public int TotalSessions { get; init; }
         public int TotalTeachingHours { get; init; }
-        public Dictionary<int, int> TeacherDistribution { get; init; }
+        public Dictionary<int?, int>? TeacherDistribution { get; init; }
         public Dictionary<DayOfWeek, int> DayDistribution { get; init; }
     }
 } 

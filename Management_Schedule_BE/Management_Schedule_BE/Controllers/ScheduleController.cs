@@ -239,5 +239,47 @@ namespace Management_Schedule_BE.Controllers
                 return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
             }
         }
+
+        [HttpPost("auto-generate")]
+        public async Task<ActionResult> AutoGenerateSchedules([FromBody] AutoGenerateScheduleDTO dto)
+        {
+            try
+            {
+                await _scheduleService.AutoGenerateSchedulesAsync(dto);
+                return Ok(new { message = "Tạo lịch học tự động thành công!" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
+
+        [HttpPut("assign-teacher-to-class")]
+        public async Task<ActionResult> AssignTeacherToClass([FromBody] AssignTeacherToClassDTO dto)
+        {
+            try
+            {
+                await _scheduleService.AssignTeacherToClassAsync(dto.ClassID, dto.TeacherID);
+                return Ok(new { message = "Gán giáo viên cho toàn bộ lịch của lớp thành công!" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
+
+        [HttpPut("assign-teacher")]
+        public async Task<ActionResult> AssignTeacherToSchedule([FromBody] AssignTeacherToScheduleDTO dto)
+        {
+            try
+            {
+                await _scheduleService.AssignTeacherToScheduleAsync(dto.ScheduleID, dto.TeacherID);
+                return Ok(new { message = "Gán giáo viên cho lịch thành công!" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
     }
 } 

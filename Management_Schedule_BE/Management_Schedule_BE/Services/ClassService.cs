@@ -30,12 +30,14 @@ namespace Management_Schedule_BE.Helpers.Validators
                 c.ClassName,
                 c.CourseID,
                 c.MaxStudents,
+                c.Course.CourseName,
+                c.Course.Duration,
                 c.StartDate,
                 c.EndDate,
                 c.Status,
                 c.CreatedAt,
-                c.ModifiedAt,
-                c.Course.CourseName
+                c.ModifiedAt
+                
             ));
         }
 

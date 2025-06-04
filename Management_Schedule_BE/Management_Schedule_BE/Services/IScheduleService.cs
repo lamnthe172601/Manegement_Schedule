@@ -17,5 +17,8 @@ namespace Management_Schedule_BE.Services
         Task<IEnumerable<StudentScheduleViewDTO>> GetSchedulesByStudentIdAsync(int studentId);
         Task<IEnumerable<StudentScheduleViewDTO>> GetSchedulesByStudentIdAndRangeAsync(int studentId, DateTime? from, DateTime? to);
         Task<IEnumerable<StudentScheduleViewDTO>> GetSchedulesByStudentIdAndStatusAsync(int studentId, byte status);
+        Task AutoGenerateSchedulesAsync(AutoGenerateScheduleDTO dto);
+        Task AssignTeacherToClassAsync(int classId, int teacherId);
+        Task AssignTeacherToScheduleAsync(int scheduleId, int teacherId);
     }
 } 
