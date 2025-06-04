@@ -44,6 +44,8 @@ namespace Management_Schedule_BE.Helpers.Validators
                     note = "Chưa đủ số buổi";
                 else if (isHaveSchedule && cancelledSchedules > 0)
                     note = "Bổ sung lịch dạy bù";
+                // Đếm số học sinh đã đăng ký lớp này
+                int enrolledStudents = await _context.StudentClassEnrollments.CountAsync(e => e.ClassID == c.ClassID && e.Status == 1);
                 result.Add(new DetailedClassDTO(
                     c.ClassID,
                     c.ClassName,
@@ -57,7 +59,8 @@ namespace Management_Schedule_BE.Helpers.Validators
                     c.Course.CourseName,
                     c.Course.Duration,
                     isHaveSchedule,
-                    note
+                    note,
+                    enrolledStudents
                 ));
             }
             return result;
