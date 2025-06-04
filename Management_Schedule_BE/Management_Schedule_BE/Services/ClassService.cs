@@ -46,6 +46,25 @@ namespace Management_Schedule_BE.Helpers.Validators
                     note = "Bổ sung lịch dạy bù";
                 // Đếm số học sinh đã đăng ký lớp này
                 int enrolledStudents = await _context.StudentClassEnrollments.CountAsync(e => e.ClassID == c.ClassID && e.Status == 1);
+                // Lấy danh sách giáo viên của các lịch học (trạng thái khác 3)
+                var teacherNames = await _context.Schedules
+                    .Where(s => s.ClassID == c.ClassID && s.Status != 3 && s.TeacherID != null)
+                    .Select(s => s.Teacher.User.FullName)
+                    .Distinct()
+                    .ToListAsync();
+                // Đếm số lịch có giáo viên
+                int schedulesWithTeacher = await _context.Schedules.CountAsync(s => s.ClassID == c.ClassID && s.Status != 3 && s.TeacherID != null);
+                // Đếm số lịch không có giáo viên
+                int schedulesWithoutTeacher = await _context.Schedules.CountAsync(s => s.ClassID == c.ClassID && s.Status != 3 && s.TeacherID == null);
+                // Xác định trạng thái đủ giáo viên
+                bool isHaveFullTeacher = (totalSchedules > 0 && schedulesWithTeacher == totalSchedules);
+                // Xác định tên giáo viên (nếu có nhiều thì lấy tên đầu tiên, hoặc nối tên)
+                string teacherName = teacherNames.Count == 1 ? teacherNames[0] : (teacherNames.Count > 1 ? string.Join(", ", teacherNames) : "");
+                // Bổ sung note về giáo viên
+                if (totalSchedules > 0 && schedulesWithTeacher == 0)
+                    note = note == "" ? "Chưa xếp giáo viên" : note + ", chưa xếp giáo viên";
+                else if (totalSchedules > 0 && schedulesWithTeacher < totalSchedules)
+                    note = note == "" ? "Chưa đủ giáo viên dạy" : note + ", chưa đủ giáo viên dạy";
                 result.Add(new DetailedClassDTO(
                     c.ClassID,
                     c.ClassName,
@@ -60,7 +79,9 @@ namespace Management_Schedule_BE.Helpers.Validators
                     c.Course.Duration,
                     isHaveSchedule,
                     note,
-                    enrolledStudents
+                    enrolledStudents,
+                    teacherName,
+                    isHaveFullTeacher
                 ));
             }
             return result;

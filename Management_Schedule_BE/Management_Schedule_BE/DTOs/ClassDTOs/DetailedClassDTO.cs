@@ -16,6 +16,8 @@ namespace Management_Schedule_BE.DTOs
         int Duration,
         bool IsHaveSchedule,
         string Note,
-        int EnrolledStudents
+        int EnrolledStudents,
+        string TeacherName,
+        bool IsHaveTeacher
     );
 } 

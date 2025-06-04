@@ -477,9 +477,12 @@ namespace Management_Schedule_BE.Services
 
         public async Task AssignTeacherToClassAsync(int classId, int teacherId)
         {
-            var schedules = await _context.Schedules.Where(s => s.ClassID == classId).ToListAsync();
+            var allSchedules = await _context.Schedules.Where(s => s.ClassID == classId && s.Status != 3).ToListAsync();
+            if (!allSchedules.Any())
+                throw new Exception("Lớp học chưa được tạo lịch học!");
+            var schedules = allSchedules.Where(s => s.TeacherID == null).ToList();
             if (!schedules.Any())
-                throw new Exception("Không tìm thấy lịch học nào cho lớp này!");
+                throw new Exception("Không có lịch học nào chưa có giáo viên để gán!");
             foreach (var schedule in schedules)
             {
                 // Kiểm tra trùng lịch giáo viên
