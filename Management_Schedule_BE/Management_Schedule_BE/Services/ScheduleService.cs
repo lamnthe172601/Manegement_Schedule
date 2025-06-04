@@ -39,13 +39,13 @@ namespace Management_Schedule_BE.Services
                 s.CreatedAt,
                 s.ModifiedAt,
                 s.Date,
-                s.Teacher.User.FullName,
-                s.Teacher.User.AvatarUrl ?? "",
-                s.StudySession.DisplayName,
-                s.StudySession.StartTime,
-                s.StudySession.EndTime,
-                s.Class.ClassName,
-                s.Class.Course.CourseName
+                s.Teacher?.User?.FullName ?? "",
+                s.Teacher?.User?.AvatarUrl ?? "",
+                s.StudySession?.DisplayName ?? "",
+                s.StudySession?.StartTime ?? "",
+                s.StudySession?.EndTime ?? "",
+                s.Class?.ClassName ?? "",
+                s.Class?.Course?.CourseName ?? ""
             ));
         }
 
