@@ -222,7 +222,8 @@ namespace Management_Schedule_BE.Services
                     StartTime = s.StudySession.StartTime,
                     EndTime = s.StudySession.EndTime,
                     Room = s.Room,
-                    Date = s.Date
+                    Date = s.Date,
+                    Notes = s.Notes
                 })
                 .ToListAsync();
 
@@ -335,7 +336,8 @@ namespace Management_Schedule_BE.Services
                     EndTime = s.StudySession.EndTime,
                     TeacherName = s.Teacher.User.FullName,
                     Room = s.Room,
-                    Date = s.Date
+                    Date = s.Date,
+                    Notes = s.Notes
                 })
                 .ToListAsync();
 

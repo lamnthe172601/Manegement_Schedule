@@ -15,5 +15,6 @@ namespace Management_Schedule_BE.DTOs
         public string TeacherName { get; set; }
         public string Room { get; set; }
         public DateTime Date { get; set; }
+        public string? Notes { get; set; }
     }
 } 
