@@ -273,7 +273,7 @@ namespace Management_Schedule_BE.Controllers
         {
             try
             {
-                await _scheduleService.AssignTeacherToScheduleAsync(dto.ScheduleID, dto.TeacherID);
+                await _scheduleService.AssignTeacherToScheduleAsync(dto.ScheduleID, dto.TeacherID,dto.notes);
                 return Ok(new { message = "Gán giáo viên cho lịch thành công!" });
             }
             catch (Exception ex)

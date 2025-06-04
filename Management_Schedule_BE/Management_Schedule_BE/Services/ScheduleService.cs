@@ -60,10 +60,10 @@ namespace Management_Schedule_BE.Services
             // Kiểm tra xem có lịch trùng không
             var existingSchedule = await _context.Schedules
                 .FirstOrDefaultAsync(s =>
-                    s.Date == dto.Date &&
-                    s.StudySessionId == dto.StudySessionId &&
-                    s.Room == dto.Room &&
-                    s.Status != 3);
+                s.Date == dto.Date && 
+                s.StudySessionId == dto.StudySessionId && 
+                s.Room == dto.Room && 
+                s.Status != 3);
 
             if (existingSchedule != null)
             {
@@ -72,9 +72,9 @@ namespace Management_Schedule_BE.Services
 
             // Kiểm tra trùng lịch lớp, giáo viên như cũ
             var classConflict = await _context.Schedules.AnyAsync(s =>
-                s.ClassID == dto.ClassID &&
-                s.Date == dto.Date &&
-                s.StudySessionId == dto.StudySessionId &&
+                s.ClassID == dto.ClassID && 
+                s.Date == dto.Date && 
+                s.StudySessionId == dto.StudySessionId && 
                 s.Status != 3);
             if (classConflict)
                 throw new Exception("Lớp học này đã có lịch học trong ca học này!");
@@ -132,8 +132,8 @@ namespace Management_Schedule_BE.Services
             var existingSchedule = await _context.Schedules
                 .FirstOrDefaultAsync(s =>
                     s.ScheduleID != id && // Loại trừ lịch hiện tại
-                s.Date == dto.Date &&
-                s.StudySessionId == dto.StudySessionId &&
+                s.Date == dto.Date && 
+                s.StudySessionId == dto.StudySessionId && 
                     (s.ClassID == dto.ClassID || s.TeacherID == dto.TeacherID || s.Room == dto.Room));
 
             if (existingSchedule != null)
@@ -430,12 +430,12 @@ namespace Management_Schedule_BE.Services
         {
             return day switch
             {
-                DayOfWeek.Monday => "Hai",
-                DayOfWeek.Tuesday => "Ba",
-                DayOfWeek.Wednesday => "Tư",
-                DayOfWeek.Thursday => "Năm",
-                DayOfWeek.Friday => "Sáu",
-                DayOfWeek.Saturday => "Bảy",
+                DayOfWeek.Monday => "Thứ Hai",
+                DayOfWeek.Tuesday => "Thứ Ba",
+                DayOfWeek.Wednesday => "Thứ Tư",
+                DayOfWeek.Thursday => "Thứ Năm",
+                DayOfWeek.Friday => "Thứ Sáu",
+                DayOfWeek.Saturday => "Thứ Bảy",
                 DayOfWeek.Sunday => "CN",
                 _ => ""
             };
@@ -491,7 +491,7 @@ namespace Management_Schedule_BE.Services
                     if (roomConflictSchedule != null)
                     {
                         string thuVN = GetVietnameseDayOfWeek(currentDate.DayOfWeek);
-                        string msg = $"Trùng phòng: {dto.Room}, (Thứ {thuVN}), ca {sessionId}, đã có lớp {roomConflictSchedule.Class?.ClassName ?? roomConflictSchedule.ClassID.ToString()}!";
+                        string msg = $"Trùng phòng: {dto.Room}, ({thuVN}), ca {sessionId}, đã có lớp {roomConflictSchedule.Class?.ClassName ?? roomConflictSchedule.ClassID.ToString()}!";
                         throw new Exception(msg);
                     }
                     // Kiểm tra trùng lịch lớp
@@ -545,7 +545,7 @@ namespace Management_Schedule_BE.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task AssignTeacherToScheduleAsync(int scheduleId, int teacherId)
+        public async Task AssignTeacherToScheduleAsync(int scheduleId, int teacherId,string notes)
         {
             var schedule = await _context.Schedules.FindAsync(scheduleId);
             if (schedule == null)
@@ -559,8 +559,9 @@ namespace Management_Schedule_BE.Services
             if (conflict)
                 throw new Exception($"Giáo viên đã có lịch dạy vào ngày {schedule.Date:yyyy-MM-dd}, ca {schedule.StudySessionId}!");
             schedule.TeacherID = teacherId;
+            schedule.Notes = notes;
             schedule.ModifiedAt = DateTime.Now;
             await _context.SaveChangesAsync();
         }
     }
-}
+} 

@@ -17,6 +17,6 @@ namespace Management_Schedule_BE.Services
       
         Task AutoGenerateSchedulesAsync(AutoGenerateScheduleDTO dto);
         Task AssignTeacherToClassAsync(int classId, int teacherId);
-        Task AssignTeacherToScheduleAsync(int scheduleId, int teacherId);
+        Task AssignTeacherToScheduleAsync(int scheduleId, int teacherId,string notes);
     }
 } 
