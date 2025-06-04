@@ -63,8 +63,7 @@ namespace Management_Schedule_BE.Helpers.Validators
                 // Bổ sung note về giáo viên
                 if (totalSchedules > 0 && schedulesWithTeacher == 0)
                     note = note == "" ? "Chưa xếp giáo viên" : note + ", chưa xếp giáo viên";
-                else if (totalSchedules > 0 && schedulesWithTeacher < totalSchedules)
-                    note = note == "" ? "Chưa đủ giáo viên dạy" : note + ", chưa đủ giáo viên dạy";
+                
                 result.Add(new DetailedClassDTO(
                     c.ClassID,
                     c.ClassName,
