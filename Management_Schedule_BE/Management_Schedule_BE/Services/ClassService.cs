@@ -25,20 +25,42 @@ namespace Management_Schedule_BE.Helpers.Validators
                 .Include(c => c.Course)
                 .ToListAsync();
 
-            return classes.Select(c => new DetailedClassDTO(
-                c.ClassID,
-                c.ClassName,
-                c.CourseID,
-                c.MaxStudents,
-                c.Course.CourseName,
-                c.Course.Duration,
-                c.StartDate,
-                c.EndDate,
-                c.Status,
-                c.CreatedAt,
-                c.ModifiedAt
-                
-            ));
+            var result = new List<DetailedClassDTO>();
+            foreach (var c in classes)
+            {
+                // Đếm số lịch học trạng thái khác 3 (không bị hủy)
+                var totalSchedules = await _context.Schedules.CountAsync(s => s.ClassID == c.ClassID && s.Status != 3);
+                // Đếm số lịch học bị hủy
+                var cancelledSchedules = await _context.Schedules.CountAsync(s => s.ClassID == c.ClassID && s.Status == 3);
+                // Tổng số lịch học của lớp
+                var allSchedules = await _context.Schedules.CountAsync(s => s.ClassID == c.ClassID);
+                // Số slot dự kiến
+                int slotCount = c.Course.Duration;
+                bool isHaveSchedule = totalSchedules >= slotCount;
+                string note = "";
+                if (allSchedules == 0)
+                    note = "Chưa tạo lịch";
+                else if (totalSchedules < slotCount)
+                    note = "Chưa đủ số buổi";
+                else if (isHaveSchedule && cancelledSchedules > 0)
+                    note = "Bổ sung lịch dạy bù";
+                result.Add(new DetailedClassDTO(
+                    c.ClassID,
+                    c.ClassName,
+                    c.CourseID,
+                    c.MaxStudents,
+                    c.StartDate,
+                    c.EndDate,
+                    c.Status,
+                    c.CreatedAt,
+                    c.ModifiedAt,
+                    c.Course.CourseName,
+                    c.Course.Duration,
+                    isHaveSchedule,
+                    note
+                ));
+            }
+            return result;
         }
 
         public async Task<ClassDTO?> GetClassByIdAsync(int id)
