@@ -1,4 +1,5 @@
 using System;
+using Microsoft.AspNetCore.Http;
 
 namespace Management_Schedule_BE.DTOs
 {
@@ -23,7 +24,7 @@ namespace Management_Schedule_BE.DTOs
         string CourseName,
         string? Description,
         decimal Price,
-        string? ThumbnailUrl,
+        IFormFile? ThumbnailFile,
         bool IsSelling,
         bool IsComingSoon,
         bool IsPro,
@@ -37,7 +38,7 @@ namespace Management_Schedule_BE.DTOs
         string CourseName,
         string? Description,
         decimal Price,
-        string? ThumbnailUrl,
+        IFormFile? ThumbnailFile,
         bool IsSelling,
         bool IsComingSoon,
         bool IsPro,

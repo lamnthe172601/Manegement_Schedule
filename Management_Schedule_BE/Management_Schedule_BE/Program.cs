@@ -121,6 +121,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IStorageService, R2StorageService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();
+builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddHostedService<ScheduleStatusBackgroundService>();
 #endregion
 

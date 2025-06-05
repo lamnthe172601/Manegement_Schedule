@@ -50,7 +50,7 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CourseDTO>> CreateCourse(CreateCourseDTO courseDto)
+        public async Task<ActionResult<CourseDTO>> CreateCourse([FromForm] CreateCourseDTO courseDto)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<CourseDTO>> UpdateCourse(int id, UpdateCourseDTO courseDto)
+        public async Task<ActionResult<CourseDTO>> UpdateCourse(int id,[FromForm] UpdateCourseDTO courseDto)
         {
             try
             {

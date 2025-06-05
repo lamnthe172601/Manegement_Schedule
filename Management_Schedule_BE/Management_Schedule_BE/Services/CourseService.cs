@@ -10,11 +10,14 @@ namespace Management_Schedule_BE.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IImageService _imageService;
+        private const string DEFAULT_THUMBNAIL = "/course-thumbnail-default.jpg";
 
-        public CourseService(ApplicationDbContext context, IMapper mapper)
+        public CourseService(ApplicationDbContext context, IMapper mapper, IImageService imageService)
         {
             _context = context;
             _mapper = mapper;
+            _imageService = imageService;
         }
 
         public async Task<IEnumerable<CourseDTO>> GetAllCoursesAsync()
@@ -36,6 +39,10 @@ namespace Management_Schedule_BE.Services
                 throw new Exception("Tên khóa học đã tồn tại!");
 
             var course = _mapper.Map<Course>(courseDto);
+            
+            // Upload thumbnail
+            course.ThumbnailUrl = await _imageService.UploadImageAsync(courseDto.ThumbnailFile, DEFAULT_THUMBNAIL);
+            
             _context.Courses.Add(course);
             await _context.SaveChangesAsync();
             return _mapper.Map<CourseDTO>(course);
@@ -51,6 +58,17 @@ namespace Management_Schedule_BE.Services
                 throw new Exception("Tên khóa học đã tồn tại!");
 
             _mapper.Map(courseDto, course);
+            
+            // Update thumbnail if new file is provided
+            if (courseDto.ThumbnailFile != null)
+            {
+                course.ThumbnailUrl = await _imageService.UpdateImageAsync(
+                    courseDto.ThumbnailFile,
+                    course.ThumbnailUrl,
+                    DEFAULT_THUMBNAIL
+                );
+            }
+            
             course.ModifiedAt = DateTime.Now;
             await _context.SaveChangesAsync();
             return _mapper.Map<CourseDTO>(course);
@@ -60,6 +78,12 @@ namespace Management_Schedule_BE.Services
         {
             var course = await _context.Courses.FindAsync(id);
             if (course == null) return false;
+
+            // Delete thumbnail if exists
+            if (!string.IsNullOrEmpty(course.ThumbnailUrl))
+            {
+                await _imageService.DeleteImageAsync(course.ThumbnailUrl);
+            }
 
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync();

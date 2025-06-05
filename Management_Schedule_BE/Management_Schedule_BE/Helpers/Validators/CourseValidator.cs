@@ -17,9 +17,7 @@ namespace Management_Schedule_BE.Helpers.Validators
             RuleFor(x => x.Price)
                 .GreaterThanOrEqualTo(0).WithMessage("Giá khóa học phải lớn hơn hoặc bằng 0");
 
-            RuleFor(x => x.ThumbnailUrl)
-                .MaximumLength(512).WithMessage("URL hình ảnh không được vượt quá 512 ký tự");
-
+            
             RuleFor(x => x.DiscountPercent)
                 .InclusiveBetween((byte)0, (byte)100).WithMessage("Phần trăm giảm giá phải từ 0 đến 100");
 
@@ -45,8 +43,7 @@ namespace Management_Schedule_BE.Helpers.Validators
             RuleFor(x => x.Price)
                 .GreaterThanOrEqualTo(0).WithMessage("Giá khóa học phải lớn hơn hoặc bằng 0");
 
-            RuleFor(x => x.ThumbnailUrl)
-                .MaximumLength(512).WithMessage("URL hình ảnh không được vượt quá 512 ký tự");
+            
 
             RuleFor(x => x.DiscountPercent)
                 .InclusiveBetween((byte)0, (byte)100).WithMessage("Phần trăm giảm giá phải từ 0 đến 100");
