@@ -30,10 +30,12 @@ export class Endpoints {
     CREATE: "User",
     UPDATE: (id: string) => `User/${id}`,
     DELETE: (id: string) => `User/${id}`,
-    GETUSERBYEMAIL: (email:string) => `User/${email}`
+    GETUSERBYEMAIL: (email:string) => `User/${email}`,
+    UPDATEBYEMAIL: (email:string) => `User/${email}`
   }
   static readonly Classes = {
     GET_ALL: "Class",
+    GET_COURSE_BY_STUDENT_ID : (studentId:string) => `Class/student/${studentId}/enrolled`
   }
   static readonly Schedule = {
     GET_ALL: "Schedule",
@@ -56,7 +58,5 @@ export class Endpoints {
     DELETE: (id: string) => `Courses/${id}`,
   }
 
-  static readonly Enrollment = {
-    GET_BY_STUDENT_ID: (studentId:string) => `Enrollment/${studentId}`
-  }
+  
 }
