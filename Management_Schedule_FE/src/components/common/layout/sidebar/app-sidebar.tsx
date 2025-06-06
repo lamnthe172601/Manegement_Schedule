@@ -4,8 +4,6 @@ import {
   SquareTerminal,
   BookOpen,
   CalendarCheck2,
-  CalendarClock,
-  DollarSign
 } from "lucide-react";
 
 import { NavMain } from "@/components/common/layout/sidebar/nav-main";
@@ -38,20 +36,20 @@ const data = {
       title: "Quản lý người dùng",
       role: ["Admin"],
     },
-    {
-      name: "Teachers",
-      url: "/admin/teachers",
-      icon: Bot,
-      title: "Quản lý giáo viên",
-      role: ["Admin"],
-    },
-    {
-      name: "Students",
-      url: "/admin/students",
-      icon: Bot,
-      title: "Quản lý học sinh",
-      role: ["Admin"],
-    },
+    // {
+    //   name: "Teachers",
+    //   url: "/admin/teachers",
+    //   icon: Bot,
+    //   title: "Quản lý giáo viên",
+    //   role: ["Admin"],
+    // },
+    // {
+    //   name: "Students",
+    //   url: "/admin/students",
+    //   icon: Bot,
+    //   title: "Quản lý học sinh",
+    //   role: ["Admin"],
+    // },
     {
       name: "Courses",
       url: "/admin/manage-course",
@@ -71,20 +69,6 @@ const data = {
       url: "/admin/teaching-schedule",
       icon: CalendarCheck2,
       title: "Quản lý lịch giảng dạy",
-      role: ["Admin", "staff", "member"],
-    },
-    {
-      name: "Learning Schedule",
-      url: "/admin/learning-schedule",
-      icon: CalendarClock,
-      title: "Quản lý lịch học",
-      role: ["Admin", "staff", "member"],
-    },
-    {
-      name: "Fees & Salary",
-      url: "/finance",
-      icon: DollarSign,
-      title: "Quản lý học phí, tiền lương",
       role: ["Admin", "staff", "member"],
     },
   ],
