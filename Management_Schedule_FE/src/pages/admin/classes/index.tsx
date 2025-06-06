@@ -2,12 +2,13 @@
 
 import { showErrorToast, showSuccessToast } from '@/components/common/toast/toast';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useAddClasses } from '@/hooks/api/classes/use-add-classes';
 import { useAddSchedule } from '@/hooks/api/schedule/use-add-schedule';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { format } from "date-fns"
 interface Course {
     courseID: number;
     courseName: string;
@@ -386,8 +387,8 @@ export default function ClassPage() {
                             <TableCell>{cls.className}</TableCell>
                             <TableCell>{cls.courseName}</TableCell>
                             <TableCell>{cls.enrolledStudents}/{cls.maxStudents}</TableCell>
-                            <TableCell>{cls.startDate}</TableCell>
-                            <TableCell>{cls.endDate ?? '-'}</TableCell>
+                            <TableCell>{cls.startDate ? format(new Date(cls.startDate), 'dd/MM/yyyy') : ''}</TableCell>
+                            <TableCell>{cls.endDate ? format(new Date(cls.endDate), 'dd/MM/yyyy') : ''}</TableCell>
                             <TableCell>
                                 {cls.status === 1 ? (
                                     <span className="text-green-600 font-semibold">Đang học</span>
@@ -423,86 +424,91 @@ export default function ClassPage() {
                 </TableBody>
             </Table>
 
-            {scheduleModalVisible && (
-                <div className="fixed inset-0 bg-opacity-40 flex justify-center items-center z-50 p-4">
-                    <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto p-6">
-                        <h2 className="text-xl font-semibold mb-4">Tạo lịch học cho lớp #{scheduleData.classID}</h2>
-                        <form onSubmit={handleScheduleSubmit} className="space-y-4">
+            <Dialog open={scheduleModalVisible} onOpenChange={setScheduleModalVisible}>
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-auto">
+                    <DialogHeader>
+                        <DialogTitle>Tạo lịch học cho lớp #{scheduleData.classID}</DialogTitle>
+                        <DialogDescription>
+                            Vui lòng chọn phòng và các ca học theo ngày trong tuần.
+                        </DialogDescription>
+                    </DialogHeader>
 
+                    <form onSubmit={handleScheduleSubmit} className="space-y-4 mt-4">
 
-                            <div>
-                                <label className="block font-medium mb-1">Phòng học:</label>
-                                <select
-                                    name="Room"
-                                    value={scheduleData.room}
-                                    onChange={e => setScheduleData(prev => ({ ...prev, room: e.target.value }))}
-                                    required
-                                    className="w-full border p-2 rounded"
-                                >
-                                    <option value={0}>-- Chọn phòng học --</option>
-                                    <option value="Room 01">-- Room 01 --</option>
-                                    <option value="Room 02">-- Room 02 --</option>
-                                    <option value="Room 03">-- Room 03 --</option>
-                                </select>
+                        {/* Phòng học */}
+                        <div>
+                            <label className="block font-medium mb-1">Phòng học:</label>
+                            <select
+                                name="Room"
+                                value={scheduleData.room}
+                                onChange={e => setScheduleData(prev => ({ ...prev, room: e.target.value }))}
+                                required
+                                className="w-full border p-2 rounded"
+                            >
+                                <option value={0}>-- Chọn phòng học --</option>
+                                <option value="Room 01">-- Room 01 --</option>
+                                <option value="Room 02">-- Room 02 --</option>
+                                <option value="Room 03">-- Room 03 --</option>
+                            </select>
+                        </div>
 
-                            </div>
-
-                            <div>
-                                <label className="block font-medium mb-2">Chọn ca học trong tuần:</label>
-                                <div className="overflow-auto max-h-[300px] border rounded p-2 bg-gray-50">
-                                    <table className="w-full border-collapse border border-gray-300 text-center">
-                                        <thead>
-                                            <tr>
-                                                <th className="border border-gray-300 px-2 py-1">Ngày</th>
-                                                {[1, 2, 3, 4, 5].map((_, i) => (
-                                                    <th key={i} className="border border-gray-300 px-2 py-1">
-                                                        Ca {i + 1}
-                                                    </th>
+                        {/* Bảng chọn ca học */}
+                        <div>
+                            <label className="block font-medium mb-2">Chọn ca học trong tuần:</label>
+                            <div className="overflow-auto max-h-[300px] border rounded p-2 bg-gray-50">
+                                <table className="w-full border-collapse border border-gray-300 text-center">
+                                    <thead>
+                                        <tr>
+                                            <th className="border border-gray-300 px-2 py-1">Ngày</th>
+                                            {[1, 2, 3, 4, 5].map((_, i) => (
+                                                <th key={i} className="border border-gray-300 px-2 py-1">
+                                                    Ca {i + 1}
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {daysOfWeek.map(day => (
+                                            <tr key={day}>
+                                                <td className="border border-gray-300 px-2 py-1 font-medium">{day}</td>
+                                                {[1, 2, 3, 4, 5].map(idx => (
+                                                    <td key={idx} className="border border-gray-300 px-2 py-1">
+                                                        <input
+                                                            type="checkbox"
+                                                            name={`slot-${day}`}
+                                                            checked={scheduleData.daysOfWeekSessions[day] === idx}
+                                                            onChange={() => handleSlotChange(day, idx)}
+                                                        />
+                                                    </td>
                                                 ))}
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            {daysOfWeek.map(day => (
-                                                <tr key={day}>
-                                                    <td className="border border-gray-300 px-2 py-1 font-medium">{day}</td>
-                                                    {[1, 2, 3, 4, 5].map(idx => (
-                                                        <td key={idx} className="border border-gray-300 px-2 py-1">
-                                                            <input
-                                                                type="checkbox"
-                                                                name={`slot-${day}`}  // nhóm radio theo ngày
-                                                                checked={scheduleData.daysOfWeekSessions[day] === idx}  // so sánh với số slot đã chọn
-                                                                onChange={() => handleSlotChange(day, idx)}
-                                                            />
-                                                        </td>
-                                                    ))}
-                                                </tr>
-                                            ))}
-
-                                        </tbody>
-                                    </table>
-                                </div>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
+                        </div>
 
-                            <div className="flex justify-end gap-3">
-                                <button
-                                    type="button"
-                                    onClick={() => setScheduleModalVisible(false)}
-                                    className="px-4 py-2 rounded border border-gray-400 hover:bg-gray-200"
-                                >
-                                    Hủy
-                                </button>
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                                >
-                                    {loading ? 'Đang xử lý...' : 'Tạo lịch học'}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+                        {/* Buttons */}
+                        <div className="flex justify-end gap-3">
+                            <button
+                                type="button"
+                                onClick={() => setScheduleModalVisible(false)}
+                                className="px-4 py-2 rounded border border-gray-400 hover:bg-gray-200"
+                            >
+                                Hủy
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                            >
+                                {loading ? 'Đang xử lý...' : 'Tạo lịch học'}
+                            </button>
+                        </div>
+                    </form>
+                </DialogContent>
+            </Dialog>
+
             <Dialog open={openDialog} onOpenChange={setOpenDialog}>
                 <DialogContent className="max-w-xl">
                     <DialogHeader>

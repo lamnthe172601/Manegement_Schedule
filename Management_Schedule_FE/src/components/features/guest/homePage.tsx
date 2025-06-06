@@ -4,11 +4,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ArrowRight, Star, Users, BookOpen, Award } from "lucide-react"
+import useGetCourses from "@/hooks/api/course/use-get-course"
 
 export default function HomePage() {
+    const { data = [], isLoading, error } = useGetCourses();
+    console.log("data", data)
     return (
         <div className="flex flex-col min-h-screen">
-            {/* Hero Section */}         
+            {/* Hero Section */}
             {/* Features Section */}
             <section className="py-16 bg-white">
                 <div className="container mx-auto px-4">
@@ -61,7 +64,6 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* Popular Courses */}
             <section className="py-16 bg-gray-50">
                 <div className="container mx-auto px-4">
                     <div className="flex justify-between items-center mb-10">
@@ -71,47 +73,56 @@ export default function HomePage() {
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {[1, 2, 3, 4].map((id) => (
-                            <Card key={id} className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-shadow">
-                                <CardContent className="p-0">
-                                    <div className="relative h-48">
-                                        <Image src={`/course-${id}.jpg`} alt={`Khóa học ${id}`} fill className="object-cover" />
-                                        <div className="absolute top-2 right-2">
-                                            <Badge className="bg-blue-500">Nổi bật</Badge>
-                                        </div>
-                                    </div>
-                                    <div className="p-5">
-                                        <div className="flex justify-between items-center mb-2">
-                                            <Badge variant="outline" className="bg-gray-100 text-gray-700 border-0">
-                                                Tiếng Anh
-                                            </Badge>
-                                            <div className="flex items-center text-yellow-500">
-                                                <Star className="fill-current w-4 h-4" />
-                                                <span className="text-sm ml-1">4.9</span>
+                    {isLoading ? (
+                        <p>Đang tải khóa học...</p>
+                    ) : error ? (
+                        <p>Không thể tải khóa học</p>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {data.map((course) => (
+                                <Card key={course.courseID} className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-shadow">
+                                    <CardContent className="p-0">
+                                        <div className="relative h-48 bg-gray-200">
+                                            {course.thumbnailUrl ? (
+                                                <Image
+                                                    src={course.thumbnailUrl}
+                                                    alt={course.courseName}
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-gray-500 text-sm">
+                                                    Không có ảnh
+                                                </div>
+                                            )}
+                                            <div className="absolute top-2 right-2">
+                                                <Badge className="bg-blue-500">Nổi bật</Badge>
                                             </div>
                                         </div>
-                                        <h3 className="font-bold text-lg mb-2">
-                                            {id === 1 && "Tiếng Anh giao tiếp cơ bản"}
-                                            {id === 2 && "Tiếng Anh thương mại"}
-                                            {id === 3 && "Ngữ pháp tiếng Anh nâng cao"}
-                                            {id === 4 && "Luyện phát âm chuẩn"}
-                                        </h3>
-                                        <p className="text-gray-600 text-sm mb-4">
-                                            {id === 1 && "Khóa học dành cho người mới bắt đầu học tiếng Anh"}
-                                            {id === 2 && "Tiếng Anh chuyên ngành cho người đi làm"}
-                                            {id === 3 && "Nâng cao kỹ năng ngữ pháp tiếng Anh"}
-                                            {id === 4 && "Phát âm chuẩn như người bản xứ"}
-                                        </p>
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-blue-500 font-bold">{id % 2 === 0 ? "1.200.000₫" : "Miễn phí"}</span>
-                                            <span className="text-sm text-gray-500">120 học viên</span>
+                                        <div className="p-5">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <Badge variant="outline" className="bg-gray-100 text-gray-700 border-0">
+                                                    {course.level === 1 ? "Cơ bản" : course.level === 2 ? "Trung cấp" : "Nâng cao"}
+                                                </Badge>
+                                                <div className="flex items-center text-yellow-500">
+                                                    <Star className="fill-current w-4 h-4" />
+                                                    <span className="text-sm ml-1">4.9</span>
+                                                </div>
+                                            </div>
+                                            <h3 className="font-bold text-lg mb-2">{course.courseName}</h3>
+                                            <p className="text-gray-600 text-sm mb-4">{course.description}</p>
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-blue-500 font-bold">
+                                                    {course.price === 0 ? "Miễn phí" : course.price.toLocaleString("vi-VN") + "₫"}
+                                                </span>
+                                                <span className="text-sm text-gray-500">120 học viên</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
 
@@ -269,7 +280,7 @@ export default function HomePage() {
                 </div>
             </section>
 
-            
+
         </div>
     )
 }

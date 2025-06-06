@@ -16,6 +16,7 @@ type Props = {
 
 const UserEditDialog: React.FC<Props> = ({ open, onOpenChange, user, onSave }) => {
     const [formData, setFormData] = React.useState<Partial<User>>({})
+    const [previewUrl, setPreviewUrl] = React.useState<string | null>(null)
 
     React.useEffect(() => {
         if (user) {
@@ -31,12 +32,26 @@ const UserEditDialog: React.FC<Props> = ({ open, onOpenChange, user, onSave }) =
                 status: user.status,
                 role: user.role
             })
+
+            // Nếu là URL chuỗi, hiển thị ảnh preview từ server
+            if (typeof user.avatarUrl === "string") {
+                setPreviewUrl(user.avatarUrl)
+            } else {
+                setPreviewUrl(null)
+            }
         }
     }, [user])
-    console.log("formData", formData)
 
     const handleChange = (field: keyof Partial<User>, value: any) => {
         setFormData((prev) => ({ ...prev, [field]: value }))
+    }
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            handleChange("avatarUrl", file)
+            setPreviewUrl(URL.createObjectURL(file))
+        }
     }
 
     const handleSave = () => {
@@ -47,9 +62,6 @@ const UserEditDialog: React.FC<Props> = ({ open, onOpenChange, user, onSave }) =
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                    <DialogTitle>Chỉnh sửa hội viên</DialogTitle>
-                </DialogHeader>
                 <div className="grid grid-cols-2 gap-4">
                     <div>
                         <Label>Họ tên</Label>
@@ -70,7 +82,11 @@ const UserEditDialog: React.FC<Props> = ({ open, onOpenChange, user, onSave }) =
                         <Label>Ngày sinh</Label>
                         <Input
                             type="date"
-                            value={formData.dateOfBirth ? format(formData.dateOfBirth, "yyyy-MM-dd") : ""}
+                            value={
+                                formData.dateOfBirth && !isNaN(new Date(formData.dateOfBirth).getTime())
+                                    ? format(new Date(formData.dateOfBirth), "yyyy-MM-dd")
+                                    : ""
+                            }
                             onChange={(e) => handleChange("dateOfBirth", e.target.value ? new Date(e.target.value) : undefined)}
                         />
                     </div>
@@ -86,17 +102,20 @@ const UserEditDialog: React.FC<Props> = ({ open, onOpenChange, user, onSave }) =
                         <Label>Giới thiệu</Label>
                         <Textarea value={formData.introduction || ""} onChange={(e) => handleChange("introduction", e.target.value)} />
                     </div>
+
                     <div className="col-span-2">
                         <Label>Avatar</Label>
+                        {previewUrl && (
+                            <img
+                                src={previewUrl}
+                                alt="Avatar preview"
+                                className="w-24 h-24 object-cover rounded-full mb-2"
+                            />
+                        )}
                         <Input
                             type="file"
                             accept="image/*"
-                            onChange={(e) => {
-                                const file = e.target.files?.[0]
-                                if (file) {
-                                    handleChange("avatarUrl", file)
-                                }
-                            }}
+                            onChange={handleImageChange}
                         />
                     </div>
 
@@ -133,5 +152,4 @@ const UserEditDialog: React.FC<Props> = ({ open, onOpenChange, user, onSave }) =
         </Dialog>
     )
 }
-
 export default UserEditDialog

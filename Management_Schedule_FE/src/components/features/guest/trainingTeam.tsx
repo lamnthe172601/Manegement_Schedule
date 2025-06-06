@@ -29,17 +29,17 @@ export default function TrainingTeamPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {teamMembers.map((member) => (
-            <Card key={member.id} className="border-0 shadow-md overflow-hidden">
+            <Card key={member.userID} className="border-0 shadow-md overflow-hidden">
               <CardContent className="p-0 text-center">
                 <div className="relative w-40 h-40 mx-auto mt-6 mb-4">
                   <Image
-                    src="/teacher.jpg"
+                    src={member.avatarUrl || "/teacher.jpg"}
                     alt={member.fullName}
                     fill
                     className="rounded-full object-cover"
                   />
                 </div>
-                <h3 className="font-bold text-lg mb-1">{member.fullName}</h3>
+                <h3 className="font-bold text-lg mb-1">Teacher:{member.fullName}</h3>
                 <p className="text-gray-500 text-sm mb-3">{member.gender == "M" ? "Nam" : "Nữ"}</p>
                 <div className="flex justify-center gap-2 mb-4">
                   <Badge className="bg-blue-500 hover:bg-blue-600 rounded-full w-6 h-6 p-0 flex items-center justify-center">
