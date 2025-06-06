@@ -1,4 +1,7 @@
 export class Endpoints {
+  static readonly baseApiURL={
+    URL: process.env.NEXT_PUBLIC_API_URL
+  }
   static readonly Auth = {
     REGISTER: "Authentication/SignUp",
     LOGIN: "Authentication/SignIn",
@@ -6,6 +9,8 @@ export class Endpoints {
     REFRESH: "auth/refresh",
     SENDOTP: "Authentication/send-otp",
     CHANGE_PASSWORD_FIRST_TIME: "auth/change-password-first-time",
+    LOGIN_GOOGLE: "Authentication/login-google"
+
   }
   static readonly Fine = {
     GET_ALL: "fines",
@@ -31,6 +36,7 @@ export class Endpoints {
     CREATE: "User",
     UPDATE: (id: string) => `User/${id}`,
     DELETE: (id: string) => `User/${id}`,
+    GETUSERBYEMAIL: (email:string) => `User/${email}`
   }
   static readonly Books = {
     GET_ALL: "books",

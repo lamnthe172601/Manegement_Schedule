@@ -9,7 +9,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
         { icon: User, label: "Trang cá nhân", href: "/student/dashboard/profile" },
         { icon: BookOpenCheck, label: "Khóa học của tôi", href: "/student/dashboard/my-courses" },
         { icon: Calendar, label: "Lịch học", href: "/student/dashboard/schedule" },
-        { icon: Settings, label: "Cài đặt", href: "/student/dashboard/settings" },
+        { icon: Settings, label: "Cài đặt", href: "/student/dashboard/my-settings" },
     ]
     const userData = useAtomValue(userInfoAtom);
 
