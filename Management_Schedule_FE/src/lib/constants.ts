@@ -17,4 +17,10 @@ export class Constants {
     2: "Giáo viên",
     3: "Học viên",
   }
+
+  static readonly statusMap: Record<string, string> = {
+    1: "Hoạt động",
+    2: "Không hoạt động",
+    3: "Khóa",
+  }
 }

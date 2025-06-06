@@ -16,15 +16,25 @@ const AuthWrapper = ({ children }: AuthWrapperProps) => {
   const router = useRouter();
   const userData = useAtomValue(userInfoAtom);
 
+  // Danh sách route không cần login vẫn xem được
+  const publicPages = [
+    "/login",
+    "/register",
+    "/user/forget-password",
+    "/user/enter-otp",
+    "/user/reset-password",
+    "/user/team-page",   // Thêm các trang public khác nếu cần
+    "/user/khoa-hoc",
+    "/user/student",
+    "/",
+  ];
+
   useEffect(() => {
     const token = localStorage.getItem(Constants.API_TOKEN_KEY);
-    const isLoginPage = router.pathname === "/login";
-    const isRegisterPage = router.pathname === "/register";
-    const isForgetPasswordPage = router.pathname === "/user/forget-password";
-    const isEnterOtpPage = router.pathname === "/user/enter-otp";
-    const isChangePasswordPage = router.pathname === "/user/reset-password";
+
+    // Nếu chưa đăng nhập và truy cập trang không public thì redirect về trang chủ
     if (!token) {
-      if (!isLoginPage && !isRegisterPage && !isForgetPasswordPage && !isEnterOtpPage && !isChangePasswordPage) {
+      if (!publicPages.includes(router.pathname)) {
         router.replace("/");
       }
       return;
@@ -34,11 +44,11 @@ const AuthWrapper = ({ children }: AuthWrapperProps) => {
       const { exp } = jwtDecode<{ exp: number }>(token);
       if (Date.now() >= exp * 1000) {
         localStorage.removeItem(Constants.API_TOKEN_KEY);
-        if (!isLoginPage && !isRegisterPage) {
+        if (!["/login", "/register"].includes(router.pathname)) {
           router.replace("/login");
         }
       } else {
-        if (isLoginPage || isRegisterPage) {
+        if (["/login", "/register"].includes(router.pathname)) {
           router.replace("/dashboard");
         }
       }

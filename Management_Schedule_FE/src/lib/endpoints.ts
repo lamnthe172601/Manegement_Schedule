@@ -21,13 +21,7 @@ export class Endpoints {
     PATCH: (id: string) => `fines/${id}/pay`,
     GET_BY_USER: "fines/me",
   }
-  static readonly Review = {
-    CREATE: "reviews",
-    GET_BY_USER_BY_BOOK_ID: (id: string) => `reviews/book/${id}/user`,
-    GET_ALL: (id: string) => `reviews/book/${id}`,
-    UPDATE: (id: string) => `reviews/${id}`,
-    DELETE: (id: string) => `reviews/${id}`,
-  }
+
   static readonly Users = {
     GET_ALL: "User",
     GET_ALLV2: "User/v2",
@@ -37,6 +31,12 @@ export class Endpoints {
     UPDATE: (id: string) => `User/${id}`,
     DELETE: (id: string) => `User/${id}`,
     GETUSERBYEMAIL: (email:string) => `User/${email}`
+  }
+  static readonly Classes = {
+    GET_ALL: "Class",
+  }
+  static readonly Schedule = {
+    GET_ALL: "Schedule",
   }
   static readonly Books = {
     GET_ALL: "books",
@@ -53,12 +53,5 @@ export class Endpoints {
     CREATE: "Courses",
     UPDATE: (id: string) => `Courses/${id}`,
     DELETE: (id: string) => `Courses/${id}`,
-  }
-  static readonly Categories = {
-    GET_ALL: "categories",
-    GET_BY_ID: (id: string) => `categories/${id}`,
-    CREATE: "categories",
-    UPDATE: (id: string) => `categories/${id}`,
-    DELETE: (id: string) => `categories/${id}`,
   }
 }

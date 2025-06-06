@@ -8,36 +8,7 @@ import { Button } from "@/components/ui/button"
 export default function CoursesPage() {
 
   const { data, error, isLoading } = useGetCourses()
-  const freeCourses = [
-    {
-      id: 5,
-      title: "Ngôn ngữ Sass",
-      subtitle: "CSS Preprocessor",
-      tags: ["HTML", "CSS Pro"],
-      students: 25,
-    },
-    {
-      id: 6,
-      title: "Ngôn ngữ Sass",
-      subtitle: "CSS Preprocessor",
-      tags: ["HTML", "CSS Pro"],
-      students: 18,
-    },
-    {
-      id: 7,
-      title: "Ngôn ngữ Sass",
-      subtitle: "CSS Preprocessor",
-      tags: ["HTML", "CSS Pro"],
-      students: 22,
-    },
-    {
-      id: 8,
-      title: "Ngôn ngữ Sass",
-      subtitle: "CSS Preprocessor",
-      tags: ["HTML", "CSS Pro"],
-      students: 30,
-    },
-  ]
+
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -66,7 +37,7 @@ export default function CoursesPage() {
 
 
                   <div className="text-sm text-gray-500 flex items-center">
-                    Time học: <Clock className="w-4 h-4 mr-2" />{course.duration}Giờ
+                    Slot học: <Clock className="w-4 h-4 mr-2" />{course.duration} Slot
 
                   </div>
                   <div className="text-sm text-gray-500 flex items-center">
@@ -76,10 +47,11 @@ export default function CoursesPage() {
 
                 </div>
                 <div className="flex justify-center mt-4">
-                  {!course.isComingSoon ? (
-                    <Button>Mua khóa học</Button>
+                  {!course.isSelling ? (
+                    <span className="text-yellow-600 font-semibold">Chưa được mở bán</span>
+
                   ) : (
-                    <span className="text-yellow-600 font-semibold">Sắp ra mắt</span>
+                    <Button>Mua khóa học</Button>
                   )}
                 </div>
 
@@ -89,7 +61,7 @@ export default function CoursesPage() {
         </div>
       </div>
 
-      <div className="mb-10">
+      {/* <div className="mb-10">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">Khóa học miễn phí</h2>
           <Link href="/khoa-hoc-mien-phi" className="text-sm text-gray-500 flex items-center hover:text-blue-500">
@@ -122,7 +94,7 @@ export default function CoursesPage() {
             </Card>
           ))}
         </div>
-      </div>
+      </div> */}
 
     </div>
   )

@@ -12,6 +12,12 @@ namespace Management_Schedule_BE.DTOs
         byte Status,
         DateTime CreatedAt,
         DateTime ModifiedAt,
-        string CourseName
+        string CourseName,
+        int Duration,
+        bool IsHaveSchedule,
+        string Note,
+        int EnrolledStudents,
+        string TeacherName,
+        bool IsHaveTeacher
     );
 } 

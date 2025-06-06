@@ -14,12 +14,21 @@ export const useRegister = () => {
     try {
       console.log("register", full_name, phone, email, password)
       setLoading(true)
-      const response = await axios.post(Endpoints.Auth.REGISTER, {
-        email,
-        passwordHash: password,
-        fullName: full_name,
-        phone,
-      })
+      const response = await axios.post(
+        Endpoints.Auth.REGISTER,
+        {
+          email,
+          passwordHash: password,
+          fullName: full_name,
+          phone,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      )
+
       return response.data
     } catch (error) {
       throw error

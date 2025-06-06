@@ -9,8 +9,10 @@ namespace Management_Schedule_BE.Helpers.Mappings
         public CourseMappingProfile()
         {
             CreateMap<Course, CourseDTO>();
-            CreateMap<CreateCourseDTO, Course>();
+            CreateMap<CreateCourseDTO, Course>()
+                .ForMember(dest => dest.ThumbnailUrl, opt => opt.Ignore());
             CreateMap<UpdateCourseDTO, Course>()
+                .ForMember(dest => dest.ThumbnailUrl, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }

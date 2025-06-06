@@ -5,7 +5,7 @@ namespace Management_Schedule_BE.DTOs
     public record DetailedScheduleDTO(
         int ScheduleID,
         int ClassID,
-        int TeacherID,
+        int? TeacherID,
         int StudySessionId,
         string Room,
         byte Status,

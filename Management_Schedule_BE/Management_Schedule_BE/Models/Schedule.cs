@@ -14,8 +14,8 @@ namespace Management_Schedule_BE.Models
         [Required]
         public int ClassID { get; set; }
 
-        [Required]
-        public int TeacherID { get; set; }
+       
+        public int? TeacherID { get; set; }
 
         [Required]
         public int StudySessionId { get; set; }

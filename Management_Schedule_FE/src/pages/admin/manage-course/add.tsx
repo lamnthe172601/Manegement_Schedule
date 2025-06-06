@@ -26,6 +26,7 @@ import {
   showErrorToast,
 } from '@/components/common/toast/toast'
 import { useAddCourse } from '@/hooks/api/course/use-add-course'
+import { useState } from 'react'
 
 const courseSchema = z.object({
   courseName: z.string().min(1, 'Vui lòng nhập tên khóa học'),
@@ -44,6 +45,9 @@ const courseSchema = z.object({
 export default function AddCourse() {
   const router = useRouter()
   const { addCourse } = useAddCourse();
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+
   const form = useForm({
     resolver: zodResolver(courseSchema),
     defaultValues: {
@@ -62,22 +66,32 @@ export default function AddCourse() {
   })
 
   const onSubmit = async (values: z.infer<typeof courseSchema>) => {
-    const transformedData = {
-      ...values,
-      price: parseFloat(values.price),
-      discountPercent: parseInt(values.discountPercent),
-      duration: parseInt(values.duration),
-      level: parseInt(values.level),
-    }
-    console.log("Giá trị form submit:", transformedData)
     try {
-      await addCourse({ data: transformedData })
-      showSuccessToast('Thêm khóa học thành công!')
-      router.push('/admin/manage-course')
+      const formData = new FormData();
+
+      formData.append("CourseName", values.courseName);
+      formData.append("Description", values.description);
+      formData.append("Price", values.price);
+      formData.append("IsSelling", values.isSelling.toString());
+      formData.append("IsComingSoon", values.isComingSoon.toString());
+      formData.append("IsPro", values.isPro.toString());
+      formData.append("IsCompletable", values.isCompletable.toString());
+      formData.append("DiscountPercent", values.discountPercent);
+      formData.append("Duration", values.duration);
+      formData.append("Level", values.level);
+
+      if (thumbnailFile) {
+        formData.append("ThumbnailFile", thumbnailFile); // 👈 Đây là file thực tế
+      }
+
+      await addCourse(formData);
+      showSuccessToast("Thêm khóa học thành công!");
+      router.push("/admin/manage-course");
     } catch (error) {
-      showErrorToast(`Thêm khóa học thất bại!, ${error}`)
+      showErrorToast(`Thêm khóa học thất bại! ${error}`);
     }
-  }
+  };
+
 
   return (
     <Form {...form}>
@@ -133,19 +147,34 @@ export default function AddCourse() {
         />
 
         {/* Ảnh */}
-        <FormField
-          control={form.control}
-          name="thumbnailUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Ảnh</FormLabel>
-              <FormControl>
-                <Input placeholder="URL ảnh hoặc tên file" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Thumbnail</label>
+          {previewUrl && (
+            <img
+              src={previewUrl}
+              alt="Thumbnail preview"
+              className="w-32 h-48 object-cover rounded mb-2"
+            />
           )}
-        />
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                const objectUrl = URL.createObjectURL(file);
+                setPreviewUrl(objectUrl);
+                setThumbnailFile(file);
+                form.setValue("thumbnailUrl", file.name); // ✅ Đánh dấu trường thumbnailUrl đã có giá trị
+              }
+            }}
+          />
+
+
+          <FormMessage>{form.formState.errors.thumbnailUrl?.message}</FormMessage>
+        </div>
+
+
 
         {/* Trạng thái Selling */}
         <FormField
@@ -303,6 +332,6 @@ export default function AddCourse() {
           </Button>
         </div>
       </form>
-    </Form>
+    </Form >
   )
 }

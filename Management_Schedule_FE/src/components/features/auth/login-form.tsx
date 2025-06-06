@@ -71,11 +71,16 @@ export function LoginForm({
         localStorage.setItem(Constants.API_TOKEN_KEY, token)
 
         // Decode token để lấy thông tin user (payload)
-        const user = jwtDecode<JwtUser>(token)
-        console.log("Decoded user:", user)
-        setUserAtom(user)
-        console.log(userInfoAtom)
-        router.push("/")
+        const user = jwtDecode<JwtUser>(token);
+        console.log("Decoded user:", user);
+        setUserAtom(user);
+        if (user.role === "Admin") {
+          router.push("/admin/dashboards");
+        } else {
+          router.push("/")
+        }
+        // Lưu thông tin user vào atom (localStorage
+
       } else {
         showErrorToast(response.message || "Đăng nhập thất bại")
       }

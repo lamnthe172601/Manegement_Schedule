@@ -6,7 +6,6 @@ import React from "react"
 import { User } from "@/hooks/api/user/use-get-users"
 import { Textarea } from "@/components/ui/textarea"
 import { format } from "date-fns"
-import axios from "axios"
 
 type Props = {
     open: boolean
@@ -17,6 +16,7 @@ type Props = {
 
 const UserEditDialog: React.FC<Props> = ({ open, onOpenChange, user, onSave }) => {
     const [formData, setFormData] = React.useState<Partial<User>>({})
+    const [previewUrl, setPreviewUrl] = React.useState<string | null>(null)
 
     React.useEffect(() => {
         if (user) {
@@ -32,38 +32,36 @@ const UserEditDialog: React.FC<Props> = ({ open, onOpenChange, user, onSave }) =
                 status: user.status,
                 role: user.role
             })
+
+            // Nếu là URL chuỗi, hiển thị ảnh preview từ server
+            if (typeof user.avatarUrl === "string") {
+                setPreviewUrl(user.avatarUrl)
+            } else {
+                setPreviewUrl(null)
+            }
         }
     }, [user])
-    console.log("formData", formData)
 
     const handleChange = (field: keyof Partial<User>, value: any) => {
         setFormData((prev) => ({ ...prev, [field]: value }))
     }
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            handleChange("avatarUrl", file)
+            setPreviewUrl(URL.createObjectURL(file))
+        }
+    }
+
     const handleSave = () => {
         if (!formData.userID) return
-        const formPayload = new FormData()
-        Object.entries(formData).forEach(([key, value]) => {
-            formPayload.append(key, value as any)
-        })
-        axios.put(`/api/user/${formData.userID}`, formPayload, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-        })
-            .then(response => {
-                console.log("User updated successfully:", response.data)
-                onSave(formData)
-            })
-            .catch(error => {
-                console.error("Error updating user:", error)
-            })
+        onSave(formData)
     }
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                    <DialogTitle>Chỉnh sửa hội viên</DialogTitle>
-                </DialogHeader>
                 <div className="grid grid-cols-2 gap-4">
                     <div>
                         <Label>Họ tên</Label>
@@ -84,7 +82,11 @@ const UserEditDialog: React.FC<Props> = ({ open, onOpenChange, user, onSave }) =
                         <Label>Ngày sinh</Label>
                         <Input
                             type="date"
-                            value={formData.dateOfBirth ? format(formData.dateOfBirth, "yyyy-MM-dd") : ""}
+                            value={
+                                formData.dateOfBirth && !isNaN(new Date(formData.dateOfBirth).getTime())
+                                    ? format(new Date(formData.dateOfBirth), "yyyy-MM-dd")
+                                    : ""
+                            }
                             onChange={(e) => handleChange("dateOfBirth", e.target.value ? new Date(e.target.value) : undefined)}
                         />
                     </div>
@@ -100,26 +102,41 @@ const UserEditDialog: React.FC<Props> = ({ open, onOpenChange, user, onSave }) =
                         <Label>Giới thiệu</Label>
                         <Textarea value={formData.introduction || ""} onChange={(e) => handleChange("introduction", e.target.value)} />
                     </div>
+
                     <div className="col-span-2">
-                        <Label>Avatar URL</Label>
-                        <Input value={formData.avatarUrl || ""} onChange={(e) => handleChange("avatarUrl", e.target.value)} />
+                        <Label>Avatar</Label>
+                        {previewUrl && (
+                            <img
+                                src={previewUrl}
+                                alt="Avatar preview"
+                                className="w-24 h-24 object-cover rounded-full mb-2"
+                            />
+                        )}
+                        <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                        />
                     </div>
+
                     <div>
                         <Label>Trạng thái</Label>
                         <select
                             className="w-full border rounded px-3 py-2"
-                            value={formData.status?.toString() || "0"}
+                            value={formData.status?.toString() || "1"}
                             onChange={(e) => handleChange("status", Number(e.target.value))}
                         >
-                            <option value={0}>Khóa</option>
                             <option value={1}>Hoạt động</option>
+                            <option value={2}>Không hoạt động</option>
+                            <option value={3}>Khóa</option>
+
                         </select>
                     </div>
                     <div>
                         <Label>Role</Label>
                         <select
                             className="w-full border rounded px-3 py-2"
-                            value={formData.role?.toString() || "0"}
+                            value={formData.role?.toString() || "3"}
                             onChange={(e) => handleChange("role", Number(e.target.value))}
                         >
                             <option value={2}>Teacher</option>
@@ -135,5 +152,4 @@ const UserEditDialog: React.FC<Props> = ({ open, onOpenChange, user, onSave }) =
         </Dialog>
     )
 }
-
 export default UserEditDialog

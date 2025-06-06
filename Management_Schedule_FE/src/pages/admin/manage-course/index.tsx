@@ -1,4 +1,3 @@
-import useGetUsers, { User } from "@/hooks/api/user/use-get-users"
 import React from "react"
 import {
   Table,
@@ -44,7 +43,6 @@ import {
   ChevronDownIcon,
   MinusIcon,
 } from "lucide-react"
-import { useRouter } from "next/router"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import {
@@ -55,20 +53,20 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 
-import { mutate, useSWRConfig } from "swr"
+import { mutate } from "swr"
 import useGetCourses, { Course } from "@/hooks/api/course/use-get-course"
 import { Slider } from "@/components/ui/slider"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useEditCourse } from "@/hooks/api/course/use-edit-course"
 import { showErrorToast, showSuccessToast } from "@/components/common/toast/toast"
 import { Endpoints } from "@/lib/endpoints"
-const PAGE_SIZE = 10
+const PAGE_SIZE = 5
 
 const SORTABLE_COLUMNS = [
   { key: "courseName", label: "Tên" },
   { key: "price", label: "Price" },
-  { key: "discountPercent", label: "DiscountPercent (%)" },
-  { key: "duration", label: "Duration (hours)" },
+  { key: "discountPercent", label: "(%)" },
+  { key: "duration", label: "Số lượng (slot)" },
 ]
 
 const SORT_ICONS = {
@@ -90,12 +88,11 @@ const CoursePage = () => {
   const [courseToView, setCourseToView] = React.useState<Course | null>(null)
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
   const [courseToDelete, setCourseToDelete] = React.useState<Course | null>(null)
-  const router = useRouter()
   const { editCourse, loading } = useEditCourse()
   const [editForm, setEditForm] = React.useState<Partial<Course>>({})
   const [editDialogOpen, setEditDialogOpen] = React.useState(false)
   const [courseToEdit, setCourseToEdit] = React.useState<Course | null>(null)
-
+  const [previewUrl, setPreviewUrl] = React.useState<string | null>(null)
 
   const filtered = (data || []).filter((course) =>
     course.courseName.toLowerCase().includes(search.toLowerCase())
@@ -134,6 +131,8 @@ const CoursePage = () => {
   const totalPages = Math.ceil(total / PAGE_SIZE)
   const paginated = sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
+  console.log(paginated, total, totalPages)
+
   const handleSort = (key: string) => {
     setSorts((prev) => {
       const existing = prev.find((s) => s.key === key)
@@ -150,7 +149,9 @@ const CoursePage = () => {
   }
   React.useEffect(() => {
     if (courseToEdit) {
-
+      if (courseToEdit?.thumbnailUrl) {
+        setPreviewUrl(typeof courseToEdit.thumbnailUrl === "string" ? courseToEdit.thumbnailUrl : null);
+      }
       setEditForm({
         courseID: courseToEdit.courseID,
         courseName: courseToEdit.courseName,
@@ -159,6 +160,7 @@ const CoursePage = () => {
         discountPercent: courseToEdit.discountPercent,
         duration: courseToEdit.duration,
         createdAt: courseToEdit.createdAt,
+        thumbnailUrl: courseToEdit.thumbnailUrl,
         isSelling: courseToEdit.isSelling,
         isComingSoon: courseToEdit.isComingSoon,
         isPro: courseToEdit.isPro,
@@ -168,26 +170,53 @@ const CoursePage = () => {
     }
   }, [courseToEdit]);
 
+
   const handleDeleteClick = (course: Course) => {
     setCourseToDelete(course)
     setDeleteDialogOpen(true)
   }
+  const convertToFormData = (data: Partial<Course>) => {
+    const formData = new FormData();
+
+    for (const key in data) {
+      const value = data[key as keyof Course];
+
+      if (key === "thumbnailUrl") {
+        if (typeof value === "object" && value instanceof File) {
+          formData.append("ThumbnailFile", value); // đổi tên thành "ThumbnailFile"
+        } else if (typeof value === "string") {
+          formData.append("thumbnailUrl", value);
+        }
+      } else if (value !== undefined && value !== null) {
+        formData.append(key, value.toString());
+      }
+    }
+
+    return formData;
+  };
+
+
+
   const handleSaveEdit = async () => {
     if (!editForm.courseID) return;
-    console.log("editForm", editForm)
+
     try {
-      await editCourse({ id: editForm.courseID.toString(), data: editForm });
+      const formData = convertToFormData(editForm);
+
+      await editCourse({ id: editForm.courseID.toString(), data: formData }); // API hỗ trợ FormData
       showSuccessToast("Cập nhật khóa học thành công!");
       setEditDialogOpen(false);
       setCourseToEdit(null);
-      mutate(Endpoints.Courses.GET_ALL)
-      setEditDialogOpen(false)
-      // Optionally, trigger refetch of courses here if using SWR or similar
+      setEditForm({});
+      setPreviewUrl(null);
+
+      mutate(Endpoints.Courses.GET_ALL);
     } catch (err) {
       console.error(err);
       showErrorToast("Cập nhật khóa học thất bại!");
     }
   };
+
   const handleEditChange = (field: keyof Course, value: any) => {
     setEditForm((prev) => ({
       ...prev,
@@ -315,8 +344,10 @@ const CoursePage = () => {
                       </TableHead>
                     )
                   })}
-                  <TableHead>Ngày tạo</TableHead>
+                  {/* <TableHead>Ngày tạo</TableHead> */}
+                  <TableHead>Hình ảnh</TableHead>
                   <TableHead>Trạng thái</TableHead>
+                  <TableHead>Tình trạng</TableHead>
                   <TableHead>Hành động</TableHead>
                 </TableRow>
               </TableHeader>
@@ -335,12 +366,26 @@ const CoursePage = () => {
                       <TableCell>{course.price.toLocaleString("vi-VN")}đ</TableCell>
                       <TableCell>{course.discountPercent}%</TableCell>
                       <TableCell>{course.duration}</TableCell>
-                      <TableCell>{new Date(course.createdAt).toLocaleDateString("vi-VN")}</TableCell>
+                      {/* <TableCell>{new Date(course.createdAt).toLocaleDateString("vi-VN")}</TableCell> */}
+                      <TableCell>
+                        <img
+                          src={course.thumbnailUrl}
+                          alt="Thumbnail preview"
+                          className="w-32 h-32 object-cover rounded mb-2"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        {course.isSelling ? (
+                          <Badge className="bg-green-600">Có bán </Badge>
+                        ) : (
+                          <Badge variant="destructive">Đéo bán</Badge>
+                        )}
+                      </TableCell>
                       <TableCell>
                         {course.isComingSoon ? (
-                          <Badge className="bg-green-600">Hoạt động</Badge>
+                          <Badge className="bg-green-600">Săp ra mắt </Badge>
                         ) : (
-                          <Badge variant="destructive">Ngưng hoạt động</Badge>
+                          <Badge variant="destructive">Ra mắt</Badge>
                         )}
                       </TableCell>
                       <TableCell>
@@ -499,6 +544,31 @@ const CoursePage = () => {
                   onChange={(e) => handleEditChange("duration", e.target.value)}
                 />
               </div>
+
+              <div>
+                <Label>Thumbnail</Label>
+                {previewUrl && (
+                  <img
+                    src={previewUrl}
+                    alt="Thumbnail preview"
+                    className="w-32 h-32 object-cover rounded mb-2"
+                  />
+                )}
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      handleEditChange("thumbnailUrl", file);
+                      setPreviewUrl(URL.createObjectURL(file));
+                    }
+                  }}
+                />
+              </div>
+
+
+
 
               <div>
                 <Label>Mô tả</Label>
