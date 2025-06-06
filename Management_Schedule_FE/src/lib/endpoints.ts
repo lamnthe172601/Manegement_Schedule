@@ -37,6 +37,7 @@ export class Endpoints {
   }
   static readonly Schedule = {
     GET_ALL: "Schedule",
+    GET_SCHEDULE_BY_STUDENT_ID: (studentid: string) => `Schedule/student/${studentid}`
   }
   static readonly Books = {
     GET_ALL: "books",
@@ -53,5 +54,9 @@ export class Endpoints {
     CREATE: "Courses",
     UPDATE: (id: string) => `Courses/${id}`,
     DELETE: (id: string) => `Courses/${id}`,
+  }
+
+  static readonly Enrollment = {
+    GET_BY_STUDENT_ID: (studentId:string) => `Enrollment/${studentId}`
   }
 }

@@ -19,8 +19,7 @@ import {
   DialogTrigger,
   DialogContent,
   DialogHeader,
-  DialogTitle,
-  DialogDescription,
+  DialogTitle
 } from "@/components/ui/dialog"
 function Page() {
   const [user] = useAtom(userInfoAtom)
@@ -28,7 +27,6 @@ function Page() {
   const email: string | undefined = user?.email
   console.log("email", user?.email)
   const fetcher = async (url: string): Promise<UserProfile> => {
-    console.log("url", url)
     const response = await axios.get(url)
     return response.data.data
   }

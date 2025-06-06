@@ -7,57 +7,30 @@ import {
   TableHead,
   TableBody,
 } from "@/components/ui/table"
+import { Schedule } from "@/hooks/api/schedule/use-get-schedules";
+import { Endpoints } from "@/lib/endpoints";
+import { userInfoAtom } from "@/stores/auth";
+import axios from "axios";
+import { useAtom } from "jotai/react";
+import { useEffect, useState } from "react"
+import useSWR from "swr";
 function Page() {
-  const listSchedule = [
-    {
-      id: 1,
-      name: "ASSA",
-      schedule: "Thứ 2",
-      slot: "Ca 1",
-      time: "8h - 10h30",
-      teacher: "Na",
-    },
-    {
-      id: 2,
-      name: "ASSA",
-      schedule: "Thứ 4",
-      slot: "Ca 3",
-      time: "8h - 10h30",
-      teacher: "GV1",
-    },
-    {
-      id: 3,
-      name: "ASSA",
-      schedule: "Thứ 7",
-      slot: "Ca 1",
-      time: "8h - 10h30",
-      teacher: "GV5",
-    },
-    {
-      id: 4,
-      name: "ASSA",
-      schedule: "Thứ 3",
-      slot: "Ca 1",
-      time: "8h - 10h30",
-      teacher: "GV2",
-    },
-    {
-      id: 5,
-      name: "ASSA",
-      schedule: "Thứ 5",
-      slot: "Ca 1",
-      time: "8h - 10h30",
-      teacher: "GV3",
-    },
-    {
-      id: 6,
-      name: "ASSA",
-      schedule: "Chủ nhật",
-      slot: "Ca 1",
-      time: "8h - 10h30",
-      teacher: "GV4",
-    },
-  ]
+  const[schedules,setSchedules] = useState<Schedule[]>([]);
+   const [user] = useAtom(userInfoAtom);
+   const studentId: string | undefined = user?.nameid;
+   const fetcher =  async (url:string):Promise<Schedule[]> => {
+        const response = await axios.get(url);
+        return response.data.data;
+   }
+  const {data, error, isLoading} = useSWR(
+    studentId ? `${Endpoints.baseApiURL.URL}/${Endpoints.Schedule.GET_SCHEDULE_BY_STUDENT_ID(studentId)}` : null,fetcher
+  )
+
+  useEffect(()=>{
+    if(data){
+      setSchedules(data);
+    }
+  },[data])
   return (
     <StudentLayout>
       <div>
@@ -72,7 +45,7 @@ function Page() {
                 Lịch học
               </TableHead>
               <TableHead className="text-white text-center font-extrabold border border-gray-50">
-                Ca học
+                Phòng học
               </TableHead>
               <TableHead className="text-white text-center font-extrabold border border-gray-50">
                 Giờ học
@@ -83,13 +56,13 @@ function Page() {
             </TableRow>
           </TableHeader>
           <TableBody className="bg-[#AACEBF]">
-            {listSchedule.map((s) => (
-              <TableRow key={s.id} className="h-[60px]">
-                <TableCell className="text-black text-center border border-gray-50">{s.name}</TableCell>
-                <TableCell className="text-black text-center border border-gray-50">{s.schedule}</TableCell>
-                <TableCell className="text-black text-center border border-gray-50">{s.slot}</TableCell>
-                <TableCell className="text-black text-center border border-gray-50">{s.time}</TableCell>
-                <TableCell className="text-black text-center border border-gray-50">{s.teacher}</TableCell>
+            {schedules &&  Array.isArray(schedules) && schedules.map((s)=>(
+              <TableRow key={s.scheduleID} className="h-[60px]">
+                <TableCell className="text-black text-center border border-gray-50">{s.className}</TableCell>
+                <TableCell className="text-black text-center border border-gray-50">{s.startTime}</TableCell>
+                <TableCell className="text-black text-center border border-gray-50">{s.room}</TableCell>
+                <TableCell className="text-black text-center border border-gray-50">{s.startTime}</TableCell>
+                <TableCell className="text-black text-center border border-gray-50">{s.teacherName}</TableCell>
               </TableRow>
             ))}
           </TableBody>
