@@ -57,47 +57,96 @@ namespace Management_Schedule_BE.Services
 
         public async Task<ScheduleDTO> CreateScheduleAsync(CreateScheduleDTO dto)
         {
-            // Kiểm tra xem có lịch trùng không
-            var existingSchedule = await _context.Schedules
-                .FirstOrDefaultAsync(s =>
-                s.Date == dto.Date && 
-                s.StudySessionId == dto.StudySessionId && 
-                s.Room == dto.Room && 
-                s.Status != 3);
+            // Kiểm tra lớp học tồn tại
+            var classEntity = await _context.Classes
+                .Include(c => c.Course)
+                .FirstOrDefaultAsync(c => c.ClassID == dto.ClassID);
+            if (classEntity == null)
+                throw new Exception("Không tìm thấy lớp học");
 
-            if (existingSchedule != null)
+            // Kiểm tra giáo viên tồn tại
+            var teacher = await _context.Teachers.FindAsync(dto.TeacherID);
+            if (teacher == null)
+                throw new Exception("Không tìm thấy giáo viên");
+
+            // Kiểm tra ca học tồn tại
+            var studySession = await _context.StudySessions.FindAsync(dto.StudySessionId);
+            if (studySession == null)
+                throw new Exception("Không tìm thấy ca học");
+
+            // Kiểm tra phòng học hợp lệ
+            if (!ValidRooms.Contains(dto.Room))
+                throw new Exception("Phòng học không hợp lệ. Chỉ được sử dụng Room 01, Room 02 hoặc Room 03");
+
+            // Kiểm tra trùng lịch học
+            var isScheduleConflict = await _context.Schedules
+                .AnyAsync(s => s.Date.Date == dto.Date.Date 
+                    && s.StudySessionId == dto.StudySessionId 
+                    && s.Room == dto.Room.Trim() 
+                    && s.Status != 3); // 3 = Cancelled
+            if (isScheduleConflict)
+                throw new Exception("Phòng học đã được sử dụng trong ca học này");
+
+            // Kiểm tra giáo viên có lịch trùng không
+            var isTeacherBusy = await _context.Schedules
+                .AnyAsync(s => s.Date.Date == dto.Date.Date 
+                    && s.StudySessionId == dto.StudySessionId 
+                    && s.TeacherID == dto.TeacherID 
+                    && s.Status != 3);
+            if (isTeacherBusy)
+                throw new Exception("Giáo viên đã có lịch dạy trong ca học này");
+
+            // Lấy danh sách các buổi học của lớp
+            var classSchedules = await _context.Schedules
+                .Where(s => s.ClassID == dto.ClassID)
+                .OrderBy(s => s.Date)
+                .ToListAsync();
+
+            // Đếm số buổi học đã hoàn thành (status = 2)
+            var completedSchedules = classSchedules.Count(s => s.Status == 2);
+            
+            // Đếm số buổi học đang active hoặc pending (status = 0 hoặc 1)
+            var activeSchedules = classSchedules.Count(s => s.Status == 0 || s.Status == 1);
+
+            // Kiểm tra tổng số buổi học
+            if (completedSchedules + activeSchedules >= classEntity.Course.Duration)
+                throw new Exception($"Lớp đã có đủ {classEntity.Course.Duration} buổi học, không thể tạo thêm!");
+
+            // Kiểm tra điều kiện tạo lịch học bù
+            if (dto.Status == 1) // Nếu là lịch học bù (status = 1)
             {
-                throw new Exception("Đã có lớp khác sử dụng phòng này trong ca học này!");
+                // Kiểm tra xem có buổi học nào bị hủy không
+                var cancelledSchedules = classSchedules.Where(s => s.Status == 3).ToList();
+                if (!cancelledSchedules.Any())
+                    throw new Exception("Không thể tạo lịch học bù khi chưa có buổi học nào bị hủy!");
+
+                // Kiểm tra xem ngày tạo lịch học bù có sau ngày của buổi học bị hủy không
+                var lastCancelledSchedule = cancelledSchedules.OrderByDescending(s => s.Date).First();
+                if (dto.Date.Date <= lastCancelledSchedule.Date.Date)
+                    throw new Exception("Lịch học bù phải được tạo sau ngày của buổi học bị hủy!");
+
+                // Kiểm tra số lượng lịch học bù đã tạo
+                var makeupSchedules = classSchedules.Count(s => s.Status == 1);
+                if (makeupSchedules >= cancelledSchedules.Count)
+                    throw new Exception("Đã tạo đủ số lịch học bù cho các buổi bị hủy!");
             }
 
-            // Kiểm tra trùng lịch lớp, giáo viên như cũ
-            var classConflict = await _context.Schedules.AnyAsync(s =>
-                s.ClassID == dto.ClassID && 
-                s.Date == dto.Date && 
-                s.StudySessionId == dto.StudySessionId && 
-                s.Status != 3);
-            if (classConflict)
-                throw new Exception("Lớp học này đã có lịch học trong ca học này!");
+            // Kiểm tra ngày học có hợp lệ không
+            if (dto.Date.Date < classEntity.StartDate.Date)
+                throw new Exception("Ngày học không được trước ngày bắt đầu của lớp");
+            if (dto.Date.Date > classEntity.EndDate?.Date)
+                throw new Exception("Ngày học không được sau ngày kết thúc của lớp");
 
-            if (dto.TeacherID != null)
-            {
-                var teacherConflict = await _context.Schedules.AnyAsync(s =>
-                    s.TeacherID == dto.TeacherID &&
-                    s.Date == dto.Date &&
-                    s.StudySessionId == dto.StudySessionId &&
-                    s.Status != 3);
-                if (teacherConflict)
-                    throw new Exception("Giáo viên này đã có lịch dạy trong ca học này!");
-            }
-
+            // Tạo lịch học mới
             var schedule = new Schedule
             {
                 ClassID = dto.ClassID,
                 TeacherID = dto.TeacherID,
                 StudySessionId = dto.StudySessionId,
-                Date = dto.Date,
                 Room = dto.Room,
-                Status = 1, // Active
+                Status = dto.Status,
+                Notes = dto.Notes,
+                Date = dto.Date,
                 CreatedAt = DateTime.Now,
                 ModifiedAt = DateTime.Now
             };
@@ -230,68 +279,32 @@ namespace Management_Schedule_BE.Services
             return schedules;
         }
 
-        //public async Task<IEnumerable<TeacherScheduleViewDTO>> GetSchedulesByTeacherIdAndRangeAsync(int teacherId, DateTime? from, DateTime? to)
-        //{
-        //    var teacher = await _context.Teachers.FindAsync(teacherId);
-        //    if (teacher == null)
-        //        throw new Exception("Không tìm thấy giáo viên");
-        //    var query = _context.Schedules
-        //        .Include(s => s.StudySession)
-        //        .Include(s => s.Class)
-        //            .ThenInclude(c => c.Course)
-        //        .Where(s => s.TeacherID == teacherId);
-        //    if (from.HasValue)
-        //        query = query.Where(s => s.Date >= from.Value);
-        //    if (to.HasValue)
-        //        query = query.Where(s => s.Date <= to.Value);
-        //    var schedules = await query
-        //        .OrderBy(s => s.Date)
-        //        .ThenBy(s => s.StudySession.StartTime)
-        //        .Select(s => new TeacherScheduleViewDTO
-        //        {
-        //            ClassID = s.ClassID,
-        //            ClassName = s.Class.ClassName,
-        //            CourseID = s.Class.CourseID,
-        //            CourseName = s.Class.Course.CourseName,
-        //            StudySessionId = s.StudySessionId,
-        //            StudySessionName = s.StudySession.DisplayName,
-        //            StartTime = s.StudySession.StartTime,
-        //            EndTime = s.StudySession.EndTime,
-        //            Room = s.Room,
-        //            Date = s.Date
-        //        })
-        //        .ToListAsync();
-        //    return schedules;
-        //}
+        public async Task<IEnumerable<TeacherClassDTO>> GetTeacherClassesAsync(int teacherId)
+        {
+            var teacher = await _context.Teachers.FindAsync(teacherId);
+            if (teacher == null)
+                throw new Exception("Không tìm thấy giáo viên");
 
-        //public async Task<IEnumerable<TeacherScheduleViewDTO>> GetSchedulesByTeacherIdAndStatusAsync(int teacherId, byte status)
-        //{
-        //    var teacher = await _context.Teachers.FindAsync(teacherId);
-        //    if (teacher == null)
-        //        throw new Exception("Không tìm thấy giáo viên");
-        //    var schedules = await _context.Schedules
-        //        .Include(s => s.StudySession)
-        //        .Include(s => s.Class)
-        //            .ThenInclude(c => c.Course)
-        //        .Where(s => s.TeacherID == teacherId && s.Status == status)
-        //        .OrderBy(s => s.Date)
-        //        .ThenBy(s => s.StudySession.StartTime)
-        //        .Select(s => new TeacherScheduleViewDTO
-        //        {
-        //            ClassID = s.ClassID,
-        //            ClassName = s.Class.ClassName,
-        //            CourseID = s.Class.CourseID,
-        //            CourseName = s.Class.Course.CourseName,
-        //            StudySessionId = s.StudySessionId,
-        //            StudySessionName = s.StudySession.DisplayName,
-        //            StartTime = s.StudySession.StartTime,
-        //            EndTime = s.StudySession.EndTime,
-        //            Room = s.Room,
-        //            Date = s.Date
-        //        })
-        //        .ToListAsync();
-        //    return schedules;
-        //}
+            var classes = await _context.Schedules
+                .Include(s => s.Class)
+                    .ThenInclude(c => c.Course)
+                .Where(s => s.TeacherID == teacherId)
+                .Select(s => new TeacherClassDTO
+                {
+                    ClassID = s.Class.ClassID,
+                    ClassName = s.Class.ClassName,
+                    CourseID = s.Class.CourseID,
+                    CourseName = s.Class.Course.CourseName,
+                    MaxStudents = s.Class.MaxStudents,
+                    StartDate = s.Class.StartDate,
+                  
+                    Status = s.Class.Status
+                })
+                .Distinct()
+                .ToListAsync();
+
+            return classes;
+        }
 
         public async Task<IEnumerable<ScheduleDTO>> GetSchedulesByDateAsync(DateTime date)
         {
