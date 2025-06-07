@@ -102,7 +102,7 @@ export function LoginForm({
       }
       
       const response = await loginGoogle(credential)
-      const token = response.data.token
+      const token = response.data
       if (!token || typeof token !== "string") {
         showErrorToast("Token không hợp lệ")
       }
