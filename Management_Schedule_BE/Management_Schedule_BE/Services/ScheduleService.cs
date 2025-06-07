@@ -80,18 +80,18 @@ namespace Management_Schedule_BE.Services
 
             // Kiểm tra trùng lịch học
             var isScheduleConflict = await _context.Schedules
-                .AnyAsync(s => s.Date.Date == dto.Date.Date 
-                    && s.StudySessionId == dto.StudySessionId 
-                    && s.Room == dto.Room.Trim() 
+                .AnyAsync(s => s.Date.Date == dto.Date.Date
+                    && s.StudySessionId == dto.StudySessionId
+                    && s.Room == dto.Room.Trim()
                     && s.Status != 3); // 3 = Cancelled
             if (isScheduleConflict)
                 throw new Exception("Phòng học đã được sử dụng trong ca học này");
 
             // Kiểm tra giáo viên có lịch trùng không
             var isTeacherBusy = await _context.Schedules
-                .AnyAsync(s => s.Date.Date == dto.Date.Date 
-                    && s.StudySessionId == dto.StudySessionId 
-                    && s.TeacherID == dto.TeacherID 
+                .AnyAsync(s => s.Date.Date == dto.Date.Date
+                    && s.StudySessionId == dto.StudySessionId
+                    && s.TeacherID == dto.TeacherID
                     && s.Status != 3);
             if (isTeacherBusy)
                 throw new Exception("Giáo viên đã có lịch dạy trong ca học này");
@@ -104,32 +104,26 @@ namespace Management_Schedule_BE.Services
 
             // Đếm số buổi học đã hoàn thành (status = 2)
             var completedSchedules = classSchedules.Count(s => s.Status == 2);
-            
+
             // Đếm số buổi học đang active hoặc pending (status = 0 hoặc 1)
-            var activeSchedules = classSchedules.Count(s => s.Status == 0 || s.Status == 1);
+            var activeSchedules = classSchedules.Count(s => s.Status == 1);
 
             // Kiểm tra tổng số buổi học
             if (completedSchedules + activeSchedules >= classEntity.Course.Duration)
                 throw new Exception($"Lớp đã có đủ {classEntity.Course.Duration} buổi học, không thể tạo thêm!");
 
-            // Kiểm tra điều kiện tạo lịch học bù
-            if (dto.Status == 1) // Nếu là lịch học bù (status = 1)
-            {
-                // Kiểm tra xem có buổi học nào bị hủy không
-                var cancelledSchedules = classSchedules.Where(s => s.Status == 3).ToList();
-                if (!cancelledSchedules.Any())
-                    throw new Exception("Không thể tạo lịch học bù khi chưa có buổi học nào bị hủy!");
 
-                // Kiểm tra xem ngày tạo lịch học bù có sau ngày của buổi học bị hủy không
-                var lastCancelledSchedule = cancelledSchedules.OrderByDescending(s => s.Date).First();
-                if (dto.Date.Date <= lastCancelledSchedule.Date.Date)
-                    throw new Exception("Lịch học bù phải được tạo sau ngày của buổi học bị hủy!");
+            // Kiểm tra xem có buổi học nào bị hủy không
+            var cancelledSchedules = classSchedules.Where(s => s.Status == 3).ToList();
+            if (!cancelledSchedules.Any())
+                throw new Exception("Không thể tạo lịch học bù khi chưa có buổi học nào bị hủy!");
 
-                // Kiểm tra số lượng lịch học bù đã tạo
-                var makeupSchedules = classSchedules.Count(s => s.Status == 1);
-                if (makeupSchedules >= cancelledSchedules.Count)
-                    throw new Exception("Đã tạo đủ số lịch học bù cho các buổi bị hủy!");
-            }
+            // Kiểm tra xem ngày tạo lịch học bù có sau ngày của buổi học bị hủy không
+            var lastCancelledSchedule = cancelledSchedules.OrderByDescending(s => s.Date).First();
+            if (dto.Date.Date <= lastCancelledSchedule.Date.Date)
+                throw new Exception("Lịch học bù phải được tạo sau ngày của buổi học bị hủy!");
+
+
 
             // Kiểm tra ngày học có hợp lệ không
             if (dto.Date.Date < classEntity.StartDate.Date)
@@ -181,8 +175,8 @@ namespace Management_Schedule_BE.Services
             var existingSchedule = await _context.Schedules
                 .FirstOrDefaultAsync(s =>
                     s.ScheduleID != id && // Loại trừ lịch hiện tại
-                s.Date == dto.Date && 
-                s.StudySessionId == dto.StudySessionId && 
+                s.Date == dto.Date &&
+                s.StudySessionId == dto.StudySessionId &&
                     (s.ClassID == dto.ClassID || s.TeacherID == dto.TeacherID || s.Room == dto.Room));
 
             if (existingSchedule != null)
@@ -298,7 +292,7 @@ namespace Management_Schedule_BE.Services
                     CourseName = s.Class.Course.CourseName,
                     MaxStudents = s.Class.MaxStudents,
                     StartDate = s.Class.StartDate,
-                  
+
                     Status = s.Class.Status
                 })
                 .Distinct()
@@ -564,7 +558,7 @@ namespace Management_Schedule_BE.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task AssignTeacherToScheduleAsync(int scheduleId, int teacherId,string notes)
+        public async Task AssignTeacherToScheduleAsync(int scheduleId, int teacherId, string notes)
         {
             var schedule = await _context.Schedules.FindAsync(scheduleId);
             if (schedule == null)
@@ -586,4 +580,4 @@ namespace Management_Schedule_BE.Services
             await _context.SaveChangesAsync();
         }
     }
-} 
+}

@@ -29,21 +29,34 @@ namespace Management_Schedule_BE.Helpers.Validators
             foreach (var c in classes)
             {
                 // Đếm số lịch học trạng thái khác 3 (không bị hủy)
-                var totalSchedules = await _context.Schedules.CountAsync(s => s.ClassID == c.ClassID && s.Status != 3);
+                var totalSchedules = await _context.Schedules.CountAsync(s => s.ClassID == c.ClassID && s.Status == 1);
                 // Đếm số lịch học bị hủy
                 var cancelledSchedules = await _context.Schedules.CountAsync(s => s.ClassID == c.ClassID && s.Status == 3);
                 // Tổng số lịch học của lớp
                 var allSchedules = await _context.Schedules.CountAsync(s => s.ClassID == c.ClassID);
                 // Số slot dự kiến
                 int slotCount = c.Course.Duration;
-                bool isHaveSchedule = totalSchedules >= slotCount;
+                int isHaveSchedule = 0;
                 string note = "";
                 if (allSchedules == 0)
+                {
                     note = "Chưa tạo lịch";
-                else if (totalSchedules < slotCount)
-                    note = "Chưa đủ số buổi";
-                else if (isHaveSchedule && cancelledSchedules > 0)
+                    isHaveSchedule = 0;
+                }
+                else if (totalSchedules >= slotCount)
+                {
+                    isHaveSchedule = 3;
+                }
+                else if (allSchedules >= slotCount)
+                {
+                    isHaveSchedule = 2;
                     note = "Bổ sung lịch dạy bù";
+                }
+                else if (allSchedules < slotCount)
+                {
+                    isHaveSchedule = 1;
+                    note = "Chưa đủ lịch học";
+                }
                 // Đếm số học sinh đã đăng ký lớp này
                 int enrolledStudents = await _context.StudentClassEnrollments.CountAsync(e => e.ClassID == c.ClassID && e.Status == 1);
                 // Lấy danh sách giáo viên của các lịch học (trạng thái khác 3)

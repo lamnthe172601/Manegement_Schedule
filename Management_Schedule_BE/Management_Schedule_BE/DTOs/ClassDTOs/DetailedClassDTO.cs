@@ -14,7 +14,7 @@ namespace Management_Schedule_BE.DTOs
         DateTime ModifiedAt,
         string CourseName,
         int Duration,
-        bool IsHaveSchedule,
+        int? IsHaveSchedule,
         string Note,
         int EnrolledStudents,
         string TeacherName,
