@@ -62,13 +62,6 @@ function Page() {
   const [openDialog, setOpenDialog] = useState(false)
 
 
-  // Dialog hủy lịch
-  const [openCancelDialog, setOpenCancelDialog] = useState(false)
-  const [cancelReason, setCancelReason] = useState("")
-  const [selectedScheduleID, setSelectedScheduleID] = useState<number | null>(
-    null,
-  )
-
   const { deleteScheduele } = useDeleteScheduele()
   const studentId: string | undefined = user?.nameid
   const fetcher = async (url: string): Promise<Schedule[]> => {
@@ -171,51 +164,6 @@ function Page() {
     setOpenDialog(true)
   }
 
-  // Mở dialog hủy lịch
-  const handleOpenCancel = (scheduleID: number) => {
-    setSelectedScheduleID(scheduleID)
-    setCancelReason("")
-    setOpenCancelDialog(true)
-  }
-
-  // Xử lý hủy lịch
-  const handleCancel = async (statusPick: number) => {
-    if (!selectedScheduleID || !cancelReason.trim()) return
-
-    const newStatus = statusPick == 1 ? 3 : 1
-    console.log(statusPick)
-
-    try {
-      const result = await deleteScheduele({
-        id: selectedScheduleID,
-        data: { status: newStatus, notes: cancelReason },
-      })
-
-      if (result.status === "success") {
-        const message =
-          statusPick === 1
-            ? "Hủy lịch học thành công"
-            : "Khôi phục lịch học thành công"
-
-        showSuccessToast(message)
-        mutate(Endpoints.Schedule.GET_ALL)
-        setOpenDialog(false)
-      } else {
-        const message =
-          statusPick === 1
-            ? "Hủy lịch học thành công"
-            : "Khôi phục lịch học thành công"
-        showErrorToast(message)
-      }
-    } catch (err: any) {
-      showErrorToast(err.message || "Lỗi khi hủy lịch")
-    } finally {
-      setOpenCancelDialog(false)
-      setCancelReason("")
-      setSelectedScheduleID(null)
-    }
-  }
-
   if (error) {
     return (
       <div className="p-6 max-w-6xl mx-auto">Lỗi tải lịch: {error.message}</div>
@@ -224,6 +172,30 @@ function Page() {
 
   if (isLoading) {
     return <div className="p-6 max-w-6xl mx-auto">Đang tải lịch...</div>
+  }
+  const eventPropGetter = (event: Event) => {
+    let backgroundColor = "#3182CE"
+
+    switch (event.resource.status) {
+      case 1:
+        backgroundColor = "#3182CE" 
+        break
+      case 2:
+        backgroundColor = "#FFD700" 
+        break
+      case 3:
+        backgroundColor = "#E53E3E" 
+        break
+    }
+
+    return {
+      style: {
+        backgroundColor,
+        color: "white",
+        borderRadius: "4px",
+        border: "none",
+      },
+    }
   }
   return (
     <StudentLayout>
@@ -235,7 +207,30 @@ function Page() {
             month: "long",
           })}`}
         </h2>
-        
+        <div className="flex gap-4 mt-4 max-w-6xl mx-auto">
+          <p className="font-bold"> Chú thích:</p>
+          <div className="flex items-center gap-2">
+            <div
+              className="w-5 h-5 rounded"
+              style={{ backgroundColor: "#3182CE" }}
+            ></div>
+            <span>Hoạt động</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div
+              className="w-5 h-5 rounded"
+              style={{ backgroundColor: "#FFD700" }}
+            ></div>
+            <span>Đã hoàn thành</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div
+              className="w-5 h-5 rounded"
+              style={{ backgroundColor: "#E53E3E" }}
+            ></div>
+            <span>Đã hủy</span>
+          </div>
+        </div>
 
         <Calendar
           localizer={localizer}
@@ -258,6 +253,7 @@ function Page() {
           onNavigate={handleNavigate}
           onSelectEvent={handleSelectEvent}
           date={currentDate}
+          eventPropGetter={eventPropGetter}
         />
 
         {/* Dialog chi tiết lịch dạy */}
@@ -298,72 +294,6 @@ function Page() {
                     <strong>Thời gian:</strong> {selectedEvent.startTime} -{" "}
                     {selectedEvent.endTime}
                   </p>
-
-                  <div className="flex flex-col items-center mt-4 space-y-2">
-                    {selectedEvent.status === 1 && (
-                      <Button
-                        className="bg-red-500 hover:bg-red-600 text-white"
-                        onClick={() =>
-                          handleOpenCancel(selectedEvent.scheduleID)
-                        }
-                      >
-                        Hủy lịch học
-                      </Button>
-                    )}
-
-                    {selectedEvent.status === 3 && (
-                      <Button
-                        className="bg-green-500 hover:bg-green-600 text-white"
-                        onClick={() =>
-                          handleOpenCancel(selectedEvent.scheduleID)
-                        }
-                      >
-                        Khôi phục lịch học
-                      </Button>
-                    )}
-                  </div>
-
-                  {/* Dialog hủy lịch */}
-                  <Dialog
-                    open={openCancelDialog}
-                    onOpenChange={setOpenCancelDialog}
-                  >
-                    <DialogContent>
-                      <DialogTitle>
-                        {selectedEvent.status === 1
-                          ? "🗑️ Lý do hủy lịch học"
-                          : "♻️ Lý do khôi phục lịch học"}
-                      </DialogTitle>
-                      <Textarea
-                        placeholder="Nhập lý do hủy lịch học"
-                        value={cancelReason}
-                        onChange={(e) => setCancelReason(e.target.value)}
-                        rows={4}
-                        className="mb-4"
-                      />
-                      <DialogFooter className="flex gap-4 justify-end">
-                        <Button
-                          variant="outline"
-                          onClick={() => setOpenCancelDialog(false)}
-                        >
-                          Hủy
-                        </Button>
-                        <Button
-                          disabled={!cancelReason.trim()}
-                          onClick={() => handleCancel(selectedEvent.status)}
-                          className={
-                            selectedEvent.status === 1
-                              ? "bg-red-500 text-white"
-                              : "bg-green-500 text-white"
-                          }
-                        >
-                          {selectedEvent.status === 1
-                            ? "Xác nhận hủy"
-                            : "Xác nhận khôi phục"}
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
                 </DialogDescription>
               )}
             </DialogHeader>

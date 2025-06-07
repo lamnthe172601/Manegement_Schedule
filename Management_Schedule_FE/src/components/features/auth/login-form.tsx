@@ -71,16 +71,15 @@ export function LoginForm({
         localStorage.setItem(Constants.API_TOKEN_KEY, token)
 
         // Decode token để lấy thông tin user (payload)
-        const user = jwtDecode<JwtUser>(token);
-        console.log("Decoded user:", user);
-        setUserAtom(user);
+        const user = jwtDecode<JwtUser>(token)
+        console.log("Decoded user:", user)
+        setUserAtom(user)
         if (user.role === "Admin") {
-          router.push("/admin/dashboards");
+          router.push("/admin/dashboards")
         } else {
           router.push("/")
         }
         // Lưu thông tin user vào atom (localStorage
-
       } else {
         showErrorToast(response.message || "Đăng nhập thất bại")
       }
@@ -95,16 +94,21 @@ export function LoginForm({
 
   const handleLoginGoogle = async (credentialReponse: any) => {
     try {
+      debugger
       const credential = credentialReponse.credential
-      
+
       if (!credential) {
         showErrorToast("Không thể xác thực tài khoản Googlge của bạn")
       }
+      
       const response = await loginGoogle(credential)
-      const token = response.data
+      const token = response.data.token
+      if (!token || typeof token !== "string") {
+        showErrorToast("Token không hợp lệ")
+      }
       console.log("token login with google", token)
       localStorage.setItem(Constants.API_TOKEN_KEY, token)
-      
+
       //lấy ra role của user
       const user = jwtDecode<JwtUser>(token)
       console.log("Decoded user:", user)

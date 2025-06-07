@@ -11,7 +11,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <PageMetadata title={"Library Management System"} description={"Nope"} />
-        <GoogleOAuthProvider clientId="937922958244-4r5cnqjiao6h79otlts9jmmhijc3qk6a.apps.googleusercontent.com">
+        <GoogleOAuthProvider clientId="586358920723-phgfoj8qsld7630qe0sv2sj48pfv1k6j.apps.googleusercontent.com">
         <AuthWrapper>
           <Toaster />
           <Component {...pageProps} />
