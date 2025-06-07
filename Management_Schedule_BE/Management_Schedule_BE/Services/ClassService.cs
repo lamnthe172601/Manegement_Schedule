@@ -29,7 +29,7 @@ namespace Management_Schedule_BE.Helpers.Validators
             foreach (var c in classes)
             {
                 // Đếm số lịch học trạng thái khác 3 (không bị hủy)
-                var totalSchedules = await _context.Schedules.CountAsync(s => s.ClassID == c.ClassID && s.Status == 1);
+                var totalSchedules = await _context.Schedules.CountAsync(s => s.ClassID == c.ClassID && s.Status !=3);
                 // Đếm số lịch học bị hủy
                 var cancelledSchedules = await _context.Schedules.CountAsync(s => s.ClassID == c.ClassID && s.Status == 3);
                 // Tổng số lịch học của lớp
