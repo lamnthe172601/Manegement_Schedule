@@ -7,5 +7,5 @@ export interface Student {
     enrollmentDate: string,
     level: number,
     status: number,
-    enrollmentId: number
+    enrollmentID: number
 }
