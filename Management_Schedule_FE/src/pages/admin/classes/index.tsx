@@ -31,7 +31,7 @@ interface ClassItem {
     endDate: string | null;
     status: number;
     note: string;
-    isHaveSchedule: boolean,
+    isHaveSchedule: number,
     isHaveTeacher: boolean
 }
 
@@ -262,6 +262,55 @@ export default function ClassPage() {
         }
     };
 
+    const handleCreateMakeupSchedule = (cls: any) => {
+        setMakeupData({
+            classID: cls.classID,
+            teacherID: cls.teacherID, // nếu có
+            studySessionId: 0,
+            room: "",
+            status: 0,
+            notes: "",
+            date: new Date().toISOString().split("T")[0],
+        });
+        setMakeupModalVisible(true);
+    };
+
+
+    const [makeupModalVisible, setMakeupModalVisible] = useState(false);
+    const [makeupData, setMakeupData] = useState({
+        classID: 0,
+        teacherID: 0,
+        studySessionId: 0,
+        room: "",
+        status: 0,
+        notes: "",
+        date: new Date().toISOString().split("T")[0], // yyyy-MM-dd
+    });
+
+    const handleMakeupSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await fetch("/api/Schedule/makeup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(makeupData),
+            });
+
+            if (res.ok) {
+                showSuccessToast("Tạo lịch học bù thành công!");
+                setMakeupModalVisible(false);
+                // refresh lớp học nếu cần
+            } else {
+                showErrorToast("Tạo lịch học bù thất bại.");
+            }
+        } catch (error) {
+            console.error("Lỗi tạo lịch học bù:", error);
+            showErrorToast("Đã xảy ra lỗi khi gửi yêu cầu.");
+        }
+    };
+
+
+
 
 
     return (
@@ -396,16 +445,37 @@ export default function ClassPage() {
                                     <span className="text-red-600 font-semibold">Kết thúc</span>
                                 )}
                             </TableCell>
+                            {/* 0 là chưa tạo lịch  1 chưa đủ 2 là bổ sung lịch dậy bù 3.Tạo lịch đủ  */}
+
+
                             <TableCell>
-                                {cls.isHaveSchedule ? <>Đã có lịch học </> : <>
+                                {cls.isHaveSchedule === 0 && (
                                     <button
                                         onClick={() => openScheduleModal(cls.classID, cls.startDate)}
                                         className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
                                     >
                                         Tạo lịch học
-                                    </button></>}
+                                    </button>
+                                )}
 
+                                {cls.isHaveSchedule === 1 && (
+                                    <div className="text-yellow-600 font-semibold">Lịch chưa đủ</div>
+                                )}
+
+                                {(cls.isHaveSchedule === 2) && (
+                                    <button
+                                        onClick={() => handleCreateMakeupSchedule(cls)}
+                                        className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
+                                    >
+                                        Tạo lịch học bù
+                                    </button>
+                                )}
+
+                                {cls.isHaveSchedule === 3 && (
+                                    <div className="text-green-600 font-semibold">Đã có lịch đầy đủ</div>
+                                )}
                             </TableCell>
+
                             <TableCell>{cls.note}</TableCell>
                             <TableCell>
                                 {cls.isHaveTeacher ? <>
@@ -423,6 +493,94 @@ export default function ClassPage() {
                     ))}
                 </TableBody>
             </Table>
+            <Dialog open={makeupModalVisible} onOpenChange={setMakeupModalVisible}>
+                <DialogContent className="max-w-xl">
+                    <DialogHeader>
+                        <DialogTitle>Tạo lịch học bù cho lớp #{makeupData.classID}</DialogTitle>
+                        <DialogDescription>
+                            Chọn thông tin buổi học bù và xác nhận tạo lịch.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <form onSubmit={handleMakeupSubmit} className="space-y-4 mt-4">
+
+                        {/* Ngày học bù */}
+                        <div>
+                            <label className="block mb-1 font-medium">Ngày học bù:</label>
+                            <input
+                                type="date"
+                                value={makeupData.date}
+                                onChange={(e) => setMakeupData(prev => ({ ...prev, date: e.target.value }))}
+                                required
+                                className="w-full border p-2 rounded"
+                            />
+                        </div>
+
+                        {/* Ca học */}
+                        <div>
+                            <label className="block mb-1 font-medium">Ca học:</label>
+                            <select
+                                value={makeupData.studySessionId}
+                                onChange={(e) => setMakeupData(prev => ({ ...prev, studySessionId: Number(e.target.value) }))}
+                                required
+                                className="w-full border p-2 rounded"
+                            >
+                                <option value={0}>-- Chọn ca học --</option>
+                                <option value={1}>Ca 1 (7:30 - 9:30)</option>
+                                <option value={2}>Ca 2 (9:45 - 11:45)</option>
+                                <option value={3}>Ca 3 (13:00 - 15:00)</option>
+                                <option value={4}>Ca 4 (15:15 - 17:15)</option>
+                                <option value={5}>Ca 5 (18:00 - 20:00)</option>
+                            </select>
+                        </div>
+
+                        {/* Phòng học */}
+                        <div>
+                            <label className="block mb-1 font-medium">Phòng học:</label>
+                            <select
+                                value={makeupData.room}
+                                onChange={(e) => setMakeupData(prev => ({ ...prev, room: e.target.value }))}
+                                required
+                                className="w-full border p-2 rounded"
+                            >
+                                <option value="">-- Chọn phòng học --</option>
+                                <option value="Room 01">Room 01</option>
+                                <option value="Room 02">Room 02</option>
+                                <option value="Room 03">Room 03</option>
+                            </select>
+                        </div>
+
+                        {/* Ghi chú */}
+                        <div>
+                            <label className="block mb-1 font-medium">Ghi chú:</label>
+                            <textarea
+                                value={makeupData.notes}
+                                onChange={(e) => setMakeupData(prev => ({ ...prev, notes: e.target.value }))}
+                                rows={3}
+                                className="w-full border p-2 rounded"
+                            />
+                        </div>
+
+                        {/* Buttons */}
+                        <div className="flex justify-end gap-3">
+                            <button
+                                type="button"
+                                onClick={() => setMakeupModalVisible(false)}
+                                className="px-4 py-2 rounded border border-gray-400 hover:bg-gray-200"
+                            >
+                                Hủy
+                            </button>
+                            <button
+                                type="submit"
+                                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                            >
+                                Tạo lịch học bù
+                            </button>
+                        </div>
+                    </form>
+                </DialogContent>
+            </Dialog>
+
 
             <Dialog open={scheduleModalVisible} onOpenChange={setScheduleModalVisible}>
                 <DialogContent className="max-w-4xl max-h-[90vh] overflow-auto">
