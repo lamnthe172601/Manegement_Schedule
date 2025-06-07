@@ -20,6 +20,11 @@ interface Class {
   isHaveTeacher: boolean
 }
 
+export interface ClassList{
+  classID: number
+  className: string
+}
+
 // Hook để lấy danh sách khóa học
 const useGetClass = () => {
   const { data, error, isLoading } = useSWR<Class[]>(

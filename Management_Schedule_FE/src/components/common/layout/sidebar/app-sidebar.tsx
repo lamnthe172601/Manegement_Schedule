@@ -36,6 +36,13 @@ const data = {
       title: "Quản lý người dùng",
       role: ["Admin"],
     },
+    {
+      name: "Users",
+      url: "/admin/register-courses",
+      icon: Bot,
+      title: "Quản lý đăng ký lớp",
+      role: ["Admin"],
+    },
     // {
     //   name: "Teachers",
     //   url: "/admin/teachers",
