@@ -179,7 +179,7 @@ namespace Management_Schedule_BE.Services
         }
 
         public async Task<TeachStudentProfile?> UpdateProfileAsync(string email, TeachStudentProfile profile)
-        {
+        {   
             var user = await _context.Users.SingleOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
             if (user != null)
             {

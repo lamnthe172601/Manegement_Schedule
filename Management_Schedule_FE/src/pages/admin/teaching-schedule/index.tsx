@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Calendar, dateFnsLocalizer, Event as RBCEvent, View } from 'react-big-calendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 import format from 'date-fns/format';
 import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
@@ -313,7 +314,7 @@ export default function SchedulePage() {
                 onRangeChange={handleRangeChange}
                 onNavigate={handleNavigate}
                 onSelectEvent={handleSelectEvent}
-                eventPropGetter={(event) => {
+                eventPropGetter={(event:any) => {
                     let backgroundColor = '#3182CE'; // màu mặc định (xanh dương)
 
                     if (event.resource.status === 1) {

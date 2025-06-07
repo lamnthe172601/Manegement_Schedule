@@ -29,7 +29,7 @@ export default function DashboardLayout({
     const [searchQuery, setSearchQuery] = useState("")
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
+        <div className="flex min-h-screen bg-zinc-50">
             {/* Sidebar */}
             <div className="w-64 border-r bg-white">
                 {/* Sidebar Header */}
@@ -94,7 +94,7 @@ export default function DashboardLayout({
                     </button>
                 </header>
 
-                <main className="p-6">{children}</main>
+                <main className="p-2">{children}</main>
             </div>
         </div>
     )

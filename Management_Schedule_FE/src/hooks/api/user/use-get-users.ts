@@ -26,6 +26,24 @@ export interface JwtUser {
   phone: string
   role: string
 }
+
+export interface UserProfile {
+  userID: number
+  email: string
+  passwordHash: string
+  role: number // 1: admin, 2: teacher, 3: student
+  fullName: string
+  dateOfBirth: string
+  address: string
+  phone: string
+  introduction: string
+  avatarUrl: string
+  status: number
+  createdAt: Date
+  modifiedAt: Date
+  gender: string
+}
+
 const useGetUsers = () => {
   const { data, error, isLoading } = useSWR<User[]>(
     Endpoints.Users.GET_ALL,

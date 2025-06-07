@@ -29,7 +29,6 @@ namespace Management_Schedule_BE.DTOs
     string Email,
     string PasswordHash,
     string? FullName,
-    
     DateTime? DateOfBirth,
     string? Address,
     string? Phone,

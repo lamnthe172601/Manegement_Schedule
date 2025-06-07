@@ -1,11 +1,11 @@
-import { showErrorToast } from "@/components/common/toast/toast"
-import TeacherLayout from "@/components/features/guest/TeacherLayout"
+import StudentLayout from "@/components/features/guest/StudentLayout"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription
+  DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog"
 import {
   Calendar,
@@ -20,16 +20,23 @@ import startOfWeek from "date-fns/startOfWeek"
 import getDay from "date-fns/getDay"
 import vi from "date-fns/locale/vi"
 import "react-big-calendar/lib/css/react-big-calendar.css"
-import { ScheduleTeacher } from "@/hooks/api/schedule/use-get-schedules"
+import { Schedule } from "@/hooks/api/schedule/use-get-schedules"
 import { Endpoints } from "@/lib/endpoints"
 import { userInfoAtom } from "@/stores/auth"
 import axios from "axios"
 import { useAtom } from "jotai/react"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
-
+import {
+  showErrorToast,
+  showSuccessToast,
+} from "@/components/common/toast/toast"
+import { useDeleteScheduele } from "@/hooks/api/schedule/use-delete-scheduele"
+import { mutate } from "swr"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
 interface Event extends RBCEvent {
-  resource: ScheduleTeacher
+  resource: Schedule
 }
 
 const locales = { vi }
@@ -41,41 +48,34 @@ const localizer = dateFnsLocalizer({
   getDay,
   locales,
 })
-
-export default function SchedulePage() {
-  const [schedules, setSchedules] = useState<ScheduleTeacher[]>([])
+function Page() {
+  const [schedules, setSchedules] = useState<Schedule[]>([])
   const [user] = useAtom(userInfoAtom)
+
   const [currentDate, setCurrentDate] = useState<Date>(new Date())
   const [events, setEvents] = useState<Event[]>([])
 
   const [dateRange, setDateRange] = useState<{ start: Date; end: Date } | null>(
     null,
   )
-  const [selectedEvent, setSelectedEvent] = useState<ScheduleTeacher | null>(null)
+  const [selectedEvent, setSelectedEvent] = useState<Schedule | null>(null)
   const [openDialog, setOpenDialog] = useState(false)
-  const teacherId: string | undefined = user?.nameid
-  const getScheduleTeach = async (url: string): Promise<void> => {
-    try {
-      const response = await axios.get(url)
-      return response.data.data
-    } catch (error: any) {
-      showErrorToast(error.message)
-    }
+
+
+  const { deleteScheduele } = useDeleteScheduele()
+  const studentId: string | undefined = user?.nameid
+  const fetcher = async (url: string): Promise<Schedule[]> => {
+    const response = await axios.get(url)
+    return response.data.data
   }
 
+  // lấy danh sách lịch học của sinh viên
   const { data, error, isLoading } = useSWR(
-    teacherId
-      ? `${Endpoints.baseApiURL.URL}/${Endpoints.Schedule.GET_SCHEDULE_BY_TEACHER_ID(teacherId)}`
-      : "",
-    getScheduleTeach,
+    studentId
+      ? `${Endpoints.baseApiURL.URL}/${Endpoints.Schedule.GET_SCHEDULE_BY_STUDENT_ID(studentId)}`
+      : null,
+    fetcher,
   )
-
-  if (error) {
-    showErrorToast(error.message)
-  }
-
-  if (isLoading) {
-  }
 
   useEffect(() => {
     if (data) {
@@ -83,14 +83,14 @@ export default function SchedulePage() {
     }
   }, [data])
   // Chuyển đổi dữ liệu lịch thành event để hiển thị trên calendar
-  const convertToEvents = (schedules: ScheduleTeacher[]): Event[] => {
+  const convertToEvents = (schedules: Schedule[]): Event[] => {
     return schedules.map((s) => {
       const dateStr = s.date.slice(0, 10) // YYYY-MM-DD
       const start = new Date(`${dateStr}T${s.startTime}`)
       const end = new Date(`${dateStr}T${s.endTime}`)
 
       return {
-        title: `${s.className} - ${s.courseName}`,
+        title: `${s.className} - ${s.teacherName}`,
         start,
         end,
         resource: s,
@@ -178,13 +178,13 @@ export default function SchedulePage() {
 
     switch (event.resource.status) {
       case 1:
-        backgroundColor = "#3182CE"
+        backgroundColor = "#3182CE" 
         break
       case 2:
-        backgroundColor = "#FFD700"
+        backgroundColor = "#FFD700" 
         break
       case 3:
-        backgroundColor = "#E53E3E"
+        backgroundColor = "#E53E3E" 
         break
     }
 
@@ -198,7 +198,7 @@ export default function SchedulePage() {
     }
   }
   return (
-    <TeacherLayout>
+    <StudentLayout>
       <div className="p-6 max-w-6xl mx-auto">
         <h1 className="text-2xl font-bold mb-2">📅 Lịch học</h1>
         <h2 className="text-lg font-medium mb-4">
@@ -276,7 +276,7 @@ export default function SchedulePage() {
                     </p>
                     <div className="flex justify-between items-center">
                       <span>
-                        {user?.fullName || "Chưa có giáo viên"}
+                        {selectedEvent.teacherName || "Chưa có giáo viên"}
                       </span>
                     </div>
                   </div>
@@ -300,6 +300,8 @@ export default function SchedulePage() {
           </DialogContent>
         </Dialog>
       </div>
-    </TeacherLayout>
+    </StudentLayout>
   )
 }
+
+export default Page
