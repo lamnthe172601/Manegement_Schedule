@@ -27,7 +27,9 @@ export default function Page() {
   const [inputValue, setInputValue] = useState<string | null>("")
   const [userInfo, setUserInfo] = useState<UserProfile | null>(null)
   const [token, setToken] = useState("")
-  const [activeField, setActiveField] = useState<string | null>(null)
+  const [activeField, setActiveField] = useState<keyof UserProfile | null>(null)
+  const [avatarFile, setAvatarFile] = useState<File | null>(null)
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
   const closePopup = () => setActiveField(null)
   const email: string | undefined = user?.email
   useEffect(() => {
@@ -60,7 +62,7 @@ export default function Page() {
     }
   }, [data])
 
-  const openPopup = (field: string) => {
+  const openPopup = (field: keyof UserProfile) => {
     setActiveField(field)
     if (!userInfo) return
     if (field === "fullName") setInputValue(userInfo?.fullName || "")
@@ -70,30 +72,47 @@ export default function Page() {
     if (field === "phone") setInputValue(userInfo?.phone || "")
   }
 
-  const handleSubmit = async (field: string, value: string) => {
-    debugger
+  const handleSubmit = async (field: keyof UserProfile, value: string) => {
     const updatedUser = {
       ...userInfo,
-      [field]: value,
+      [field as keyof UserProfile]: value,
     }
-
-    const response = await axios.put(
-      email
-        ? `${Endpoints.baseApiURL.URL}/${Endpoints.Users.UPDATEBYEMAIL(email)}`
-        : "",
-      updatedUser,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+    const formData = new FormData()
+    for (const key in updatedUser) {
+      if (updatedUser.hasOwnProperty(key)) {
+        const k = key as keyof UserProfile
+        const val = updatedUser[k]
+        if (val !== undefined && val !== null) {
+          if (k === "avatarUrl" && avatarFile) {
+            formData.append(k, avatarFile)
+          } else {
+            formData.append(k, String(val))
+          }
+        }
+      }
+    }
+    try {
+      const response = await axios.put(
+        email
+          ? `${Endpoints.baseApiURL.URL}/${Endpoints.Users.UPDATEBYEMAIL(email)}`
+          : "",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
         },
-      },
-    )
-    closePopup()
-    if (response.status === 200) {
-      mutate()
-      console.log(userInfo)
-      showSuccessToast(response.data.message)
+      )
+      closePopup()
+      if (response.status === 200) {
+        mutate()
+        console.log(userInfo)
+        setUserInfo(response.data.data)
+        showSuccessToast(response.data.message)
+      }
+    } catch (error: any) {
+      showErrorToast(error?.response?.data?.message || "Lỗi cập nhật")
     }
   }
   return (
@@ -102,40 +121,6 @@ export default function Page() {
 
       <div className="flex">
         {/* Settings Navigation */}
-        <div className="w-64 pr-8">
-          <nav>
-            <ul className="space-y-1">
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center px-3 py-2 text-sm text-green-600 bg-green-50 rounded-md"
-                >
-                  <User className="h-4 w-4 mr-2" />
-                  Cài đặt tài khoản
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
-                >
-                  <Shield className="h-4 w-4 mr-2" />
-                  Bảo mật và đăng nhập
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
-                >
-                  <Bell className="h-4 w-4 mr-2" />
-                  Cài đặt thông báo
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-
         {/* Settings Content */}
         <div className="flex-1">
           <div className="bg-white rounded-lg border p-6">
@@ -277,15 +262,51 @@ export default function Page() {
               className="w-full border p-2 rounded"
             />
           )}
+          {activeField === "avatarUrl" && (
+            <div className="space-y-2">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  console.log(file)
+                  if (file) {
+                    setAvatarFile(file)
+                    setInputValue(file.name)
+                    setAvatarPreview(URL.createObjectURL(file))
+                  }
+                }}
+                className="block w-full text-sm text-gray-700
+                 file:mr-4 file:py-2 file:px-4
+                 file:rounded-full file:border-0
+                 file:text-sm file:font-semibold
+                 file:bg-blue-50 file:text-blue-700
+                 hover:file:bg-blue-100"
+              />
+              {avatarPreview && (
+                <img
+                  src={avatarPreview}
+                  alt="Avatar preview"
+                  className="w-24 h-24 rounded-full object-cover border-blue-400 shadow-md border-2"
+                />
+              )}
+            </div>
+          )}
+
           <div className="flex justify-end mt-4">
             <button
-              onClick={() => handleSubmit(activeField ?? "", inputValue!)}
+              onClick={() => {
+                if (activeField === "avatarUrl" && avatarFile) {
+                  handleSubmit(activeField, avatarFile.name)
+                } else {
+                  activeField && handleSubmit(activeField, inputValue!)
+                }
+              }}
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
               Lưu thay đổi
             </button>
           </div>
-          {/* Avatar thì có thể dùng upload input */}
         </DialogContent>
       </Dialog>
     </StudentLayout>
