@@ -55,7 +55,8 @@ export default function ResetPasswordFlow() {
     const [otp, setOtp] = useState('');
     const { forgetPassword } = useForgetPassword();
     const { resetPassword } = useResetPassword()
-
+    const [isSending, setIsSending] = useState(false);
+    const [cooldown, setCooldown] = useState(0);
     // --- Form for OTP ---
     const otpForm = useForm<z.infer<typeof otpSchema>>({
         resolver: zodResolver(otpSchema),
@@ -71,20 +72,40 @@ export default function ResetPasswordFlow() {
     // Step 1: Gửi email lấy mã OTP
     async function handleSendEmail(e: React.FormEvent) {
         e.preventDefault();
+
+        if (isSending || cooldown > 0) return;
+
         try {
+            setIsSending(true);
             const response = await forgetPassword(email);
             console.log("response handleSendEmail", response)
-            setOtp(response.data.otp)
+            setOtp(response.data.otp);
             showSuccessToast('Mã OTP đã được gửi đến email của bạn.');
             setStep(2);
+
+            // Cooldown: Không cho gửi lại trong 30 giây
+            setCooldown(30);
+            const interval = setInterval(() => {
+                setCooldown((prev) => {
+                    if (prev <= 1) {
+                        clearInterval(interval);
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+
         } catch (error: any) {
             showErrorToast(
                 error?.response?.data?.message ||
                 error?.message ||
                 'Có lỗi xảy ra, vui lòng thử lại sau',
             );
+        } finally {
+            setIsSending(false);
         }
     }
+
 
     // Step 2: Xác nhận OTP
     async function handleVerifyOtp(values: z.infer<typeof otpSchema>) {
@@ -158,10 +179,12 @@ export default function ResetPasswordFlow() {
                                 />
                                 <button
                                     type="submit"
-                                    className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+                                    className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+                                    disabled={isSending || cooldown > 0}
                                 >
-                                    Gửi
+                                    {isSending ? 'Đang gửi...' : cooldown > 0 ? `Gửi lại sau ${cooldown}s` : 'Gửi'}
                                 </button>
+
                             </form>
                         </CardContent>
                     </>
