@@ -38,7 +38,7 @@ export default function Header() {
     { href: "/", label: "TRANG CHỦ" },
     { href: "/user/team-page", label: "ĐỘI NGŨ ĐÀO TẠO" },
     { href: "/user/khoa-hoc", label: "KHÓA HỌC" },
-    { href: "/user/student", label: "Học viên" },
+    { href: "/user/student", label: "HỌC VIÊN" },
   ]
 
   return (
