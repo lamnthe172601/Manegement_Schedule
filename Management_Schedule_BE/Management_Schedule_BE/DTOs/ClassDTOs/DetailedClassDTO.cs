@@ -17,7 +17,8 @@ namespace Management_Schedule_BE.DTOs
         int? IsHaveSchedule,
         string Note,
         int EnrolledStudents,
-        string TeacherName,
-        bool IsHaveTeacher
+        string? TeacherName,
+        bool IsHaveTeacher,
+        int? TeacherId
     );
 } 
