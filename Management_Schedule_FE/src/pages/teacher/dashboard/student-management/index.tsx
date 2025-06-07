@@ -77,8 +77,17 @@ export default function StudentManagementPage() {
 
   const handleSelectClass = async (value: string) => {
     debugger
-    setSelectClassId(+value)
-    fetchDataStudent(selectClassId ?? 0)
+    const id = +value
+    setSelectClassId(id)
+    if (!id) return
+    try {
+      const response = await axios.get(
+        `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_STUDENT_BY_CLASS_ID(id)}`,
+      )
+      setStudents(response.data.data)
+    } catch (err) {
+      console.error("Lỗi gọi API:", err)
+    }
   }
 
   useEffect(() => {

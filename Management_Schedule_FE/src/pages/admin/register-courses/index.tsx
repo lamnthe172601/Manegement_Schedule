@@ -60,6 +60,15 @@ function Page() {
     }
   }, [data])
 
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setClasses(data)
+      const firstId = data[0].classID
+      setSelectedId(firstId)
+      handleSelectClass(firstId.toString())
+    }
+  }, [data])
+
   const handleSelectClass = async (value: string) => {
     debugger
     const id = +value
@@ -70,8 +79,8 @@ function Page() {
         `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_STUDENT_BY_CLASS_ID(id)}`,
       )
       setStudents(response.data.data)
-    } catch (err) {
-      console.error("Lỗi gọi API:", err)
+    } catch (err: any) {
+      showErrorToast(err.message)
     }
   }
 
@@ -87,7 +96,7 @@ function Page() {
   }
 
   const handleUpdateStatus = async () => {
-    debugger
+    console.log("hehe")
     if (selectedEnrollmentId) {
       const response = await axiox.patch(
         `${Endpoints.baseApiURL.URL}/${Endpoints.Enrollment.UPDATE_STATUS_ENROLL(selectedEnrollmentId)}`,
@@ -95,10 +104,15 @@ function Page() {
       )
       console.log(response.data)
       setIsDialogOpen(false)
+      setStudents((prev) =>
+        prev.map((student) =>
+          student.enrollmentID === selectedEnrollmentId
+            ? { ...student, status: 1 }
+            : student
+        )
+      );
     }
   }
-
-
 
   return (
     <div>
@@ -161,8 +175,7 @@ function Page() {
                     {student.email}
                   </TableCell>
                   <TableCell className="text-sm text-gray-500">
-                    {format(new Date(student.enrollmentDate), "dd/MM/yyyy")} -
-                    {student.enrollmentID}
+                    {format(new Date(student.enrollmentDate), "dd/MM/yyyy")}
                   </TableCell>
                   <TableCell>
                     <Button
