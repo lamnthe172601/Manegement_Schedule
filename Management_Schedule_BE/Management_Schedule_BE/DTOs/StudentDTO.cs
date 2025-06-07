@@ -10,6 +10,7 @@ namespace Management_Schedule_BE.DTOs
         string? PhoneNumber,
         DateTime EnrollmentDate,
         byte Level,
-        byte Status
+        byte Status,
+        int EnrollmentID
     );
 } 

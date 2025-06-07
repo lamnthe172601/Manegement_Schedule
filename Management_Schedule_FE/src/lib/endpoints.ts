@@ -64,6 +64,9 @@ export class Endpoints {
   static readonly Teacher = {
     GET_CLASS_BY_TEACHER_ID: (teacherId: string) => `Teacher/${teacherId}/classes`
   }
+  static readonly Enrollment = {
+    UPDATE_STATUS_ENROLL: (enrollId: number) => `Enrollment/${enrollId}/status`
+  }
 
   
 }

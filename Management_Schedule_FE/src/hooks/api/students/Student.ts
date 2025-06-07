@@ -6,5 +6,6 @@ export interface Student {
     phoneNumber: string,
     enrollmentDate: string,
     level: number,
-    status: number
+    status: number,
+    enrollmentId: number
 }

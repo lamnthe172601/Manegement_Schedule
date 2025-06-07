@@ -165,11 +165,11 @@ namespace Management_Schedule_BE.Services
                 throw new Exception("Trạng thái không hợp lệ!");
 
             // Kiểm tra số tiền đã thanh toán khi cập nhật trạng thái thành Active
-            if (status == 1) // Active
-            {
-                if (enrollment.TuitionPaid < enrollment.TotalTuitionDue)
-                    throw new Exception("Không thể kích hoạt đăng ký khi chưa thanh toán đủ học phí!");
-            }
+            //if (status == 1) // Active
+            //{
+            //    if (enrollment.TuitionPaid < enrollment.TotalTuitionDue)
+            //        throw new Exception("Không thể kích hoạt đăng ký khi chưa thanh toán đủ học phí!");
+            //}
 
             // Kiểm tra trạng thái hiện tại
             if (enrollment.Status == 3) // Cancelled

@@ -227,7 +227,7 @@ namespace Management_Schedule_BE.Helpers.Validators
             var enrollments = await _context.StudentClassEnrollments
                 .Include(e => e.Student)
                     .ThenInclude(s => s.User)
-                .Where(e => e.ClassID == classId && e.Status == 1) // Status 1 = Active
+                .Where(e => e.ClassID == classId) // Status 1 = Active
                 .ToListAsync();
 
             var students = enrollments.Select(e => new StudentInClassDTO(
@@ -238,7 +238,8 @@ namespace Management_Schedule_BE.Helpers.Validators
                 e.Student.User.Phone,
                 e.EnrollmentDate,
                 e.Student.Level,
-                e.Status
+                e.Status,
+                e.EnrollmentID
             ))
             .OrderBy(s => s.FullName)
             .ToList();
