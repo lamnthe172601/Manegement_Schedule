@@ -80,10 +80,15 @@ export default function AddCourse() {
       formData.append("Duration", values.duration);
       formData.append("Level", values.level);
 
+
       if (thumbnailFile) {
         formData.append("ThumbnailFile", thumbnailFile); // 👈 Đây là file thực tế
       }
 
+      console.log("FormData contents:");
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
       await addCourse(formData);
       showSuccessToast("Thêm khóa học thành công!");
       router.push("/admin/manage-course");
