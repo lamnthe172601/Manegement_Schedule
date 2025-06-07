@@ -11,10 +11,12 @@ namespace Management_Schedule_BE.Controllers
     public class TeacherController : ControllerBase
     {
         private readonly ITeacherService _teacherService;
+        private readonly IScheduleService _scheduleService;
 
-        public TeacherController(ITeacherService teacherService)
+        public TeacherController(ITeacherService teacherService, IScheduleService scheduleService)
         {
             _teacherService = teacherService;
+            _scheduleService = scheduleService;
         }
 
         [HttpGet]
@@ -66,6 +68,20 @@ namespace Management_Schedule_BE.Controllers
                 return NotFound();
 
             return NoContent();
+        }
+
+        [HttpGet("{id}/classes")]
+        public async Task<ActionResult<IEnumerable<TeacherClassDTO>>> GetTeacherClasses(int id)
+        {
+            try
+            {
+                var classes = await _scheduleService.GetTeacherClassesAsync(id);
+                return Ok(classes);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 } 

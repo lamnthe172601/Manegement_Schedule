@@ -11,7 +11,7 @@ namespace Management_Schedule_BE.Services
         Task<bool> DeleteScheduleAsync(int id);
         Task<bool> UpdateScheduleStatusAsync(int id, byte status,string notes);
         Task<IEnumerable<TeacherScheduleViewDTO>> GetSchedulesByTeacherIdAsync(int teacherId);
-     
+        Task<IEnumerable<TeacherClassDTO>> GetTeacherClassesAsync(int teacherId);
         Task<IEnumerable<ScheduleDTO>> GetSchedulesByDateAsync(DateTime date);
         Task<IEnumerable<StudentScheduleViewDTO>> GetSchedulesByStudentIdAsync(int studentId);
       

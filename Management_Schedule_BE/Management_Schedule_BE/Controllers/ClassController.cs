@@ -131,5 +131,22 @@ namespace Management_Schedule_BE.Controllers
                 return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
             }
         }
+
+        [HttpGet("{classId}/students")]
+        [EnableQuery]
+        public async Task<ActionResult<IEnumerable<StudentInClassDTO>>> GetStudentsInClass(int classId)
+        {
+            try
+            {
+                var students = await _classService.GetStudentsInClassAsync(classId);
+                return Ok(students);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("Không tìm thấy lớp học"))
+                    return NotFound(new { message = ex.Message });
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
     }
 } 

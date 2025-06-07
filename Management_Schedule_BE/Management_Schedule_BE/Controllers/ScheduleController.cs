@@ -49,8 +49,8 @@ namespace Management_Schedule_BE.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult> CreateSchedule(CreateScheduleDTO dto)
+        [HttpPost("makeup")]
+        public async Task<ActionResult> CreateMakeupSchedule(CreateScheduleDTO dto)
         {
             try
             {

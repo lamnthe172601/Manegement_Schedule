@@ -191,5 +191,35 @@ namespace Management_Schedule_BE.Helpers.Validators
 
             return enrolledClasses;
         }
+
+        public async Task<IEnumerable<StudentInClassDTO>> GetStudentsInClassAsync(int classId)
+        {
+            // Kiểm tra lớp học tồn tại
+            var classEntity = await _context.Classes.FindAsync(classId);
+            if (classEntity == null)
+                throw new Exception("Không tìm thấy lớp học");
+
+            // Lấy danh sách học sinh trong lớp
+            var enrollments = await _context.StudentClassEnrollments
+                .Include(e => e.Student)
+                    .ThenInclude(s => s.User)
+                .Where(e => e.ClassID == classId && e.Status == 1) // Status 1 = Active
+                .ToListAsync();
+
+            var students = enrollments.Select(e => new StudentInClassDTO(
+                e.StudentID,
+                e.Student.User.FullName,
+                e.Student.User.AvatarUrl,
+                e.Student.User.Email,
+                e.Student.User.Phone,
+                e.EnrollmentDate,
+                e.Student.Level,
+                e.Status
+            ))
+            .OrderBy(s => s.FullName)
+            .ToList();
+
+            return students;
+        }
     }
 }

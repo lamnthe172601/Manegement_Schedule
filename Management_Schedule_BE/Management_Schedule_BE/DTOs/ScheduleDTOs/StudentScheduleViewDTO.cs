@@ -16,5 +16,6 @@ namespace Management_Schedule_BE.DTOs
         public string Room { get; set; }
         public DateTime Date { get; set; }
         public string? Notes { get; set; }
+        public byte Status { get; set; }
     }
 } 
