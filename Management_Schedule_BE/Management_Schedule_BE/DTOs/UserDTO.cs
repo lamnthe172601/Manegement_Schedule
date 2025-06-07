@@ -29,11 +29,11 @@ namespace Management_Schedule_BE.DTOs
     string Email,
     string PasswordHash,
     string? FullName,
-    
     DateTime? DateOfBirth,
     string? Address,
     string? Phone,
     string? Introduction,
+   
     [MaxLength(1)]
     string? Gender = "M",
     IFormFile? AvatarUrl = null

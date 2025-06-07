@@ -14,6 +14,22 @@ export interface Schedule {
   room: string
   notes: string
   status: number
+  studySessionName: string
+}
+
+export interface ScheduleTeacher {
+  classID: number,
+  className: string,
+  courseID: number,
+  courseName: string,
+  studySessionId: number,
+  studySessionName: string,
+  startTime: string,
+  endTime: string,
+  room: string,
+  date: string,
+  notes: string,
+  status: number
 }
 const useGetSchedule = () => {
   const { data, error, isLoading } = useSWR<Schedule[]>(

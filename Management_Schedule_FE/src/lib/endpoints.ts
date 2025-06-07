@@ -1,4 +1,7 @@
 export class Endpoints {
+  static readonly baseApiURL={
+    URL: process.env.NEXT_PUBLIC_API_URL
+  }
   static readonly Auth = {
     REGISTER: "Authentication/SignUp",
     LOGIN: "Authentication/SignIn",
@@ -6,6 +9,8 @@ export class Endpoints {
     REFRESH: "auth/refresh",
     SENDOTP: "Authentication/send-otp",
     CHANGE_PASSWORD_FIRST_TIME: "auth/change-password-first-time",
+    LOGIN_GOOGLE: "Authentication/login-google"
+
   }
   static readonly Fine = {
     GET_ALL: "fines",
@@ -25,12 +30,18 @@ export class Endpoints {
     CREATE: "User",
     UPDATE: (id: string) => `User/${id}`,
     DELETE: (id: string) => `User/${id}`,
+    GETUSERBYEMAIL: (email:string) => `User/${email}`,
+    UPDATEBYEMAIL: (email:string) => `User/${email}`
   }
   static readonly Classes = {
     GET_ALL: "Class",
+    GET_COURSE_BY_STUDENT_ID : (studentId:string) => `Class/student/${studentId}/enrolled`,
+    GET_STUDENT_BY_CLASS_ID : (classId: number) => `Class/${classId}/students`
   }
   static readonly Schedule = {
     GET_ALL: "Schedule",
+    GET_SCHEDULE_BY_STUDENT_ID: (studentid: string) => `Schedule/student/${studentid}`,
+    GET_SCHEDULE_BY_TEACHER_ID: (teacherid: string) => `Schedule/teacher/${teacherid}`
   }
   static readonly Books = {
     GET_ALL: "books",
@@ -48,4 +59,10 @@ export class Endpoints {
     UPDATE: (id: string) => `Courses/${id}`,
     DELETE: (id: string) => `Courses/${id}`,
   }
+
+  static readonly Teacher = {
+    GET_CLASS_BY_TEACHER_ID: (teacherId: string) => `Teacher/${teacherId}/classes`
+  }
+
+  
 }

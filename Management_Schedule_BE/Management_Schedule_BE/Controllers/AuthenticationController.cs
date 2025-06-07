@@ -84,7 +84,20 @@ namespace Management_Schedule_BE.Controllers
                 }
                 else
                 {
-                    return Ok(new { Message = "Email not exits in email" });
+                    UserCreateDTO userCreateDTO = new UserCreateDTO(
+                        payload.Email,
+                        "123456789",
+                        "string",
+                        DateTime.Now,
+                        "string",
+                        "string",
+                        "M",
+                        null
+                    );
+                    await _userService.CreateUserAsync(userCreateDTO);
+                    var userJustCreate = await _userService.GetUserByEmailAsync(payload.Email);
+                    string token = _jwtConfig.GenerateToken(userJustCreate);
+                    return Ok(new { message = "Đăng nhập thành công", data = token });
                 }
             }
             catch (InvalidJwtException)
