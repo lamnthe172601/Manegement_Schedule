@@ -53,7 +53,7 @@ namespace Management_Schedule_BE.Services
                 .Include(e => e.Class)
                     .ThenInclude(c => c.Schedules)
                         .ThenInclude(sch => sch.StudySession)
-                .Where(e => e.StudentID == studentId && e.Status == 1) // Chỉ kiểm tra các lớp đang học
+                .Where(e => e.StudentID == studentId && e.Status != 3) // Chỉ kiểm tra các lớp đang học
                 .ToListAsync();
 
             foreach (var enrollmentItem in studentEnrollments)
@@ -62,20 +62,10 @@ namespace Management_Schedule_BE.Services
                 {
                     foreach (var schedule2 in @class.Schedules)
                     {
-                        // Kiểm tra trùng ngày
-                        if (schedule1.Date.Date == schedule2.Date.Date)
+                       
+                        if (schedule1.Date.Date == schedule2.Date.Date && schedule1.StudySessionId == schedule2.StudySessionId)
                         {
-                            // Lấy thời gian bắt đầu/kết thúc của từng ca học
-                            var s1Start = TimeSpan.Parse(schedule1.StudySession.StartTime);
-                            var s1End = TimeSpan.Parse(schedule1.StudySession.EndTime);
-                            var s2Start = TimeSpan.Parse(schedule2.StudySession.StartTime);
-                            var s2End = TimeSpan.Parse(schedule2.StudySession.EndTime);
-
-                            // Kiểm tra trùng thời gian
-                            if (s1Start < s2End && s1End > s2Start)
-                            {
-                                throw new Exception($"Lịch học trùng với lớp {enrollmentItem.Class.ClassName} vào ngày {schedule1.Date:dd/MM/yyyy}!");
-                            }
+                            throw new Exception($"Lịch học trùng với lớp {enrollmentItem.Class.ClassName} vào ngày {schedule1.Date:dd/MM/yyyy}, ca {schedule1.StudySessionId}!");
                         }
                     }
                 }
