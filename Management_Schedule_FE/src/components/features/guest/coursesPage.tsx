@@ -1,57 +1,87 @@
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ChevronRight, Clock } from "lucide-react"
-import useGetCourses from "@/hooks/api/course/use-get-course"
+import { ChevronRight, Clock, Users, Calendar, User, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import useGetClass from "@/hooks/api/classes/use-get-class"
+import { format } from "date-fns"
+import { showErrorToast, showSuccessToast } from "@/components/common/toast/toast"
+import { useAxios } from "@/hooks/api/use-axios"
+import { AxiosError } from "axios"
 
 export default function CoursesPage() {
+  const { data, error, isLoading } = useGetClass()
+  console.log(data)
+  const axios = useAxios()
+  if (isLoading) return <div>Đang tải lớp học...</div>
+  if (error) return <div>Đã xảy ra lỗi khi tải lớp học.</div>
+  const handleEnroll = async (classID: number) => {
+    try {
+      const response = await axios.post("/Enrollment", { classID }) // đã có baseURL nên không cần full URL
 
-  const { data, error, isLoading } = useGetCourses()
+      if (response) {
+        showSuccessToast("Đăng ký thành công!")
 
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError<any>
+
+      if (axiosError.response) {
+        const message = axiosError.response.data?.errors?.detail || "Đăng ký thất bại"
+        showErrorToast(message)
+      } else {
+        showErrorToast("Lỗi kết nối đến máy chủ!")
+      }
+
+      console.error("Error:", error)
+    }
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-10">
         <h2 className="text-lg font-semibold flex items-center mb-4">
-          <Badge className="bg-blue-500 text-white mr-2">Pro</Badge>
-          Khóa học Pro
+          <Badge className="bg-blue-500 text-white mr-2">Lớp học</Badge>
+          Danh sách các lớp đang hoạt động
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {data?.map((course) => (
-            <Card key={course.courseID} className="overflow-hidden border-0 shadow-md relative">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {data?.map((cls) => (
+            <Card key={cls.classID} className="overflow-hidden border-0 shadow-md relative">
               <CardContent className="p-0">
-                {course.isPro && <Badge
-                  variant="outline"
-                  className="absolute w-18 right-2 top-2 rounded-full px-3 py-1 text-xs font-semibold bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-md z-10"
-                >
-                  Pro
-                </Badge>}
-
                 <div className="bg-pink-500 text-white p-6 text-center">
-                  <h3 className="font-bold text-xl mb-1">{course.courseName}</h3>
-                  <p className="text-sm opacity-90">{course.description}</p>
+                  <h3 className="font-bold text-xl mb-1">{cls.className}</h3>
+                  <p className="text-sm opacity-90">{cls.courseName}</p>
                 </div>
-                <div className="p-4 flex justify-between">
 
-
-                  <div className="text-sm text-gray-500 flex items-center">
-                    Slot học: <Clock className="w-4 h-4 mr-2" />{course.duration} Slot
-
-                  </div>
-                  <div className="text-sm text-gray-500 flex items-center">
+                <div className="p-4 space-y-2 text-sm text-gray-700">
+                  <div className="flex items-center">
                     <Clock className="w-4 h-4 mr-2" />
-                    Giảm Giá {course.discountPercent} %
+                    Thời lượng: {cls.duration} buổi
+                  </div>
+                  <div className="flex items-center">
+                    <Users className="w-4 h-4 mr-2" />
+                    {cls.enrolledStudents}/{cls.maxStudents} học viên
+                  </div>
+                  <div className="flex items-center">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Bắt đầu từ: {format(new Date(cls.startDate), "dd/MM/yyyy")}
+                  </div>
+                  <div className="flex items-center">
+                    <User className="w-4 h-4 mr-2" />
+                    Giáo viên: {cls.isHaveTeacher ? cls.teacherName : "Chưa xếp"}
                   </div>
 
                 </div>
-                <div className="flex justify-center mt-4">
-                  {!course.isSelling ? (
-                    <span className="text-yellow-600 font-semibold">Chưa được mở bán</span>
 
+                <div className="flex justify-center mt-4 mb-4">
+                  {cls.status === 1 ? (
+                    <div className="flex flex-col space-y-2 w-full px-4">
+                      <Button variant="outline">Xem chi tiết</Button>
+                      <Button onClick={() => handleEnroll(cls.classID)}>Mua khóa học</Button>
+                    </div>
                   ) : (
-                    <Button>Mua khóa học</Button>
+                    <span className="text-yellow-600 font-semibold">Lớp chưa hoạt động</span>
                   )}
                 </div>
 
@@ -60,42 +90,6 @@ export default function CoursesPage() {
           ))}
         </div>
       </div>
-
-      {/* <div className="mb-10">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">Khóa học miễn phí</h2>
-          <Link href="/khoa-hoc-mien-phi" className="text-sm text-gray-500 flex items-center hover:text-blue-500">
-            Xem tất cả <ChevronRight size={16} />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {freeCourses.map((course) => (
-            <Card key={course.id} className="overflow-hidden border-0 shadow-md">
-              <CardContent className="p-0">
-                <div className="bg-pink-500 text-white p-6 text-center">
-                  <h3 className="font-bold text-xl mb-1">{course.title}</h3>
-                  <p className="text-sm opacity-90">{course.subtitle}</p>
-                </div>
-                <div className="p-4">
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {course.tags.map((tag, index) => (
-                      <Badge key={index} variant="outline" className="bg-gray-100 text-gray-700 border-0">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    <span className="inline-block mr-2">👤</span>
-                    {course.students} học viên
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div> */}
-
     </div>
   )
 }

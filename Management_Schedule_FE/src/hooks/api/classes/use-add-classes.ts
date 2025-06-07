@@ -16,7 +16,7 @@ export const useAddClasses = () => {
   const addClasses = async ({ data }: { data: any }) => {
     try {
       setLoading(true)
-      const response = await axios.post(`Classes`, data)
+      const response = await axios.post(`Class`, data)
       return response.data
     } catch (error) {
       throw error

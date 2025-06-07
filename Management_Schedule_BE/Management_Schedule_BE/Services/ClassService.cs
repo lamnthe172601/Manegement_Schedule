@@ -29,7 +29,7 @@ namespace Management_Schedule_BE.Helpers.Validators
             foreach (var c in classes)
             {
                 // Đếm số lịch học trạng thái khác 3 (không bị hủy)
-                var totalSchedules = await _context.Schedules.CountAsync(s => s.ClassID == c.ClassID && s.Status == 1);
+                var totalSchedules = await _context.Schedules.CountAsync(s => s.ClassID == c.ClassID && s.Status !=3);
                 // Đếm số lịch học bị hủy
                 var cancelledSchedules = await _context.Schedules.CountAsync(s => s.ClassID == c.ClassID && s.Status == 3);
                 // Tổng số lịch học của lớp
@@ -59,24 +59,34 @@ namespace Management_Schedule_BE.Helpers.Validators
                 }
                 // Đếm số học sinh đã đăng ký lớp này
                 int enrolledStudents = await _context.StudentClassEnrollments.CountAsync(e => e.ClassID == c.ClassID && e.Status == 1);
-                // Lấy danh sách giáo viên của các lịch học (trạng thái khác 3)
-                var teacherNames = await _context.Schedules
-                    .Where(s => s.ClassID == c.ClassID && s.Status != 3 && s.TeacherID != null)
-                    .Select(s => s.Teacher.User.FullName)
-                    .Distinct()
+                // Lấy danh sách tất cả lịch học của lớp (kể cả bị hủy)
+                var allSchedulesOfClass = await _context.Schedules
+                    .Where(s => s.ClassID == c.ClassID && s.TeacherID != null)
                     .ToListAsync();
-                // Đếm số lịch có giáo viên
-                int schedulesWithTeacher = await _context.Schedules.CountAsync(s => s.ClassID == c.ClassID && s.Status != 3 && s.TeacherID != null);
-                // Đếm số lịch không có giáo viên
-                int schedulesWithoutTeacher = await _context.Schedules.CountAsync(s => s.ClassID == c.ClassID && s.Status != 3 && s.TeacherID == null);
-                // Xác định trạng thái đủ giáo viên
-                bool isHaveFullTeacher = (totalSchedules > 0 && schedulesWithTeacher == totalSchedules);
-                // Xác định tên giáo viên (nếu có nhiều thì lấy tên đầu tiên, hoặc nối tên)
-                string teacherName = teacherNames.Count == 1 ? teacherNames[0] : (teacherNames.Count > 1 ? string.Join(", ", teacherNames) : "");
+                int? teacherId = null;
+                string teacherName = "";
+                if (allSchedulesOfClass.Count > 0)
+                {
+                    var mainTeacher = allSchedulesOfClass
+                        .GroupBy(s => s.TeacherID)
+                        .OrderByDescending(g => g.Count())
+                        .FirstOrDefault();
+                    if (mainTeacher != null)
+                    {
+                        teacherId = mainTeacher.Key;
+                        // Lấy tên giáo viên dạy chính
+                        teacherName = await _context.Teachers
+                            .Where(t => t.TeacherID == teacherId)
+                            .Select(t => t.User.FullName)
+                            .FirstOrDefaultAsync() ?? "";
+                    }
+                }
                 // Bổ sung note về giáo viên
-                if (totalSchedules > 0 && schedulesWithTeacher == 0)
+                if (totalSchedules > 0 && allSchedulesOfClass.Count(s => s.TeacherID != null) == 0)
                     note = note == "" ? "Chưa xếp giáo viên" : note + ", chưa xếp giáo viên";
                 
+                // Xác định trạng thái đủ giáo viên: tất cả lịch học đều có giáo viên
+                bool isHaveFullTeacher = (totalSchedules > 0 && allSchedulesOfClass.Count(s => s.TeacherID != null)>= c.Course.Duration);
                 result.Add(new DetailedClassDTO(
                     c.ClassID,
                     c.ClassName,
@@ -93,7 +103,8 @@ namespace Management_Schedule_BE.Helpers.Validators
                     note,
                     enrolledStudents,
                     teacherName,
-                    isHaveFullTeacher
+                    isHaveFullTeacher,
+                    teacherId
                 ));
             }
             return result;

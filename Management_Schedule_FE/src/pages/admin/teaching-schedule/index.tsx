@@ -314,7 +314,7 @@ export default function SchedulePage() {
                 onRangeChange={handleRangeChange}
                 onNavigate={handleNavigate}
                 onSelectEvent={handleSelectEvent}
-                eventPropGetter={(event:any) => {
+                eventPropGetter={(event: any) => {
                     let backgroundColor = '#3182CE'; // màu mặc định (xanh dương)
 
                     if (event.resource.status === 1) {
@@ -359,7 +359,7 @@ export default function SchedulePage() {
                                     {!isEditingTeacher ? (
                                         <div className="flex justify-between items-center">
                                             <span>{selectedEvent.teacherName || 'Chưa có giáo viên'}</span>
-                                            {selectedEvent.status !== 2 && (
+                                            {selectedEvent.status == 1 && (
                                                 <button
                                                     className="text-blue-500 underline ml-4"
                                                     onClick={() => setIsEditingTeacher(true)}
@@ -462,14 +462,14 @@ export default function SchedulePage() {
                                         </Button>
                                     )}
 
-                                    {selectedEvent.status === 3 && (
+                                    {/* {selectedEvent.status === 3 && (
                                         <Button
                                             className="bg-green-500 hover:bg-green-600 text-white"
                                             onClick={() => handleOpenCancel(selectedEvent.scheduleID)}
                                         >
                                             Khôi phục lịch học
                                         </Button>
-                                    )}
+                                    )} */}
                                 </div>
 
                                 {/* Dialog hủy lịch */}
