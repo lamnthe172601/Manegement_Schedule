@@ -263,12 +263,13 @@ export default function ClassPage() {
     };
 
     const handleCreateMakeupSchedule = (cls: any) => {
+        console.log(cls)
         setMakeupData({
             classID: cls.classID,
-            teacherID: cls.teacherID, // nếu có
+            teacherID: cls.teacherId,
             studySessionId: 0,
             room: "",
-            status: 0,
+            status: 1,
             notes: "",
             date: new Date().toISOString().split("T")[0],
         });
@@ -282,23 +283,22 @@ export default function ClassPage() {
         teacherID: 0,
         studySessionId: 0,
         room: "",
-        status: 0,
+        status: 1,
         notes: "",
         date: new Date().toISOString().split("T")[0], // yyyy-MM-dd
     });
 
     const handleMakeupSubmit = async (e) => {
         e.preventDefault();
+        console.log(makeupData)
         try {
-            const res = await fetch("/api/Schedule/makeup", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(makeupData),
-            });
+            const res = await axios.post("http://localhost:5163/api/Schedule/makeup", (makeupData),
+            );
 
-            if (res.ok) {
+            if (res) {
                 showSuccessToast("Tạo lịch học bù thành công!");
                 setMakeupModalVisible(false);
+                fetchClasses();
                 // refresh lớp học nếu cần
             } else {
                 showErrorToast("Tạo lịch học bù thất bại.");

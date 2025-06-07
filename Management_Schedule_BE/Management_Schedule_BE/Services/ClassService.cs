@@ -86,7 +86,7 @@ namespace Management_Schedule_BE.Helpers.Validators
                     note = note == "" ? "Chưa xếp giáo viên" : note + ", chưa xếp giáo viên";
                 
                 // Xác định trạng thái đủ giáo viên: tất cả lịch học đều có giáo viên
-                bool isHaveFullTeacher = (totalSchedules > 0 && allSchedulesOfClass.Count(s => s.TeacherID != null)== c.Course.Duration);
+                bool isHaveFullTeacher = (totalSchedules > 0 && allSchedulesOfClass.Count(s => s.TeacherID != null)>= c.Course.Duration);
                 result.Add(new DetailedClassDTO(
                     c.ClassID,
                     c.ClassName,
