@@ -19,6 +19,7 @@ namespace Management_Schedule_BE.DTOs
     byte Status,
     DateTime CreatedAt,
     DateTime ModifiedAt,
+    [MaxLength(1)]
     string? Gender = "M");
 
     public record UserCreateDTO(
@@ -28,11 +29,12 @@ namespace Management_Schedule_BE.DTOs
     string Email,
     string PasswordHash,
     string? FullName,
-    [MaxLength(1)]
+    
     DateTime? DateOfBirth,
     string? Address,
     string? Phone,
     string? Introduction,
+    [MaxLength(1)]
     string? Gender = "M",
     IFormFile? AvatarUrl = null
     );
@@ -45,6 +47,7 @@ namespace Management_Schedule_BE.DTOs
     string? Phone,
     string? Introduction,
     byte Status,
+    [MaxLength(1)]
     string? Gender = "M",
     IFormFile? AvatarUrl = null
     );
@@ -55,6 +58,7 @@ namespace Management_Schedule_BE.DTOs
         string? Address,
         string? Phone,
         DateTime? DateOfBirth,
+        [MaxLength(1)]
         string? Gender = "M",
         IFormFile? AvatarUrl = null
     );
