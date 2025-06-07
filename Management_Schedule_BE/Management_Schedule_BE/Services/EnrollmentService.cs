@@ -18,6 +18,7 @@ namespace Management_Schedule_BE.Services
         {
             var @class = await _context.Classes
                 .Include(c => c.Course)
+                .Include(c => c.Schedules)
                 .FirstOrDefaultAsync(c => c.ClassID == enrollmentDto.ClassID);
 
             if (@class == null)
@@ -39,6 +40,35 @@ namespace Management_Schedule_BE.Services
             if (currentEnrolledCount >= @class.MaxStudents)
             {
                 throw new Exception("Lớp học đã đủ số lượng học sinh!");
+            }
+
+            // Kiểm tra ngày bắt đầu của lớp học
+            if (@class.StartDate <= DateTime.Now)
+            {
+                throw new Exception("Không thể đăng ký vào lớp học đã bắt đầu!");
+            }
+
+            // Kiểm tra lịch học trùng lặp
+            var studentEnrollments = await _context.StudentClassEnrollments
+                .Include(e => e.Class)
+                    .ThenInclude(c => c.Schedules)
+                        .ThenInclude(sch => sch.StudySession)
+                .Where(e => e.StudentID == studentId && e.Status != 3) // Chỉ kiểm tra các lớp đang học
+                .ToListAsync();
+
+            foreach (var enrollmentItem in studentEnrollments)
+            {
+                foreach (var schedule1 in enrollmentItem.Class.Schedules)
+                {
+                    foreach (var schedule2 in @class.Schedules)
+                    {
+                       
+                        if (schedule1.Date.Date == schedule2.Date.Date && schedule1.StudySessionId == schedule2.StudySessionId)
+                        {
+                            throw new Exception($"Lịch học trùng với lớp {enrollmentItem.Class.ClassName} vào ngày {schedule1.Date:dd/MM/yyyy}, ca {schedule1.StudySessionId}!");
+                        }
+                    }
+                }
             }
 
             var enrollment = new StudentClassEnrollment

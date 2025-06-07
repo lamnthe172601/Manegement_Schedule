@@ -17,21 +17,19 @@ import axios from "axios"
 import { Constants } from "@/lib/constants"
 import { mutate } from "swr"
 import { UserProfile } from "@/hooks/api/user/use-get-users"
-import { any, date } from "zod"
+import { date } from "zod"
 import {
   showErrorToast,
   showSuccessToast,
 } from "@/components/common/toast/toast"
-import TeacherLayout from "@/components/features/guest/TeacherLayout"
 export default function Page() {
   const [user] = useAtom(userInfoAtom)
   const [inputValue, setInputValue] = useState<string | null>("")
   const [userInfo, setUserInfo] = useState<UserProfile | null>(null)
-  const [avatarFile, setAvatarFile] = useState<File | null>(null)
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
-
   const [token, setToken] = useState("")
   const [activeField, setActiveField] = useState<keyof UserProfile | null>(null)
+  const [avatarFile, setAvatarFile] = useState<File | null>(null)
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
   const closePopup = () => setActiveField(null)
   const email: string | undefined = user?.email
   useEffect(() => {
@@ -118,11 +116,11 @@ export default function Page() {
     }
   }
   return (
-    <TeacherLayout>
+    <StudentLayout>
       <h1 className="text-2xl font-bold mb-6">Cài đặt</h1>
 
       <div className="flex">
-
+        {/* Settings Navigation */}
         {/* Settings Content */}
         <div className="flex-1">
           <div className="bg-white rounded-lg border p-6">
@@ -311,6 +309,6 @@ export default function Page() {
           </div>
         </DialogContent>
       </Dialog>
-    </TeacherLayout>
+    </StudentLayout>
   )
 }

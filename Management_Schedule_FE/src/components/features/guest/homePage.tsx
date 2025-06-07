@@ -82,7 +82,7 @@ export default function HomePage() {
                             {data.map((course) => (
                                 <Card key={course.courseID} className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-shadow">
                                     <CardContent className="p-0">
-                                        <div className="relative h-48 bg-gray-200">
+                                        <div className="relative h-72 bg-gray-200">
                                             {course.thumbnailUrl ? (
                                                 <Image
                                                     src={course.thumbnailUrl}

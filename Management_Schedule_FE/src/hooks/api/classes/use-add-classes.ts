@@ -1,6 +1,15 @@
 import { useAxios } from "@/hooks/api/use-axios"
 import { useState } from "react"
 
+export interface Classes {
+  classID: number,
+  className: string,
+  courseID: 1,
+  courseName: string,
+  maxStudents: number,
+  startDate: string,
+  status: number
+}
 export const useAddClasses = () => {
   const axios = useAxios()
   const [loading, setLoading] = useState(false)
