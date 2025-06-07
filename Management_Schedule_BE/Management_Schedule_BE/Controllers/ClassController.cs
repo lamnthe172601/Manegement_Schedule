@@ -148,5 +148,19 @@ namespace Management_Schedule_BE.Controllers
                 return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
             }
         }
+
+        [HttpGet("basic")]
+        public async Task<ActionResult<IEnumerable<ClassBasicDTO>>> GetAllClassBasic()
+        {
+            try
+            {
+                var classes = await _classService.GetAllClassBasicAsync();
+                return Ok(classes);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
     }
 } 

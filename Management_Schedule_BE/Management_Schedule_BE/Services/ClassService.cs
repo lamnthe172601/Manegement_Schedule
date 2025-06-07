@@ -245,5 +245,12 @@ namespace Management_Schedule_BE.Helpers.Validators
 
             return students;
         }
+
+        public async Task<IEnumerable<ClassBasicDTO>> GetAllClassBasicAsync()
+        {
+            return await _context.Classes
+                .Select(c => new ClassBasicDTO(c.ClassID, c.ClassName))
+                .ToListAsync();
+        }
     }
 }

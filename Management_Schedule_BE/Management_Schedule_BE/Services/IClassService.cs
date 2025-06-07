@@ -13,5 +13,6 @@ namespace Management_Schedule_BE.Services
         Task<bool> UpdateClassStatusAsync(int id, byte status);
         Task<IEnumerable<StudentEnrolledClassDTO>> GetStudentEnrolledClassesAsync(int studentId);
         Task<IEnumerable<StudentInClassDTO>> GetStudentsInClassAsync(int classId);
+        Task<IEnumerable<ClassBasicDTO>> GetAllClassBasicAsync();
     }
 } 
