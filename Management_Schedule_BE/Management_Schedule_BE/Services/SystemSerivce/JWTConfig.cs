@@ -32,7 +32,9 @@ namespace Management_Schedule_BE.Services.SystemSerivce
             new Claim(JwtRegisteredClaimNames.Email, user.Email),        // Email (JWT standard claim)
             new Claim("fullName", user.FullName ?? ""),                   // fullName
             new Claim("gender", user.Gender ?? ""),                       // gender
-            new Claim("phone", user.Phone ?? ""),                         // phone
+            new Claim("phone", user.Phone ?? ""),
+            new Claim("address", user.Address ?? ""),
+           new Claim("dateOfBirth", user.DateOfBirth.HasValue ? user.DateOfBirth.Value.ToString("yyyy-MM-dd") : ""),
             new Claim("role", role)       
                     
                     //roles
