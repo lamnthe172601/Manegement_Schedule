@@ -12,6 +12,7 @@ import { Endpoints } from "@/lib/endpoints"
 import axios from "axios"
 import { showErrorToast } from "@/components/common/toast/toast"
 import { Constants } from "@/lib/constants"
+import Link from "next/link"
 function Page() {
   const [courses, setCourse] = useState<Course[]>([])
   const [token, setToken] = useState("")
@@ -92,9 +93,9 @@ function Page() {
               <Plus size={20} />
             </Button>
             {/* sửa thành thẻ link sang trang mua khoá học */}
-            <Button className="text-[#91AD9C] border-2 rounded-xl border-[#91AD9C] bg-white">
+            <Link href={"/user/khoa-hoc"} className="btn text-[#91AD9C] border-2 rounded-xl border-[#91AD9C] bg-white">
               Thêm khóa học
-            </Button>
+            </Link>
           </div>
         </div>
       </div>

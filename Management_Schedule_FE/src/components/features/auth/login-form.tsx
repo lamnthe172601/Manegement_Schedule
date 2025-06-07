@@ -134,7 +134,7 @@ export function LoginForm({
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-3">
                 <div className="grid gap-3">
                   <FormField
                     control={form.control}
@@ -174,7 +174,7 @@ export function LoginForm({
                     )}
                   />
                 </div>
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2">
                   <Button
                     type="submit"
                     className="w-full cursor-pointer"
@@ -186,6 +186,7 @@ export function LoginForm({
                     Đăng nhập
                   </Button>
                 </div>
+                <GoogleLogin onSuccess={handleLoginGoogle} />
               </div>
               <div className="mt-4 text-center text-sm">
                 Bạn chưa có tài khoản?{" "}
@@ -195,7 +196,6 @@ export function LoginForm({
               </div>
             </form>
           </Form>
-          <GoogleLogin onSuccess={handleLoginGoogle} />
         </CardContent>
       </Card>
     </div>
