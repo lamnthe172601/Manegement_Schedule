@@ -31,7 +31,6 @@ namespace Management_Schedule_BE.DTOs
 
     public record DailyScheduleReportDTO
     {
-        public DateTime Date { get; init; }
         public int TotalSessions { get; init; }
         public int CompletedSessions { get; init; }
         public int CancelledSessions { get; init; }

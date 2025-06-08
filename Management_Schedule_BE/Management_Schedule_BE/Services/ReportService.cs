@@ -16,21 +16,23 @@ namespace Management_Schedule_BE.Services
             _mapper = mapper;
         }
 
-        public async Task<TeacherScheduleReportDTO> GetTeacherScheduleReportAsync(int teacherId, DateTime startDate, DateTime endDate)
+        public async Task<TeacherScheduleReportDTO> GetTeacherScheduleReportAsync(int teacherId)
         {
-            var teacher = await _context.Teachers.FindAsync(teacherId);
+            var teacher = await _context.Teachers.Include(t => t.User).FirstOrDefaultAsync(t => t.TeacherID == teacherId);
             if (teacher == null)
                 throw new Exception("Không tìm thấy giáo viên");
 
+            var teacherName = teacher.User != null ? teacher.User.FullName : "";
+
             var schedules = await _context.Schedules
                 .Include(s => s.StudySession)
-                .Where(s => s.TeacherID == teacherId && s.Date >= startDate && s.Date <= endDate)
+                .Where(s => s.TeacherID == teacherId)
                 .ToListAsync();
 
             var report = new TeacherScheduleReportDTO
             {
                 TeacherID = teacher.TeacherID,
-                TeacherName = teacher.User.FullName,
+                TeacherName = teacherName,
                 TotalSessions = schedules.Count,
                 CompletedSessions = schedules.Count(s => s.Status == 2),
                 CancelledSessions = schedules.Count(s => s.Status == 3),
@@ -40,7 +42,7 @@ namespace Management_Schedule_BE.Services
             return report;
         }
 
-        public async Task<ClassScheduleReportDTO> GetClassScheduleReportAsync(int classId, DateTime startDate, DateTime endDate)
+        public async Task<ClassScheduleReportDTO> GetClassScheduleReportAsync(int classId)
         {
             var classEntity = await _context.Classes.FindAsync(classId);
             if (classEntity == null)
@@ -48,7 +50,7 @@ namespace Management_Schedule_BE.Services
 
             var schedules = await _context.Schedules
                 .Include(s => s.StudySession)
-                .Where(s => s.ClassID == classId && s.Date >= startDate && s.Date <= endDate)
+                .Where(s => s.ClassID == classId)
                 .ToListAsync();
 
             var report = new ClassScheduleReportDTO
@@ -64,11 +66,11 @@ namespace Management_Schedule_BE.Services
             return report;
         }
 
-        public async Task<RoomScheduleReportDTO> GetRoomScheduleReportAsync(string room, DateTime startDate, DateTime endDate)
+        public async Task<RoomScheduleReportDTO> GetRoomScheduleReportAsync(string room)
         {
             var schedules = await _context.Schedules
                 .Include(s => s.StudySession)
-                .Where(s => s.Room == room && s.Date >= startDate && s.Date <= endDate)
+                .Where(s => s.Room == room)
                 .ToListAsync();
 
             var report = new RoomScheduleReportDTO
@@ -83,16 +85,14 @@ namespace Management_Schedule_BE.Services
             return report;
         }
 
-        public async Task<DailyScheduleReportDTO> GetDailyScheduleReportAsync(DateTime date)
+        public async Task<DailyScheduleReportDTO> GetDailyScheduleReportAsync()
         {
             var schedules = await _context.Schedules
                 .Include(s => s.StudySession)
-                .Where(s => s.Date.Date == date.Date)
                 .ToListAsync();
 
             var report = new DailyScheduleReportDTO
             {
-                Date = date,
                 TotalSessions = schedules.Count,
                 CompletedSessions = schedules.Count(s => s.Status == 2),
                 CancelledSessions = schedules.Count(s => s.Status == 3),
@@ -102,15 +102,17 @@ namespace Management_Schedule_BE.Services
             return report;
         }
 
-        public async Task<TeacherStatisticsDTO> GetTeacherStatisticsAsync(int teacherId, DateTime startDate, DateTime endDate)
+        public async Task<TeacherStatisticsDTO> GetTeacherStatisticsAsync(int teacherId)
         {
-            var teacher = await _context.Teachers.FindAsync(teacherId);
+            var teacher = await _context.Teachers.Include(t => t.User).FirstOrDefaultAsync(t => t.TeacherID == teacherId);
             if (teacher == null)
                 throw new Exception("Không tìm thấy giáo viên");
 
+            var teacherName = teacher.User != null ? teacher.User.FullName : "";
+
             var schedules = await _context.Schedules
                 .Include(s => s.StudySession)
-                .Where(s => s.TeacherID == teacherId && s.Date >= startDate && s.Date <= endDate)
+                .Where(s => s.TeacherID == teacherId)
                 .ToListAsync();
 
             var roomUsage = schedules
@@ -122,7 +124,7 @@ namespace Management_Schedule_BE.Services
                 .ToDictionary(g => g.Key, g => g.Count());
 
             var totalTeachingHours = schedules
-                .Where(s => s.Status != 3) // Không tính các buổi đã hủy
+                .Where(s => s.Status != 3)
                 .Count();
 
             var totalClasses = schedules
@@ -133,7 +135,7 @@ namespace Management_Schedule_BE.Services
             var statistics = new TeacherStatisticsDTO
             {
                 TeacherID = teacher.TeacherID,
-                TeacherName = teacher.User.FullName,
+                TeacherName = teacherName,
                 TotalTeachingHours = totalTeachingHours,
                 TotalClasses = totalClasses,
                 RoomUsage = roomUsage,
@@ -143,11 +145,11 @@ namespace Management_Schedule_BE.Services
             return statistics;
         }
 
-        public async Task<RoomStatisticsDTO> GetRoomStatisticsAsync(string room, DateTime startDate, DateTime endDate)
+        public async Task<RoomStatisticsDTO> GetRoomStatisticsAsync(string room)
         {
             var schedules = await _context.Schedules
                 .Include(s => s.StudySession)
-                .Where(s => s.Room == room && s.Date >= startDate && s.Date <= endDate)
+                .Where(s => s.Room == room)
                 .ToListAsync();
 
             var teacherDistribution = schedules
@@ -159,7 +161,7 @@ namespace Management_Schedule_BE.Services
                 .ToDictionary(g => g.Key, g => g.Count());
 
             var totalTeachingHours = schedules
-                .Where(s => s.Status != 3) // Không tính các buổi đã hủy
+                .Where(s => s.Status != 3)
                 .Count();
 
             var statistics = new RoomStatisticsDTO

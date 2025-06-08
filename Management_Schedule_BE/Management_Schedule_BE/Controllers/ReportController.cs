@@ -17,13 +17,11 @@ namespace Management_Schedule_BE.Controllers
 
         [HttpGet("teacher/{teacherId}")]
         public async Task<ActionResult<TeacherScheduleReportDTO>> GetTeacherScheduleReport(
-            int teacherId,
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate)
+            int teacherId)
         {
             try
             {
-                var report = await _reportService.GetTeacherScheduleReportAsync(teacherId, startDate, endDate);
+                var report = await _reportService.GetTeacherScheduleReportAsync(teacherId);
                 return Ok(report);
             }
             catch (Exception ex)
@@ -34,13 +32,11 @@ namespace Management_Schedule_BE.Controllers
 
         [HttpGet("class/{classId}")]
         public async Task<ActionResult<ClassScheduleReportDTO>> GetClassScheduleReport(
-            int classId,
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate)
+            int classId)
         {
             try
             {
-                var report = await _reportService.GetClassScheduleReportAsync(classId, startDate, endDate);
+                var report = await _reportService.GetClassScheduleReportAsync(classId);
                 return Ok(report);
             }
             catch (Exception ex)
@@ -51,13 +47,11 @@ namespace Management_Schedule_BE.Controllers
 
         [HttpGet("room/{room}")]
         public async Task<ActionResult<RoomScheduleReportDTO>> GetRoomScheduleReport(
-            string room,
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate)
+            string room)
         {
             try
             {
-                var report = await _reportService.GetRoomScheduleReportAsync(room, startDate, endDate);
+                var report = await _reportService.GetRoomScheduleReportAsync(room);
                 return Ok(report);
             }
             catch (Exception ex)
@@ -67,12 +61,11 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpGet("daily")]
-        public async Task<ActionResult<DailyScheduleReportDTO>> GetDailyScheduleReport(
-            [FromQuery] DateTime date)
+        public async Task<ActionResult<DailyScheduleReportDTO>> GetDailyScheduleReport()
         {
             try
             {
-                var report = await _reportService.GetDailyScheduleReportAsync(date);
+                var report = await _reportService.GetDailyScheduleReportAsync();
                 return Ok(report);
             }
             catch (Exception ex)
@@ -83,13 +76,11 @@ namespace Management_Schedule_BE.Controllers
 
         [HttpGet("teacher/{teacherId}/statistics")]
         public async Task<ActionResult<TeacherStatisticsDTO>> GetTeacherStatistics(
-            int teacherId,
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate)
+            int teacherId)
         {
             try
             {
-                var statistics = await _reportService.GetTeacherStatisticsAsync(teacherId, startDate, endDate);
+                var statistics = await _reportService.GetTeacherStatisticsAsync(teacherId);
                 return Ok(statistics);
             }
             catch (Exception ex)
@@ -100,13 +91,11 @@ namespace Management_Schedule_BE.Controllers
 
         [HttpGet("room/{room}/statistics")]
         public async Task<ActionResult<RoomStatisticsDTO>> GetRoomStatistics(
-            string room,
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate)
+            string room)
         {
             try
             {
-                var statistics = await _reportService.GetRoomStatisticsAsync(room, startDate, endDate);
+                var statistics = await _reportService.GetRoomStatisticsAsync(room);
                 return Ok(statistics);
             }
             catch (Exception ex)
