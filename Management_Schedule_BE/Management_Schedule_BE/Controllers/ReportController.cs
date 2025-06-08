@@ -15,93 +15,32 @@ namespace Management_Schedule_BE.Controllers
             _reportService = reportService;
         }
 
-        [HttpGet("teacher/{teacherId}")]
-        public async Task<ActionResult<TeacherScheduleReportDTO>> GetTeacherScheduleReport(
-            int teacherId)
+        [HttpGet("dashboard")]
+        public async Task<ActionResult<DashboardAdminDTO>> GetDashboardAdmin()
         {
-            try
-            {
-                var report = await _reportService.GetTeacherScheduleReportAsync(teacherId);
-                return Ok(report);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var dashboard = await _reportService.GetDashboardAdminAsync();
+            return Ok(dashboard);
         }
 
-        [HttpGet("class/{classId}")]
-        public async Task<ActionResult<ClassScheduleReportDTO>> GetClassScheduleReport(
-            int classId)
+        [HttpGet("schedule-status-statistics")]
+        public async Task<ActionResult<ScheduleStatusStatisticsDTO>> GetScheduleStatusStatistics()
         {
-            try
-            {
-                var report = await _reportService.GetClassScheduleReportAsync(classId);
-                return Ok(report);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var data = await _reportService.GetScheduleStatusStatisticsAsync();
+            return Ok(data);
         }
 
-        [HttpGet("room/{room}")]
-        public async Task<ActionResult<RoomScheduleReportDTO>> GetRoomScheduleReport(
-            string room)
+        [HttpGet("top-teachers")]
+        public async Task<ActionResult<List<TopTeacherDTO>>> GetTopTeachers([FromQuery] int top = 5)
         {
-            try
-            {
-                var report = await _reportService.GetRoomScheduleReportAsync(room);
-                return Ok(report);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var data = await _reportService.GetTopTeachersAsync(top);
+            return Ok(data);
         }
 
-        [HttpGet("daily")]
-        public async Task<ActionResult<DailyScheduleReportDTO>> GetDailyScheduleReport()
+        [HttpGet("student-distribution-by-class")]
+        public async Task<ActionResult<List<StudentDistributionByClassDTO>>> GetStudentDistributionByClass()
         {
-            try
-            {
-                var report = await _reportService.GetDailyScheduleReportAsync();
-                return Ok(report);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet("teacher/{teacherId}/statistics")]
-        public async Task<ActionResult<TeacherStatisticsDTO>> GetTeacherStatistics(
-            int teacherId)
-        {
-            try
-            {
-                var statistics = await _reportService.GetTeacherStatisticsAsync(teacherId);
-                return Ok(statistics);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet("room/{room}/statistics")]
-        public async Task<ActionResult<RoomStatisticsDTO>> GetRoomStatistics(
-            string room)
-        {
-            try
-            {
-                var statistics = await _reportService.GetRoomStatisticsAsync(room);
-                return Ok(statistics);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var data = await _reportService.GetStudentDistributionByClassAsync();
+            return Ok(data);
         }
     }
 } 

@@ -16,164 +16,82 @@ namespace Management_Schedule_BE.Services
             _mapper = mapper;
         }
 
-        public async Task<TeacherScheduleReportDTO> GetTeacherScheduleReportAsync(int teacherId)
+        public async Task<DashboardAdminDTO> GetDashboardAdminAsync()
         {
-            var teacher = await _context.Teachers.Include(t => t.User).FirstOrDefaultAsync(t => t.TeacherID == teacherId);
-            if (teacher == null)
-                throw new Exception("Không tìm thấy giáo viên");
+            var totalUsers = await _context.Users.CountAsync();
+            var totalTeachers = await _context.Teachers.CountAsync();
+            var totalStudents = await _context.Students.CountAsync();
+            var totalClasses = await _context.Classes.CountAsync();
+            var totalCourses = await _context.Courses.CountAsync();
+            var totalSchedules = await _context.Schedules.CountAsync();
+            var totalActiveClasses = await _context.Classes.CountAsync(c => c.Status == 1);
+            var totalActiveStudents = await _context.Students.CountAsync(s => s.Status == 1);
+            var totalActiveTeachers = await _context.Teachers.CountAsync(t => t.User.Status == 1);
 
-            var teacherName = teacher.User != null ? teacher.User.FullName : "";
-
-            var schedules = await _context.Schedules
-                .Include(s => s.StudySession)
-                .Where(s => s.TeacherID == teacherId)
-                .ToListAsync();
-
-            var report = new TeacherScheduleReportDTO
+            return new DashboardAdminDTO
             {
-                TeacherID = teacher.TeacherID,
-                TeacherName = teacherName,
-                TotalSessions = schedules.Count,
-                CompletedSessions = schedules.Count(s => s.Status == 2),
-                CancelledSessions = schedules.Count(s => s.Status == 3),
-                Schedules = _mapper.Map<List<ScheduleDTO>>(schedules)
-            };
-
-            return report;
-        }
-
-        public async Task<ClassScheduleReportDTO> GetClassScheduleReportAsync(int classId)
-        {
-            var classEntity = await _context.Classes.FindAsync(classId);
-            if (classEntity == null)
-                throw new Exception("Không tìm thấy lớp học");
-
-            var schedules = await _context.Schedules
-                .Include(s => s.StudySession)
-                .Where(s => s.ClassID == classId)
-                .ToListAsync();
-
-            var report = new ClassScheduleReportDTO
-            {
-                ClassID = classEntity.ClassID,
-                ClassName = classEntity.ClassName,
-                TotalSessions = schedules.Count,
-                CompletedSessions = schedules.Count(s => s.Status == 2),
-                CancelledSessions = schedules.Count(s => s.Status == 3),
-                Schedules = _mapper.Map<List<ScheduleDTO>>(schedules)
-            };
-
-            return report;
-        }
-
-        public async Task<RoomScheduleReportDTO> GetRoomScheduleReportAsync(string room)
-        {
-            var schedules = await _context.Schedules
-                .Include(s => s.StudySession)
-                .Where(s => s.Room == room)
-                .ToListAsync();
-
-            var report = new RoomScheduleReportDTO
-            {
-                Room = room,
-                TotalSessions = schedules.Count,
-                CompletedSessions = schedules.Count(s => s.Status == 2),
-                CancelledSessions = schedules.Count(s => s.Status == 3),
-                Schedules = _mapper.Map<List<ScheduleDTO>>(schedules)
-            };
-
-            return report;
-        }
-
-        public async Task<DailyScheduleReportDTO> GetDailyScheduleReportAsync()
-        {
-            var schedules = await _context.Schedules
-                .Include(s => s.StudySession)
-                .ToListAsync();
-
-            var report = new DailyScheduleReportDTO
-            {
-                TotalSessions = schedules.Count,
-                CompletedSessions = schedules.Count(s => s.Status == 2),
-                CancelledSessions = schedules.Count(s => s.Status == 3),
-                Schedules = _mapper.Map<List<ScheduleDTO>>(schedules)
-            };
-
-            return report;
-        }
-
-        public async Task<TeacherStatisticsDTO> GetTeacherStatisticsAsync(int teacherId)
-        {
-            var teacher = await _context.Teachers.Include(t => t.User).FirstOrDefaultAsync(t => t.TeacherID == teacherId);
-            if (teacher == null)
-                throw new Exception("Không tìm thấy giáo viên");
-
-            var teacherName = teacher.User != null ? teacher.User.FullName : "";
-
-            var schedules = await _context.Schedules
-                .Include(s => s.StudySession)
-                .Where(s => s.TeacherID == teacherId)
-                .ToListAsync();
-
-            var roomUsage = schedules
-                .GroupBy(s => s.Room)
-                .ToDictionary(g => g.Key, g => g.Count());
-
-            var dayDistribution = schedules
-                .GroupBy(s => s.Date.DayOfWeek)
-                .ToDictionary(g => g.Key, g => g.Count());
-
-            var totalTeachingHours = schedules
-                .Where(s => s.Status != 3)
-                .Count();
-
-            var totalClasses = schedules
-                .Select(s => s.ClassID)
-                .Distinct()
-                .Count();
-
-            var statistics = new TeacherStatisticsDTO
-            {
-                TeacherID = teacher.TeacherID,
-                TeacherName = teacherName,
-                TotalTeachingHours = totalTeachingHours,
+                TotalUsers = totalUsers,
+                TotalTeachers = totalTeachers,
+                TotalStudents = totalStudents,
                 TotalClasses = totalClasses,
-                RoomUsage = roomUsage,
-                DayDistribution = dayDistribution
+                TotalCourses = totalCourses,
+                TotalSchedules = totalSchedules,
+                TotalActiveClasses = totalActiveClasses,
+                TotalActiveStudents = totalActiveStudents,
+                TotalActiveTeachers = totalActiveTeachers
             };
-
-            return statistics;
         }
 
-        public async Task<RoomStatisticsDTO> GetRoomStatisticsAsync(string room)
+        public async Task<ScheduleStatusStatisticsDTO> GetScheduleStatusStatisticsAsync()
         {
-            var schedules = await _context.Schedules
-                .Include(s => s.StudySession)
-                .Where(s => s.Room == room)
+            var total = await _context.Schedules.CountAsync();
+            var completed = await _context.Schedules.CountAsync(s => s.Status == 2);
+            var cancelled = await _context.Schedules.CountAsync(s => s.Status == 3);
+            var pending = await _context.Schedules.CountAsync(s => s.Status == 1 || s.Status == 0);
+            return new ScheduleStatusStatisticsDTO
+            {
+                TotalSchedules = total,
+                CompletedSchedules = completed,
+                CancelledSchedules = cancelled,
+                PendingSchedules = pending
+            };
+        }
+
+        public async Task<List<TopTeacherDTO>> GetTopTeachersAsync(int top = 5)
+        {
+            var topTeachers = await _context.Schedules
+                .Where(s => s.TeacherID != null)
+                .GroupBy(s => s.TeacherID)
+                .Select(g => new { TeacherID = g.Key.Value, TotalSessions = g.Count() })
+                .OrderByDescending(x => x.TotalSessions)
+                .Take(top)
                 .ToListAsync();
 
-            var teacherDistribution = schedules
-                .GroupBy(s => s.TeacherID)
-                .ToDictionary(g => g.Key, g => g.Count());
+            var teacherIds = topTeachers.Select(t => t.TeacherID).ToList();
+            var teacherNames = await _context.Teachers
+                .Where(t => teacherIds.Contains(t.TeacherID))
+                .Select(t => new { t.TeacherID, t.User.FullName })
+                .ToListAsync();
 
-            var dayDistribution = schedules
-                .GroupBy(s => s.Date.DayOfWeek)
-                .ToDictionary(g => g.Key, g => g.Count());
-
-            var totalTeachingHours = schedules
-                .Where(s => s.Status != 3)
-                .Count();
-
-            var statistics = new RoomStatisticsDTO
+            return topTeachers.Select(t => new TopTeacherDTO
             {
-                Room = room,
-                TotalSessions = schedules.Count,
-                TotalTeachingHours = totalTeachingHours,
-                TeacherDistribution = teacherDistribution,
-                DayDistribution = dayDistribution
-            };
+                TeacherID = t.TeacherID,
+                TeacherName = teacherNames.FirstOrDefault(n => n.TeacherID == t.TeacherID)?.FullName ?? "",
+                TotalSessions = t.TotalSessions
+            }).ToList();
+        }
 
-            return statistics;
+        public async Task<List<StudentDistributionByClassDTO>> GetStudentDistributionByClassAsync()
+        {
+            var data = await _context.Classes
+                .Select(c => new StudentDistributionByClassDTO
+                {
+                    ClassID = c.ClassID,
+                    ClassName = c.ClassName,
+                    StudentCount = _context.StudentClassEnrollments.Count(e => e.ClassID == c.ClassID && e.Status == 1)
+                })
+                .ToListAsync();
+            return data;
         }
     }
 } 
