@@ -4,10 +4,21 @@ import { useState } from "react"
 export const useAddUser = () => {
   const axios = useAxios()
   const [loading, setLoading] = useState(false)
+
   const addUser = async ({ data }: { data: any }) => {
     try {
       setLoading(true)
-      const response = await axios.post(`users`, data)
+
+      const formData = new FormData()
+      for (const key in data) {
+        formData.append(key, data[key])
+      }
+
+      const response = await axios.post(`User/by-admin`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       return response.data
     } catch (error) {
       throw error
@@ -15,5 +26,6 @@ export const useAddUser = () => {
       setLoading(false)
     }
   }
+
   return { addUser, loading }
 }

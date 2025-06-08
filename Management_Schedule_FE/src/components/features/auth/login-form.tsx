@@ -86,8 +86,8 @@ export function LoginForm({
     } catch (error: any) {
       showErrorToast(
         error?.response?.data?.message ||
-          error?.message ||
-          "Có lỗi xảy ra, vui lòng thử lại sau",
+        error?.message ||
+        "Có lỗi xảy ra, vui lòng thử lại sau",
       )
     }
   }
@@ -100,7 +100,7 @@ export function LoginForm({
       if (!credential) {
         showErrorToast("Không thể xác thực tài khoản Googlge của bạn")
       }
-      
+
       const response = await loginGoogle(credential)
       const token = response.data
       if (!token || typeof token !== "string") {
@@ -118,8 +118,8 @@ export function LoginForm({
     } catch (error: any) {
       showErrorToast(
         error?.response?.data?.message ||
-          error?.message ||
-          "Có lỗi xảy ra, vui lòng thử lại sau",
+        error?.message ||
+        "Có lỗi xảy ra, vui lòng thử lại sau",
       )
     }
   }
@@ -192,6 +192,12 @@ export function LoginForm({
                 Bạn chưa có tài khoản?{" "}
                 <Link href="/register" className="underline underline-offset-4">
                   Đăng ký ngay
+                </Link>
+              </div>
+              <div className="mt-4 text-center text-sm">
+                Bạn quên mật khẩu sao ?{" "}
+                <Link href="/user/forget-password" className="underline underline-offset-4">
+                  Lấy lại ngay
                 </Link>
               </div>
             </form>

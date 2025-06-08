@@ -163,8 +163,9 @@ function Page() {
                   <Button
                     onClick={() => handleOpenDialog(student.enrollmentID)}
                     variant={student.status === 1 ? "outline" : "secondary"}
+                    disabled={student.status === 1}
                   >
-                    {student.status === 1 ? "đã đăng kí" : "chưa đăng kí"}
+                    {student.status === 1 ? "Thanh toán " : "Chưa thanh toán"}
                   </Button>
                 </TableCell>
               </TableRow>

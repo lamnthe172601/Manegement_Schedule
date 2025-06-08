@@ -9,7 +9,6 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -28,35 +27,40 @@ import {
 } from "@/components/common/toast/toast"
 
 const formSchema = z.object({
-  full_name: z.string().min(1, "Vui lòng nhập tên"),
-  email: z.string().email("Email không hợp lệ"),
-  identity_number: z.string().min(1, "Vui lòng nhập mã hội viên"),
-  phone: z.string().min(1, "Vui lòng nhập số điện thoại"),
-  role: z.enum(["admin", "staff", "member"]),
-  is_active: z.boolean().default(true),
-})
+  FullName: z.string().min(1, "Vui lòng nhập tên"),
+  Email: z.string().email("Email không hợp lệ"),
+  Password: z.string(),
+  Phone: z
+    .string()
+    .regex(/^\d{10}$/, "Số điện thoại phải gồm đúng 10 chữ số"),
+  Role: z.union([z.literal(2), z.literal(3)]),
+  Gender: z.enum(["F", "M"]),
+});
+
+
 
 const AddUser = () => {
   const router = useRouter()
   const { addUser, loading } = useAddUser()
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      full_name: "",
-      email: "",
-      identity_number: "",
-      phone: "",
-      role: "member",
-      is_active: true,
+      FullName: "",
+      Password: "",
+      Email: "",
+      Phone: "",
+      Role: 2,
+      Gender: "F"
     },
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log("data", values)
     await addUser({ data: values })
       .then(() => {
         showSuccessToast("Thêm hội viên thành công!")
-        router.push("/users")
+        router.push("/admin/users")
       })
       .catch(() => {
         showErrorToast("Thêm hội viên thất bại!")
@@ -70,9 +74,10 @@ const AddUser = () => {
         className="w-full max-w-xl mx-auto py-8 space-y-5"
       >
         <h2 className="text-2xl font-bold mb-2">Thêm hội viên</h2>
+
         <FormField
           control={form.control}
-          name="full_name"
+          name="FullName"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Họ và tên</FormLabel>
@@ -83,9 +88,10 @@ const AddUser = () => {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
-          name="email"
+          name="Email"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
@@ -96,22 +102,10 @@ const AddUser = () => {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
-          name="identity_number"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Mã hội viên</FormLabel>
-              <FormControl>
-                <Input placeholder="Nhập mã hội viên" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="phone"
+          name="Phone"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Số điện thoại</FormLabel>
@@ -124,19 +118,36 @@ const AddUser = () => {
         />
         <FormField
           control={form.control}
-          name="role"
+          name="Password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Mật khẩu</FormLabel>
+              <FormControl>
+                <Input placeholder="Nhập mật khẩu" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="Role"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Vai trò</FormLabel>
               <FormControl>
-                <Select value={field.value} onValueChange={field.onChange}>
+                <Select
+                  value={String(field.value)}
+                  onValueChange={(value) => field.onChange(Number(value))}
+                >
+
                   <SelectTrigger>
                     <SelectValue placeholder="Chọn vai trò" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="admin">Quản trị viên</SelectItem>
-                    <SelectItem value="staff">Nhân viên</SelectItem>
-                    <SelectItem value="member">Thành viên</SelectItem>
+                    <SelectItem value="2">Teacher</SelectItem>
+                    <SelectItem value="3">Học sinh</SelectItem>
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -144,23 +155,37 @@ const AddUser = () => {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
-          name="is_active"
+          name="Gender"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-              <div className="space-y-0.5">
-                <FormLabel>Trạng thái hoạt động</FormLabel>
-              </div>
+            <FormItem>
+              <FormLabel>Vai trò</FormLabel>
               <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
+                <Select
+                  value={field.value}
+                  onValueChange={(value) => {
+                    console.log("onValueChange:", value);
+                    field.onChange(value);
+                  }}
+                >
+
+                  <SelectTrigger>
+                    <SelectValue placeholder="Chọn giới tính" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="M">Nam </SelectItem>
+                    <SelectItem value="F">Nữ </SelectItem>
+                  </SelectContent>
+                </Select>
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
+        {/* Nếu muốn thêm AvatarUrl input (optional), có thể thêm form field ở đây */}
+
         <div className="flex gap-3 justify-end pt-2">
           <Button
             type="submit"
@@ -173,7 +198,7 @@ const AddUser = () => {
           <Button
             type="button"
             variant="outline"
-            onClick={() => router.push("/users")}
+            onClick={() => router.push("/admin/users")}
           >
             Quay lại
           </Button>
@@ -182,5 +207,4 @@ const AddUser = () => {
     </Form>
   )
 }
-
 export default AddUser
