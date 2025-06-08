@@ -33,6 +33,8 @@ function Page() {
     return response.data.data
   }
 
+  
+
   const { data, error, isLoading } = useSWR(
     studentId
       ? `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_COURSE_BY_STUDENT_ID(studentId)}`

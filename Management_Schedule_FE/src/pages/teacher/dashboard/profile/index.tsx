@@ -19,10 +19,12 @@ import {
   DialogTrigger,
   DialogContent,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from "@/components/ui/dialog"
 import TeacherLayout from "@/components/features/guest/TeacherLayout"
+import { ScheduleTeacher } from "@/hooks/api/schedule/use-get-schedules"
 function Page() {
+  const [schedules, setSchedules] = useState<ScheduleTeacher[]>([])
   const [user] = useAtom(userInfoAtom)
   const [userInfo, SetUserInfo] = useState<UserProfile | null>(null)
   const email: string | undefined = user?.email
@@ -53,16 +55,31 @@ function Page() {
     }
   }, [data])
 
-  function formatDate(isoDateString: string): string {
-  if (!isoDateString) return "Không có dữ liệu";
-  
-  const date = new Date(isoDateString);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0'); 
-  const year = date.getFullYear();
+  const teacherId: string | undefined = user?.nameid
+  useEffect(() => {
+    const fetchDataCourse = async () => {
+      const response = await axios.get(
+        teacherId
+          ? `${Endpoints.baseApiURL.URL}/${Endpoints.Schedule.GET_SCHEDULE_BY_TEACHER_ID(teacherId)}`
+          : "",
+      )
+      if (response.status == 200) {
+        setSchedules(response.data.data)
+      }
+    }
+    fetchDataCourse()
+  }, [])
 
-  return `${day}/${month}/${year}`; 
-}
+  function formatDate(isoDateString: string): string {
+    if (!isoDateString) return "Không có dữ liệu"
+
+    const date = new Date(isoDateString)
+    const day = String(date.getDate()).padStart(2, "0")
+    const month = String(date.getMonth() + 1).padStart(2, "0")
+    const year = date.getFullYear()
+
+    return `${day}/${month}/${year}`
+  }
 
   const [photoCover, setPhotoCover] = useState("null")
   const [open, setOpen] = useState(false)
@@ -98,12 +115,35 @@ function Page() {
                 <DialogTrigger asChild>
                   <div
                     onClick={() => setOpen(true)}
-                    className="rounded-xl border-gray-200 border-[2] mb-[10px] cursor-pointer hover:bg-gray-50"
+                    className="rounded-xl border-gray-200 border-[2] cursor-pointer hover:bg-gray-50"
                   >
-                    <h2 className="font-semibold p-2">Giới thiệu</h2>
-                    <h3 className="p-2 flex flex-row">
-                      {userInfo?.introduction || "Không có giới thiệu."}
-                    </h3>
+                    <div className="flex flex-row">
+                      <h2 className="font-semibold p-2">Giới thiệu: </h2>
+                      <h3 className="p-2 ">
+                        {userInfo?.introduction || "Không có giới thiệu."}
+                      </h3>
+                    </div>
+                    <div className="flex flex-row">
+                      <h2 className="font-semibold p-2">Email: </h2>
+                      <h3 className="p-2">
+                        {userInfo?.email || "Chưa cập nhật."}
+                      </h3>
+                    </div>
+                    <div className="flex flex-row">
+                      <h2 className="font-semibold p-2">Số điện thoại: </h2>
+                      <h3 className="p-2">
+                        {userInfo?.phone || "Chưa cập nhật."}
+                      </h3>
+                    </div>
+                    <div className="flex flex-row">
+                      <h2 className="font-semibold p-2">
+                        Tham gia trung tâm từ:{" "}
+                      </h2>
+                      <h3 className="p-2">
+                        {formatDate(userInfo?.createdAt.toString()) ||
+                          "Chưa cập nhật."}
+                      </h3>
+                    </div>
                   </div>
                 </DialogTrigger>
                 <DialogContent className="max-w-lg">
@@ -112,7 +152,10 @@ function Page() {
                   </DialogHeader>
                   <div className="mt-2 whitespace-pre-line flex flex-row gap-2">
                     <CakeIcon size={20} />
-                    <span>{formatDate(userInfo?.dateOfBirth) || "Không có nội dung."}</span>
+                    <span>
+                      {formatDate(userInfo?.dateOfBirth) ||
+                        "Không có nội dung."}
+                    </span>
                   </div>
                   <div className="mt-2 whitespace-pre-line flex flex-row gap-2">
                     <MapPinHouse size={20} />
@@ -121,7 +164,11 @@ function Page() {
                   <div className="mt-2 whitespace-pre-line flex flex-row gap-2">
                     <MarsStroke size={20} />
                     <span>
-                      {userInfo?.gender ? userInfo.gender === "M" ? "Male" : "Female" : "Không có nội dung."}
+                      {userInfo?.gender
+                        ? userInfo.gender === "M"
+                          ? "Male"
+                          : "Female"
+                        : "Không có nội dung."}
                     </span>
                   </div>
                   <div className="mt-2 whitespace-pre-line flex flex-row gap-2">
@@ -134,34 +181,22 @@ function Page() {
                   </div>
                 </DialogContent>
               </Dialog>
-              {/* <div className="rounded-xl border-gray-200 border-[2] mb-[10px]">
-                <h2 className="font-semibold p-2">Giới thiệu</h2>
-                <h3 className="p-2 flex flex-row"> {userInfo?.introduction}</h3>
-              </div> */}
-              <div className="rounded-xl border-gray-200 border-[2]">
-                <h2 className="font-semibold p-2">Hoạt động gần đây</h2>
-                <h3 className="p-2 flex flex-row">Chưa có hoạt động gần đây</h3>
-              </div>
             </div>
             <div className="flex-1 flex-1 rounded-xl border-gray-200 border-[2]">
-              <h2 className="p-2 font-semibold">Các khóa học đã tham gia</h2>
-              <div className="flex flex-row">
-                <Image
-                  src="/anh1.webp"
-                  width={200}
-                  height={100}
-                  alt="khao hoc"
-                  className="p-2 rounded-2xl"
-                />
-
-                <div>
-                  <h2 className="font-semibold p-2">Kiến thức nhập môn IT</h2>
-                  <h3 className="p-2 flex flex-row">
-                    Để có cái nhìn tổng quan hơn về ngành IT - Lập trình web các
-                    bạn nên xem các videos tại khóa này trước nhé
-                  </h3>
-                </div>
-              </div>
+              <h2 className="p-2 font-semibold">Các lớp học đang dạy</h2>
+              {schedules &&
+                Array.isArray(schedules) &&
+                schedules.map((s) => (
+                  <div className="flex flex-row">
+                    <div className="flex flex-row">
+                      <h2 className="font-semibold p-2">{s.className}</h2>
+                      <h3 className="p-2 flex flex-row">{s.room}</h3>
+                      <h3 className="p-2 flex flex-row">
+                        {formatDate(s.date)}
+                      </h3>
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
         </div>

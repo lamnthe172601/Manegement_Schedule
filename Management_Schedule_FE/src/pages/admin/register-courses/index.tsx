@@ -96,7 +96,6 @@ function Page() {
   }
 
   const handleUpdateStatus = async () => {
-    console.log("hehe")
     if (selectedEnrollmentId) {
       const response = await axiox.patch(
         `${Endpoints.baseApiURL.URL}/${Endpoints.Enrollment.UPDATE_STATUS_ENROLL(selectedEnrollmentId)}`,
