@@ -129,5 +129,21 @@ namespace Management_Schedule_BE.Controllers
                 Message = "Update sucessfully"
             });
         }
+
+        [HttpPost("by-admin")]
+        public async Task<ActionResult<UserDTO>> AddUserByAdmin([FromForm] UserCreateByAdminDTO dto)
+        {
+            try
+            {
+                var user = await _userService.AddUserByAdminAsync(dto);
+                if (user == null)
+                    return BadRequest(new { message = "Email đã tồn tại!" });
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
+            }
+        }
     }
 }

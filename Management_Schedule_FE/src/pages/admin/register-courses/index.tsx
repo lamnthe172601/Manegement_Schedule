@@ -1,8 +1,8 @@
 "use client"
-import { Endpoints } from "@/lib/endpoints"
-import axios from "axios"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
+import axios from "axios"
+import { Endpoints } from "@/lib/endpoints"
 import {
   Select,
   SelectContent,
@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/table"
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogFooter,
@@ -33,83 +32,73 @@ import { Student } from "@/hooks/api/students/Student"
 import { ClassList } from "@/hooks/api/classes/use-get-class"
 import format from "date-fns/format"
 import { showErrorToast } from "@/components/common/toast/toast"
-import { debug } from "console"
 import { useAxios } from "@/hooks/api/use-axios"
+
+const fetcher = (url: string) =>
+  axios.get(url).then((res) => res.data.data)
+
 function Page() {
   const axiox = useAxios()
-  const [classes, setClasses] = useState<ClassList[]>([])
-  const [students, setStudents] = useState<Student[]>([])
-  const [selectedId, setSelectedId] = useState<number | null>(null)
-  const fetcher = async (url: string) => {
-    const response = await axios.get(url)
-    return response.data.data
-  }
-
-  const { data, error, isLoading } = useSWR(
-    `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_ALL_BASIC}`,
-    fetcher,
-  )
-
-  if (error) {
-    showErrorToast(error.message)
-  }
-
-  useEffect(() => {
-    if (data) {
-      setClasses(data)
-    }
-  }, [data])
-
-  useEffect(() => {
-    if (data && data.length > 0) {
-      setClasses(data)
-      const firstId = data[0].classID
-      setSelectedId(firstId)
-      handleSelectClass(firstId.toString())
-    }
-  }, [data])
-
-  const handleSelectClass = async (value: string) => {
-    debugger
-    const id = +value
-    setSelectedId(id)
-    if (!id) return
-    try {
-      const response = await axios.get(
-        `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_STUDENT_BY_CLASS_ID(id)}`,
-      )
-      setStudents(response.data.data)
-    } catch (err: any) {
-      showErrorToast(err.message)
-    }
-  }
-
-  const [selectedEnrollmentId, setSelectedEnrollmentId] = useState<
-    number | null
-  >(null)
+  const [selectedClassId, setSelectedClassId] = useState<number | null>(null)
+  const [selectedEnrollmentId, setSelectedEnrollmentId] = useState<number | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const handleOpenDialog = async (enrollmentId: number) => {
-    debugger
+
+  const {
+    data: classes = [],
+    error: classError,
+  } = useSWR<ClassList[]>(
+    `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_ALL_BASIC}`,
+    fetcher
+  )
+
+
+  useEffect(() => {
+    if (classes.length > 0 && !selectedClassId) {
+      setSelectedClassId(classes[0].classID)
+    }
+  }, [classes])
+
+
+  const {
+    data: students = [],
+    error: studentError,
+    mutate: mutateStudents,
+  } = useSWR<Student[]>(
+    selectedClassId
+      ? `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_STUDENT_BY_CLASS_ID(selectedClassId)}`
+      : null,
+    fetcher
+  )
+
+  if (classError || studentError) {
+    showErrorToast(classError?.message || studentError?.message)
+  }
+
+  const handleSelectClass = (value: string) => {
+    const id = parseInt(value)
+    if (!isNaN(id)) {
+      setSelectedClassId(id)
+    }
+  }
+
+  const handleOpenDialog = (enrollmentId: number) => {
     setSelectedEnrollmentId(enrollmentId)
     setIsDialogOpen(true)
   }
 
   const handleUpdateStatus = async () => {
     if (selectedEnrollmentId) {
-      const response = await axiox.patch(
-        `${Endpoints.baseApiURL.URL}/${Endpoints.Enrollment.UPDATE_STATUS_ENROLL(selectedEnrollmentId)}`,
-        { status: 1 },
-      )
-      console.log(response.data)
-      setIsDialogOpen(false)
-      setStudents((prev) =>
-        prev.map((student) =>
-          student.enrollmentID === selectedEnrollmentId
-            ? { ...student, status: 1 }
-            : student
+      try {
+        await axiox.patch(
+          `${Endpoints.baseApiURL.URL}/${Endpoints.Enrollment.UPDATE_STATUS_ENROLL(selectedEnrollmentId)}`,
+          { status: 1 }
         )
-      );
+        setIsDialogOpen(false)
+        mutateStudents() // Refresh student list
+      } catch (err: any) {
+        showErrorToast(err.message)
+      }
     }
   }
 
@@ -117,20 +106,18 @@ function Page() {
     <div>
       <div className="flex justify-between items-end mb-6">
         <h1 className="text-2xl font-bold">Quản lý học viên</h1>
-        <Select onValueChange={handleSelectClass}>
+        <Select onValueChange={handleSelectClass} value={selectedClassId?.toString()}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a Class" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Các lớp học của bạn</SelectLabel>
-              {classes &&
-                Array.isArray(classes) &&
-                classes.map((c) => (
-                  <SelectItem key={c.classID} value={c.classID.toString()}>
-                    {c.className}
-                  </SelectItem>
-                ))}
+              {classes.map((c) => (
+                <SelectItem key={c.classID} value={c.classID.toString()}>
+                  {c.className}
+                </SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -150,53 +137,47 @@ function Page() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {students &&
-              Array.isArray(students) &&
-              students.map((student, index) => (
-                <TableRow key={student.studentID}>
-                  <TableCell className="font-medium">{index + 1}</TableCell>
-                  <TableCell>{student.fullName}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center space-x-3">
-                      <Avatar>
-                        <AvatarImage
-                          src={student.avatarUrl || "/placeholder.svg"}
-                          alt={student.fullName}
-                        />
-                        <AvatarFallback>NA</AvatarFallback>
-                      </Avatar>
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    {student.phoneNumber}
-                  </TableCell>
-                  <TableCell className="text-sm text-gray-500">
-                    {student.email}
-                  </TableCell>
-                  <TableCell className="text-sm text-gray-500">
-                    {format(new Date(student.enrollmentDate), "dd/MM/yyyy")}
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      onClick={() => handleOpenDialog(student.enrollmentID)}
-                      variant={student.status == 1 ? "outline" : "secondary"}
-                    >
-                      {student.status == 1 ? "đã đăng kí" : "chưa đăng kí"}
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+            {students.map((student, index) => (
+              <TableRow key={student.studentID}>
+                <TableCell className="font-medium">{index + 1}</TableCell>
+                <TableCell>{student.fullName}</TableCell>
+                <TableCell>
+                  <div className="flex items-center space-x-3">
+                    <Avatar>
+                      <AvatarImage
+                        src={student.avatarUrl || "/placeholder.svg"}
+                        alt={student.fullName}
+                      />
+                      <AvatarFallback>NA</AvatarFallback>
+                    </Avatar>
+                  </div>
+                </TableCell>
+                <TableCell>{student.phoneNumber}</TableCell>
+                <TableCell className="text-sm text-gray-500">
+                  {student.email}
+                </TableCell>
+                <TableCell className="text-sm text-gray-500">
+                  {format(new Date(student.enrollmentDate), "dd/MM/yyyy")}
+                </TableCell>
+                <TableCell>
+                  <Button
+                    onClick={() => handleOpenDialog(student.enrollmentID)}
+                    variant={student.status === 1 ? "outline" : "secondary"}
+                  >
+                    {student.status === 1 ? "đã đăng kí" : "chưa đăng kí"}
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
+
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent>
             <DialogHeader>Xác nhận cập nhật trạng thái</DialogHeader>
             <p>Bạn có chắc muốn cập nhật trạng thái của sinh viên không?</p>
             <DialogFooter>
-              <Button
-                onClick={() => setIsDialogOpen(false)}
-                variant="secondary"
-              >
+              <Button onClick={() => setIsDialogOpen(false)} variant="secondary">
                 Hủy
               </Button>
               <Button onClick={handleUpdateStatus}>Xác nhận</Button>

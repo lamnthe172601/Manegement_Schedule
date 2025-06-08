@@ -6,7 +6,7 @@ namespace Management_Schedule_BE.Services
     public class ScheduleStatusBackgroundService : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly TimeSpan _checkInterval = TimeSpan.FromSeconds(10); // Kiểm tra mỗi giờ
+        private readonly TimeSpan _checkInterval = TimeSpan.FromSeconds(100); 
 
         public ScheduleStatusBackgroundService(IServiceProvider serviceProvider)
         {

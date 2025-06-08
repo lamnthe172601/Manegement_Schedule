@@ -12,5 +12,6 @@ namespace Management_Schedule_BE.Services
         Task<UserDTO?> GetUserByEmailAsync(string email);
         Task<UserDTO?> UpdatePasswordAsync(string email, string password);
         Task<TeachStudentProfile?> UpdateProfileAsync(string email, TeachStudentProfile profile);
+        Task<UserDTO?> AddUserByAdminAsync(UserCreateByAdminDTO dto);
     }
 }
