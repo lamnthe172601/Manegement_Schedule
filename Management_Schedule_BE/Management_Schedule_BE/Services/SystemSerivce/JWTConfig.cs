@@ -34,7 +34,7 @@ namespace Management_Schedule_BE.Services.SystemSerivce
             new Claim("gender", user.Gender ?? ""),                       // gender
             new Claim("phone", user.Phone ?? ""),
             new Claim("address", user.Address ?? ""),
-             new Claim("AvatarUrl", user.AvatarUrl ?? ""),
+             new Claim("avatarUrl", user.AvatarUrl ?? ""),
            new Claim("dateOfBirth", user.DateOfBirth.HasValue ? user.DateOfBirth.Value.ToString("yyyy-MM-dd") : ""),
             new Claim("role", role)       
                     

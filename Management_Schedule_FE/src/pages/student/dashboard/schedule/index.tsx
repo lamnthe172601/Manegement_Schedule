@@ -294,6 +294,9 @@ function Page() {
                     <strong>Thời gian:</strong> {selectedEvent.startTime} -{" "}
                     {selectedEvent.endTime}
                   </p>
+                  <p>
+                    <strong>Ghi chú:</strong> {selectedEvent.notes ?? "Không có ghi chú nào"}
+                  </p>
                 </DialogDescription>
               )}
             </DialogHeader>

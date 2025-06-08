@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {
   Select,
@@ -12,16 +11,7 @@ import {
   SelectGroup,
   SelectLabel,
 } from "@/components/ui/select"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import {
-  DropdownMenu,
-  DropdownMenuItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { MoreHorizontal } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   Table,
   TableBody,
@@ -30,7 +20,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
 import TeacherLayout from "@/components/features/guest/TeacherLayout"
 import { Classes } from "@/hooks/api/classes/use-add-classes"
 import useSWR from "swr"
@@ -48,6 +37,11 @@ export default function StudentManagementPage() {
   const [classes, setClasses] = useState<Classes[]>([])
   const [students, setStudents] = useState<Student[]>([])
   const [selectClassId, setSelectClassId] = useState<number | null>(null)
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const pageSize = 5
+
   const fetcher = async (url: string): Promise<Classes[]> => {
     const response = await axios.get(url)
     return response.data.data
@@ -56,60 +50,54 @@ export default function StudentManagementPage() {
     teacherId
       ? `${Endpoints.baseApiURL.URL}/${Endpoints.Teacher.GET_CLASS_BY_TEACHER_ID(teacherId)}`
       : null,
-    fetcher,
+    fetcher
   )
 
-  if (error) {
-    showErrorToast(error.message)
-  }
+  useEffect(() => {
+    if (error) showErrorToast(error.message)
+  }, [error])
 
-  if (isLoading) {
-  }
+  useEffect(() => {
+    if (data && data.length) {
+      setClasses(data)
+      const firstId = data[0].classID
+      setSelectClassId(firstId)
+      fetchStudents(firstId)
+    }
+  }, [data])
 
-  const fetchDataStudent = async (idClass: number) => {
-    const response = await axios.get(
-      idClass
-        ? `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_STUDENT_BY_CLASS_ID(idClass)}`
-        : "",
-    )
-    setStudents(response.data.data)
-  }
-
-  const handleSelectClass = async (value: string) => {
-    debugger
-    const id = +value
-    setSelectClassId(id)
-    if (!id) return
+  async function fetchStudents(idClass: number) {
     try {
       const response = await axios.get(
-        `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_STUDENT_BY_CLASS_ID(id)}`,
+        `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_STUDENT_BY_CLASS_ID(idClass)}`
       )
       setStudents(response.data.data)
+      setCurrentPage(1)
     } catch (err) {
       console.error("Lỗi gọi API:", err)
     }
   }
 
-  useEffect(() => {
-    if (data && data.length > 0) {
-      setClasses(data)
-      const firstId = data[0].classID
-      setSelectClassId(firstId)
-      handleSelectClass(firstId.toString())
-    }
-  }, [data])
-  console.log(students)
+  const handleSelectClass = (value: string) => {
+    const id = +value
+    setSelectClassId(id)
+    if (id) fetchStudents(id)
+  }
 
-  function formatDate(isoDateString: string): string {
-  if (!isoDateString) return "Không có dữ liệu";
-  
-  const date = new Date(isoDateString);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0'); 
-  const year = date.getFullYear();
+  const totalPages = Math.ceil(students.length / pageSize)
+  const paginatedStudents = students.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  )
 
-  return `${day}/${month}/${year}`; 
-}
+  const formatDate = (iso: string) => {
+    if (!iso) return "Không có dữ liệu"
+    const d = new Date(iso)
+    const day = String(d.getDate()).padStart(2, "0")
+    const month = String(d.getMonth() + 1).padStart(2, "0")
+    const year = d.getFullYear()
+    return `${day}/${month}/${year}`
+  }
 
   return (
     <TeacherLayout>
@@ -117,18 +105,16 @@ export default function StudentManagementPage() {
         <h1 className="text-2xl font-bold">Quản lý học viên</h1>
         <Select onValueChange={handleSelectClass}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select a Class" />
+            <SelectValue placeholder="Chọn lớp" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Các lớp học của bạn</SelectLabel>
-              {classes &&
-                Array.isArray(classes) &&
-                classes.map((c) => (
-                  <SelectItem key={c.classID} value={c.classID.toString()}>
-                    {c.className}
-                  </SelectItem>
-                ))}
+              <SelectLabel>Các lớp học</SelectLabel>
+              {classes.map((c) => (
+                <SelectItem key={c.classID} value={String(c.classID)}>
+                  {c.className}
+                </SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -138,108 +124,68 @@ export default function StudentManagementPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-gray-100">
-              <TableHead className="w-[50px]">STT</TableHead>
+              <TableHead>STT</TableHead>
               <TableHead>Họ và tên</TableHead>
               <TableHead>Avatar</TableHead>
-              <TableHead>Số điện thoại</TableHead>
+              <TableHead>SĐT</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>Ngày đăng kí</TableHead>
+              <TableHead>Ngày đăng ký</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {students &&
-              Array.isArray(students) &&
-              students.map((student,index) => (
-                <TableRow key={student.studentID}>
-                  <TableCell className="font-medium">
-                    {index+1}
-                  </TableCell>
-                  <TableCell>{student.fullName}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center space-x-3">
-                      <Avatar>
-                        <AvatarImage
-                          src={student.avatarUrl || "/placeholder.svg"}
-                          alt={student.fullName}
-                        />
-                        <AvatarFallback>NA</AvatarFallback>
-                      </Avatar>
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-medium">{student.phoneNumber}</TableCell>
-                  <TableCell className="text-sm text-gray-500">{student.email}</TableCell>
-                  <TableCell className="text-sm text-gray-500">{formatDate(student.enrollmentDate)}</TableCell>
-                  {/* <TableCell>
-                    <Badge
-                      variant={
-                        student.status === 1
-                          ? "default"
-                          : student.status === 0
-                            ? "secondary"
-                            : "outline"
-                      }
-                      className={
-                        student.status === 1
-                          ? "bg-green-100 text-green-800 hover:bg-green-100"
-                          : student.status === 0
-                            ? "bg-gray-100 text-gray-800 hover:bg-gray-100"
-                            : "bg-yellow-100 text-yellow-800 hover:bg-yellow-100"
-                      }
-                    >
-                      {student.status === 1
-                        ? "Đang học"
-                        : student.status === 0
-                          ? "Tạm dừng"
-                          : "Chờ xử lý"}
-                    </Badge>
-                  </TableCell> */}
-                  {/* <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Mở menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Thao tác</DropdownMenuLabel>
-                        <DropdownMenuItem>Xem chi tiết</DropdownMenuItem>
-                        <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>Gửi tin nhắn</DropdownMenuItem>
-                        <DropdownMenuItem>Xem lịch sử học tập</DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-red-600">
-                          Xóa học viên
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell> */}
-                </TableRow>
-              ))}
+            {paginatedStudents.map((student, idx) => (
+              <TableRow key={student.studentID}>
+                <TableCell>{(currentPage - 1) * pageSize + idx + 1}</TableCell>
+                <TableCell>{student.fullName}</TableCell>
+                <TableCell>
+                  <Avatar>
+                    <AvatarImage
+                      src={student.avatarUrl || "/placeholder.svg"}
+                      alt={student.fullName}
+                    />
+                    <AvatarFallback>NA</AvatarFallback>
+                  </Avatar>
+                </TableCell>
+                <TableCell>{student.phoneNumber}</TableCell>
+                <TableCell>{student.email}</TableCell>
+                <TableCell>{formatDate(student.enrollmentDate)}</TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>
 
-      {/* Pagination */}
+      {/* Pagination Controls */}
       <div className="flex items-center justify-between mt-4">
         <div className="text-sm text-gray-500">
-          Hiển thị 1-5 của 125 học viên
+          Hiển thị {(currentPage - 1) * pageSize + 1} -{' '}
+          {Math.min(currentPage * pageSize, students.length)} của {students.length} học viên
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm" disabled>
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(currentPage - 1)}
+          >
             Trước
           </Button>
-          <Button variant="outline" size="sm" className="bg-gray-100">
-            1
-          </Button>
-          <Button variant="outline" size="sm">
-            2
-          </Button>
-          <Button variant="outline" size="sm">
-            3
-          </Button>
-          <Button variant="outline" size="sm">
+          {[...Array(totalPages)].map((_, i) => (
+            <Button
+              key={i}
+              size="sm"
+              variant={i + 1 === currentPage ? 'ghost' : 'outline'}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </Button>
+          ))}
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
             Sau
           </Button>
         </div>
