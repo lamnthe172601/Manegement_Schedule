@@ -183,7 +183,10 @@ namespace Management_Schedule_BE.Services
             var user = await _context.Users.SingleOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
             if (user != null)
             {
-                await UpLoadFileImgAsync(user, profile.AvatarUrl, "/avatar-mac-dinh-4.jpg");
+                if (profile.AvatarUrl != null)
+                {
+                    await UpLoadFileImgAsync(user, profile.AvatarUrl, "/avatar-mac-dinh-4.jpg");
+                }
 
                 _mapper.Map(profile, user);
                 _context.Update(user);

@@ -14,7 +14,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
     const userData = useAtomValue(userInfoAtom);
 
     return (
-        <DashboardLayout sidebarItems={sidebarItems} userName={userData?.fullName || ""}>
+        <DashboardLayout sidebarItems={sidebarItems} userName={userData?.fullName || ""} avatarUrl={userData?.avatarUrl || ""}>
             {children}
         </DashboardLayout>
     )

@@ -15,23 +15,26 @@ import { userInfoAtom } from "@/stores/auth"
 import { Endpoints } from "@/lib/endpoints"
 import axios from "axios"
 import { Constants } from "@/lib/constants"
-import { mutate } from "swr"
 import { UserProfile } from "@/hooks/api/user/use-get-users"
-import { any, date } from "zod"
 import {
   showErrorToast,
   showSuccessToast,
 } from "@/components/common/toast/toast"
+import format from "date-fns/format"
 import TeacherLayout from "@/components/features/guest/TeacherLayout"
+
+const phoneRegex =
+  /^(?:\+84|0)(?:3[2-9]|5[6|8|9]|7[0|6-9]|8[1-5]|9[0-4|6-9])[0-9]{7}$/
 export default function Page() {
   const [user] = useAtom(userInfoAtom)
-  const [inputValue, setInputValue] = useState<string | null>("")
+  const [inputValue, setInputValue] = useState<string>("")
   const [userInfo, setUserInfo] = useState<UserProfile | null>(null)
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
-
+  const [dateError, setDateError] = useState<string | null>(null)
   const [token, setToken] = useState("")
   const [activeField, setActiveField] = useState<keyof UserProfile | null>(null)
+  const [phoneError, setPhoneError] = useState<string | null>(null)
   const closePopup = () => setActiveField(null)
   const email: string | undefined = user?.email
   useEffect(() => {
@@ -39,7 +42,7 @@ export default function Page() {
     if (accessToken) {
       setToken(accessToken)
     }
-  }, [])
+  }, [userInfo])
 
   const getUserByEmail = async (url: string) => {
     const response = await axios.get(url)
@@ -52,14 +55,14 @@ export default function Page() {
       : null,
     getUserByEmail,
   )
-  console.log(data)
+
   if (error) {
     showErrorToast(error.message)
   }
 
   useEffect(() => {
     if (data) {
-      console.log(data)
+      console.log("data tu api", data)
       setUserInfo(data)
     }
   }, [data])
@@ -67,32 +70,87 @@ export default function Page() {
   const openPopup = (field: keyof UserProfile) => {
     setActiveField(field)
     if (!userInfo) return
-    if (field === "fullName") setInputValue(userInfo?.fullName || "")
-    if (field === "address") setInputValue(userInfo?.address || "")
-    if (field === "avatarUrl") setInputValue(userInfo?.avatarUrl || "")
-    if (field === "dateOfBirth") setInputValue(userInfo?.dateOfBirth || "")
-    if (field === "phone") setInputValue(userInfo?.phone || "")
+
+    switch (field) {
+      case "dateOfBirth": {
+        debugger
+        let raw = userInfo.dateOfBirth || ""
+        if (/^\d{2}\/\d{2}\/\d{4}$/.test(raw)) {
+          const [d, m, y] = raw.split("/")
+          raw = `${y}-${m}-${d}`
+        }
+        if (/^\d{4}-\d{2}-\d{2}T/.test(raw)) {
+          raw = raw.split('T')[0]
+        }
+        setInputValue(raw)
+        setDateError(null)
+        break
+      }
+      case "phone": {
+        setInputValue(userInfo.phone || "")
+        setPhoneError(null)
+        break
+      }
+      case "fullName":
+        setInputValue(userInfo.fullName || "")
+        break
+      case "address":
+        setInputValue(userInfo.address || "")
+        break
+      case "avatarUrl":
+        setInputValue(userInfo.avatarUrl || "")
+        break
+    }
+  }
+
+  const handlePhoneChange = (value: string) => {
+    setInputValue(value)
+    if (!value) {
+      setPhoneError(null)
+      return
+    }
+    if (!phoneRegex.test(value)) setPhoneError("Số điện thoại không hợp lệ.")
+    else setPhoneError(null)
+  }
+  const todayStr = new Date().toISOString().split("T")[0]
+
+  const handleDateChange = (value: string) => {
+    if (!value) {
+      setDateError(null)
+      setInputValue(value)
+      return
+    }
+    if (value > todayStr) {
+      setDateError("Ngày không được sau hôm nay.")
+    } else {
+      setDateError(null)
+      setInputValue(value)
+    }
   }
 
   const handleSubmit = async (field: keyof UserProfile, value: string) => {
-    const updatedUser = {
-      ...userInfo,
-      [field as keyof UserProfile]: value,
+    if (!value.trim()) {
+      showErrorToast("Vui lòng nhập giá trị trước khi lưu.")
+      return
     }
+    if (field === "dateOfBirth" && dateError) {
+      showErrorToast(dateError)
+      return
+    }
+    if (field === "phone" && phoneError) {
+      showErrorToast(phoneError)
+      return
+    }
+
+    const updatedUser = { ...userInfo, [field]: value }
     const formData = new FormData()
-    for (const key in updatedUser) {
-      if (updatedUser.hasOwnProperty(key)) {
-        const k = key as keyof UserProfile
-        const val = updatedUser[k]
-        if (val !== undefined && val !== null) {
-          if (k === "avatarUrl" && avatarFile) {
-            formData.append(k, avatarFile)
-          } else {
-            formData.append(k, String(val))
-          }
-        }
+    Object.entries(updatedUser).forEach(([k, v]) => {
+      if (v != null) {
+        if (k === "avatarUrl" && avatarFile) formData.append(k, avatarFile)
+        else formData.append(k, String(v))
       }
-    }
+    })
+
     try {
       const response = await axios.put(
         email
@@ -109,12 +167,11 @@ export default function Page() {
       closePopup()
       if (response.status === 200) {
         mutate()
-        console.log(userInfo)
         setUserInfo(response.data.data)
         showSuccessToast(response.data.message)
       }
-    } catch (error: any) {
-      showErrorToast(error?.response?.data?.message || "Lỗi cập nhật")
+    } catch (err: any) {
+      showErrorToast(err?.response?.data?.message || "Lỗi cập nhật")
     }
   }
   return (
@@ -122,7 +179,6 @@ export default function Page() {
       <h1 className="text-2xl font-bold mb-6">Cài đặt</h1>
 
       <div className="flex">
-
         {/* Settings Content */}
         <div className="flex-1">
           <div className="bg-white rounded-lg border p-6">
@@ -194,7 +250,6 @@ export default function Page() {
                 </p>
               </div>
             </div>
-
             {/* Email */}
             <div className="mb-6 space-y-2">
               <h3 className="text-sm font-medium text-gray-700 mb-2">Email</h3>
@@ -217,7 +272,11 @@ export default function Page() {
                   Chỉnh sửa
                 </Button>
               </div>
-              <p className="text-sm">{userInfo?.dateOfBirth}</p>
+              <p className="text-sm">
+                {userInfo?.dateOfBirth
+                  ? format(new Date(userInfo.dateOfBirth), "dd/MM/yyyy")
+                  : "Chưa có ngày sinh"}
+              </p>
             </div>
 
             {/* Phone */}
@@ -254,14 +313,40 @@ export default function Page() {
             </DialogTitle>
           </DialogHeader>
 
-          {["fullName", "address", "dateOfBirth", "phone"].includes(
-            activeField ?? "",
-          ) && (
+          {["fullName", "address"].includes(activeField ?? "") && (
             <input
               type="text"
+              required
               value={inputValue ?? ""}
               onChange={(e) => setInputValue(e.target.value)}
               className="w-full border p-2 rounded"
+            />
+          )}
+          {activeField === "phone" && (
+            <div className="space-y-1">
+              <input
+                type="tel"
+                required
+                value={inputValue}
+                onChange={(e) => handlePhoneChange(e.target.value)}
+                placeholder="0912345678 hoặc +84912345678"
+                className={`w-full border p-2 rounded ${phoneError ? "border-red-500" : ""}`}
+              />
+              {phoneError && (
+                <p className="text-red-500 text-sm">{phoneError}</p>
+              )}
+            </div>
+          )}
+          {activeField === "dateOfBirth" && (
+            <input
+              type="date"
+              value={inputValue}
+              onChange={(e) => handleDateChange(e.target.value)}
+              min="1900-01-01"
+              max={todayStr}
+              className={`w-full border p-2 rounded ${
+                dateError ? "border-red-500" : ""
+              }`}
             />
           )}
           {activeField === "avatarUrl" && (
@@ -269,13 +354,17 @@ export default function Page() {
               <input
                 type="file"
                 accept="image/*"
+                required
                 onChange={(e) => {
                   const file = e.target.files?.[0]
-                  console.log(file)
                   if (file) {
                     setAvatarFile(file)
-                    setInputValue(file.name)
-                    setAvatarPreview(URL.createObjectURL(file))
+                    const reader = new FileReader()
+                    reader.onloadend = () => {
+                      setAvatarPreview(reader.result as string)
+                      setInputValue(file.name)
+                    }
+                    reader.readAsDataURL(file)
                   }
                 }}
                 className="block w-full text-sm text-gray-700
@@ -288,8 +377,8 @@ export default function Page() {
               {avatarPreview && (
                 <img
                   src={avatarPreview}
-                  alt="Avatar preview"
-                  className="w-24 h-24 rounded-full object-cover border-blue-400 shadow-md border-2"
+                  alt="Preview"
+                  className="w-24 h-24 rounded object-cover"
                 />
               )}
             </div>
@@ -298,11 +387,15 @@ export default function Page() {
           <div className="flex justify-end mt-4">
             <button
               onClick={() => {
-                if (activeField === "avatarUrl" && avatarFile) {
-                  handleSubmit(activeField, avatarFile.name)
-                } else {
-                  activeField && handleSubmit(activeField, inputValue!)
+                if (!inputValue?.trim()) {
+                  showErrorToast("Vui lòng nhập giá trị trước khi lưu.")
+                  return
                 }
+                if (activeField === "dateOfBirth" && dateError) {
+                  showErrorToast(dateError)
+                  return
+                }
+                handleSubmit(activeField!, inputValue)
               }}
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >

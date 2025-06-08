@@ -15,104 +15,32 @@ namespace Management_Schedule_BE.Controllers
             _reportService = reportService;
         }
 
-        [HttpGet("teacher/{teacherId}")]
-        public async Task<ActionResult<TeacherScheduleReportDTO>> GetTeacherScheduleReport(
-            int teacherId,
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate)
+        [HttpGet("dashboard")]
+        public async Task<ActionResult<DashboardAdminDTO>> GetDashboardAdmin()
         {
-            try
-            {
-                var report = await _reportService.GetTeacherScheduleReportAsync(teacherId, startDate, endDate);
-                return Ok(report);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var dashboard = await _reportService.GetDashboardAdminAsync();
+            return Ok(dashboard);
         }
 
-        [HttpGet("class/{classId}")]
-        public async Task<ActionResult<ClassScheduleReportDTO>> GetClassScheduleReport(
-            int classId,
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate)
+        [HttpGet("schedule-status-statistics")]
+        public async Task<ActionResult<ScheduleStatusStatisticsDTO>> GetScheduleStatusStatistics()
         {
-            try
-            {
-                var report = await _reportService.GetClassScheduleReportAsync(classId, startDate, endDate);
-                return Ok(report);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var data = await _reportService.GetScheduleStatusStatisticsAsync();
+            return Ok(data);
         }
 
-        [HttpGet("room/{room}")]
-        public async Task<ActionResult<RoomScheduleReportDTO>> GetRoomScheduleReport(
-            string room,
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate)
+        [HttpGet("top-teachers")]
+        public async Task<ActionResult<List<TopTeacherDTO>>> GetTopTeachers([FromQuery] int top = 5)
         {
-            try
-            {
-                var report = await _reportService.GetRoomScheduleReportAsync(room, startDate, endDate);
-                return Ok(report);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var data = await _reportService.GetTopTeachersAsync(top);
+            return Ok(data);
         }
 
-        [HttpGet("daily")]
-        public async Task<ActionResult<DailyScheduleReportDTO>> GetDailyScheduleReport(
-            [FromQuery] DateTime date)
+        [HttpGet("student-distribution-by-class")]
+        public async Task<ActionResult<List<StudentDistributionByClassDTO>>> GetStudentDistributionByClass()
         {
-            try
-            {
-                var report = await _reportService.GetDailyScheduleReportAsync(date);
-                return Ok(report);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet("teacher/{teacherId}/statistics")]
-        public async Task<ActionResult<TeacherStatisticsDTO>> GetTeacherStatistics(
-            int teacherId,
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate)
-        {
-            try
-            {
-                var statistics = await _reportService.GetTeacherStatisticsAsync(teacherId, startDate, endDate);
-                return Ok(statistics);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet("room/{room}/statistics")]
-        public async Task<ActionResult<RoomStatisticsDTO>> GetRoomStatistics(
-            string room,
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate)
-        {
-            try
-            {
-                var statistics = await _reportService.GetRoomStatisticsAsync(room, startDate, endDate);
-                return Ok(statistics);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var data = await _reportService.GetStudentDistributionByClassAsync();
+            return Ok(data);
         }
     }
 } 

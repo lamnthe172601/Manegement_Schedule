@@ -30,23 +30,13 @@ import { Loader2 } from "lucide-react"
 import { useSetAtom } from "jotai/react"
 import { userInfoAtom } from "@/stores/auth"
 import Link from "next/link"
-
+import { JwtUser } from "@/hooks/api/user/use-get-users"
 import { jwtDecode } from "jwt-decode"
 
 const formSchema = z.object({
   email: z.string().email("Email không hợp lệ"),
   password: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
 })
-export interface JwtUser {
-  nameid: string
-  unique_name?: string
-  email: string
-  fullName: string
-  gender: "M" | "F"
-  phone: string
-  role: string
-  [key: string]: any // cho phép thêm các trường khác
-}
 
 export function LoginForm({
   className,

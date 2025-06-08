@@ -25,6 +25,8 @@ export interface JwtUser {
   gender: "M" | "F"
   phone: string
   role: string
+  avatarUrl: string
+  dateOfBirth: string
 }
 
 export interface UserProfile {
@@ -42,6 +44,7 @@ export interface UserProfile {
   createdAt: Date
   modifiedAt: Date
   gender: string
+  note:string
 }
 
 const useGetUsers = () => {
