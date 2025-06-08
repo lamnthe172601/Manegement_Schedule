@@ -192,5 +192,55 @@ namespace Management_Schedule_BE.Services
             }
             return null;
         }
+
+        public async Task<UserDTO?> AddUserByAdminAsync(UserCreateByAdminDTO dto)
+        {
+            bool existsEmail = await CheckUserExistsByEmailAsync(dto.Email);
+            if (!existsEmail)
+            {
+                var user = new User
+                {
+                    FullName = dto.FullName,
+                    Email = dto.Email,
+                    PasswordHash = PasswordHassing.ComputeSha256Hash(dto.Password),
+                    Role = dto.Role,
+                    Phone = dto.Phone,
+                    Gender = dto.Gender,
+                    CreatedAt = DateTime.Now,
+                    ModifiedAt = DateTime.Now
+                };
+                await _context.Users.AddAsync(user);
+                await _context.SaveChangesAsync();
+                // Nếu là student thì tạo bản ghi student
+                if (user.Role == 3)
+                {
+                    var student = new Student
+                    {
+                        StudentID = user.UserID,
+                        Level = 0,
+                        EnrollmentDate = DateTime.Now,
+                        Status = 1,
+                        CreatedAt = DateTime.Now,
+                        ModifiedAt = DateTime.Now
+                    };
+                    await _context.Students.AddAsync(student);
+                    await _context.SaveChangesAsync();
+                }
+                // Nếu là teacher thì tạo bản ghi teacher
+                else if (user.Role == 2)
+                {
+                    var teacher = new Teacher
+                    {
+                        TeacherID = user.UserID,
+                        CreatedAt = DateTime.Now,
+                        ModifiedAt = DateTime.Now
+                    };
+                    await _context.Teachers.AddAsync(teacher);
+                    await _context.SaveChangesAsync();
+                }
+                return _mapper.Map<UserDTO>(user);
+            }
+            return null;
+        }
     }
 }
