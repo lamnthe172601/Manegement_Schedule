@@ -8,5 +8,6 @@ namespace Management_Schedule_BE.Services
         Task<ScheduleStatusStatisticsDTO> GetScheduleStatusStatisticsAsync();
         Task<List<TopTeacherDTO>> GetTopTeachersAsync(int top = 5);
         Task<List<StudentDistributionByClassDTO>> GetStudentDistributionByClassAsync();
+        Task<List<NewApprovedStudentDTO>> GetNewApprovedStudentsAsync();
     }
 } 

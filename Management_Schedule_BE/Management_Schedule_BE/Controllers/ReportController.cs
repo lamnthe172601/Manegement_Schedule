@@ -42,5 +42,12 @@ namespace Management_Schedule_BE.Controllers
             var data = await _reportService.GetStudentDistributionByClassAsync();
             return Ok(data);
         }
+
+        [HttpGet("new-approved-students")]
+        public async Task<ActionResult<List<NewApprovedStudentDTO>>> GetNewApprovedStudents()
+        {
+            var data = await _reportService.GetNewApprovedStudentsAsync();
+            return Ok(data);
+        }
     }
 } 

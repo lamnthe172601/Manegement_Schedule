@@ -93,5 +93,23 @@ namespace Management_Schedule_BE.Services
                 .ToListAsync();
             return data;
         }
+
+        public async Task<List<NewApprovedStudentDTO>> GetNewApprovedStudentsAsync()
+        {
+            var students = await _context.Students
+                .Where(s => s.User.Status == 0)
+                .OrderByDescending(s => s.User.CreatedAt)
+                .Take(10)
+                .Select(s => new NewApprovedStudentDTO
+                {
+                    StudentID = s.StudentID,
+                    FullName = s.User.FullName,
+                    Email = s.User.Email,
+                    Phone = s.User.Phone,
+                    CreatedAt = s.User.CreatedAt
+                })
+                .ToListAsync();
+            return students;
+        }
     }
 } 
