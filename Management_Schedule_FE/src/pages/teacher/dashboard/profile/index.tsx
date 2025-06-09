@@ -94,7 +94,7 @@ function Page() {
         <div>
           <div className="h-100 w-full relative ">
             <Image
-              src="/anhbia.jpg"
+              src="/anh1.webp"
               alt="anh bia student"
               layout="fill"
               objectFit="cover"
