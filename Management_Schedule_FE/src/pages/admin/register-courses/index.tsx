@@ -169,10 +169,10 @@ function Page() {
                 <TableCell>
                   <Button
                     onClick={() => handleOpenDialog(student.enrollmentID)}
-                    variant={student.status === 1 ? "outline" : "secondary"}
+                    variant={student.status === 1 ? "link" : "destructive"}
                     disabled={student.status === 1}
                   >
-                    {student.status === 1 ? "Thanh toán " : "Chưa thanh toán"}
+                    {student.status === 1 ? "Đã duyệt " : "Chưa duyệt"}
                   </Button>
                 </TableCell>
               </TableRow>

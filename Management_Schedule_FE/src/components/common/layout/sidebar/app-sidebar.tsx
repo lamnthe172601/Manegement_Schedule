@@ -95,7 +95,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <Image
-          src="/lms_logo.png"
+          src="/logo.jpg"
           alt="Sidebar Logo"
           width={200}
           height={200}

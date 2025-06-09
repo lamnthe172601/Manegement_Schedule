@@ -72,6 +72,10 @@ export class Endpoints {
     UPDATE_STATUS_ENROLL: (enrollId: number) => `Enrollment/${enrollId}/status`,
   }
   static readonly Report = {
+    Dashboard: "Report/dashboard", // GET /api/Report/dashboard
+    ScheduleStatusStatistics: "Report/schedule-status-statistics", // GET /api/Report/schedule-status-statistics
+    TopTeachers: "Report/top-teachers", // GET /api/Report/top-teachers?top=5
+    StudentDistributionByClass: "Report/student-distribution-by-class", // GET /api/Report/student-distribution-by-class
     Teacher: "Report/teacher", // GET /api/Report/teacher/{teacherId}
     Class: "Report/class", // GET /api/Report/class/{classId}
     Room: "Report/room", // GET /api/Report/room/{room}
