@@ -31,6 +31,7 @@ export class Endpoints {
     DELETE: (id: string) => `User/${id}`,
     GETUSERBYEMAIL: (email: string) => `User/${email}`,
     UPDATEBYEMAIL: (email: string) => `User/${email}`,
+    CHANGEPASSWORD: 'User/change-password'
   }
   static readonly Classes = {
     GET_ALL: "Class",

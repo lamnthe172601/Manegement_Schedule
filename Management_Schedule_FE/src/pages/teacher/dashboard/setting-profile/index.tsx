@@ -7,8 +7,10 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
+  DialogOverlay,
 } from "@/components/ui/dialog"
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import useSWR from "swr"
 import { useAtom } from "jotai/react"
 import { userInfoAtom } from "@/stores/auth"
@@ -21,7 +23,7 @@ import {
   showSuccessToast,
 } from "@/components/common/toast/toast"
 import format from "date-fns/format"
-import TeacherLayout from "@/components/features/guest/TeacherLayout"
+import { ChangePasswordDtos } from "@/hooks/api/user/user-change-password"
 
 const phoneRegex =
   /^(?:\+84|0)(?:3[2-9]|5[6|8|9]|7[0|6-9]|8[1-5]|9[0-4|6-9])[0-9]{7}$/
@@ -36,13 +38,78 @@ export default function Page() {
   const [activeField, setActiveField] = useState<keyof UserProfile | null>(null)
   const [phoneError, setPhoneError] = useState<string | null>(null)
   const closePopup = () => setActiveField(null)
+  const [openChangePassword, setOpenChangePassword] = useState(false)
+  const [changePasswordUser, setChangePasswordUser] =
+    useState<ChangePasswordDtos>({
+      email: userInfo?.email,
+      oldPassword: "",
+      password: "",
+      confirmPassword: "",
+    })
+  const changePassword = () => {
+    setOpenChangePassword(true)
+  }
+
+  useEffect(() => {
+    if (!openChangePassword) {
+      setChangePasswordUser({
+        email: userInfo?.email || "",
+        oldPassword: "",
+        password: "",
+        confirmPassword: "",
+      })
+    }
+  }, [openChangePassword])
+
+  const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
+    debugger
+    e.preventDefault()
+
+    if (
+      !changePasswordUser?.oldPassword ||
+      !changePasswordUser?.password ||
+      !changePasswordUser?.confirmPassword
+    ) {
+      showErrorToast("Vui lòng nhập đầy đủ các trường")
+      return
+    }
+
+    if (changePasswordUser.password !== changePasswordUser.confirmPassword) {
+      showErrorToast("Mật khẩu không trùng khớp")
+      return
+    }
+
+    console.log(changePasswordUser)
+    const payload = {
+      Email: userInfo?.email,
+      OldPassword: changePasswordUser.oldPassword,
+      Password: changePasswordUser.password,
+      ConfirmPassword: changePasswordUser.confirmPassword,
+    }
+
+    try {
+      const responseData = await axios.post(
+        `${Endpoints.baseApiURL.URL}/${Endpoints.Users.CHANGEPASSWORD}`,
+        payload,
+      )
+      if (responseData.status == 200) {
+        showSuccessToast("Đổi mật khẩu thành công")
+        setOpenChangePassword(false)
+      }
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại sau"
+      showErrorToast(errorMessage)
+    }
+  }
+
   const email: string | undefined = user?.email
   useEffect(() => {
     const accessToken = localStorage.getItem(Constants.API_TOKEN_KEY)
     if (accessToken) {
       setToken(accessToken)
     }
-  }, [userInfo])
+  }, [])
 
   const getUserByEmail = async (url: string) => {
     const response = await axios.get(url)
@@ -80,7 +147,7 @@ export default function Page() {
           raw = `${y}-${m}-${d}`
         }
         if (/^\d{4}-\d{2}-\d{2}T/.test(raw)) {
-          raw = raw.split('T')[0]
+          raw = raw.split("T")[0]
         }
         setInputValue(raw)
         setDateError(null)
@@ -129,6 +196,7 @@ export default function Page() {
   }
 
   const handleSubmit = async (field: keyof UserProfile, value: string) => {
+    debugger
     if (!value.trim()) {
       showErrorToast("Vui lòng nhập giá trị trước khi lưu.")
       return
@@ -141,7 +209,8 @@ export default function Page() {
       showErrorToast(phoneError)
       return
     }
-
+    console.log("data local", user)
+    console.log("data userinfo", userInfo)
     const updatedUser = { ...userInfo, [field]: value }
     const formData = new FormData()
     Object.entries(updatedUser).forEach(([k, v]) => {
@@ -149,6 +218,10 @@ export default function Page() {
         if (k === "avatarUrl" && avatarFile) formData.append(k, avatarFile)
         else formData.append(k, String(v))
       }
+    })
+
+    formData.forEach((value, key) => {
+      console.log(key, value)
     })
 
     try {
@@ -174,16 +247,33 @@ export default function Page() {
       showErrorToast(err?.response?.data?.message || "Lỗi cập nhật")
     }
   }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setChangePasswordUser((prev) => ({
+      ...prev!,
+      [name]: value,
+    }))
+  }
   return (
-    <TeacherLayout>
+    <StudentLayout>
       <h1 className="text-2xl font-bold mb-6">Cài đặt</h1>
 
       <div className="flex">
         {/* Settings Content */}
         <div className="flex-1">
           <div className="bg-white rounded-lg border p-6">
-            <h2 className="text-lg font-medium mb-6">Thông tin cá nhân</h2>
-
+            <div className="flex flex-row justify-between items-center">
+              <h2 className="text-lg font-medium mb-6">Thông tin cá nhân</h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-sx font-semibold text-red-500 hover:text-gray-700"
+                onClick={() => changePassword()}
+              >
+                Đổi mật khẩu
+              </Button>
+            </div>
             {/* Name */}
             <div className="mb-6 space-y-2">
               <div className="flex items-center justify-between mb-2">
@@ -404,6 +494,66 @@ export default function Page() {
           </div>
         </DialogContent>
       </Dialog>
-    </TeacherLayout>
+      <Dialog open={openChangePassword} onOpenChange={setOpenChangePassword}>
+        <DialogOverlay className="fixed inset-0 bg-black/50 z-[999]" />
+        <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white sm:max-w-md z-[1000] rounded-lg shadow-lg p-6">
+          <DialogHeader>
+            <DialogTitle>Đổi mật khẩu</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleChangePassword}>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <label className="text-sm font-medium">Mật khẩu cũ</label>
+                <input
+                  type="password"
+                  name="oldPassword"
+                  className="border p-2 rounded"
+                  minLength={6}
+                  required
+                  value={changePasswordUser?.oldPassword}
+                  onChange={(e) => handleInputChange(e)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <label className="text-sm font-medium">Mật khẩu mới</label>
+                <input
+                  type="password"
+                  name="password"
+                  className="border p-2 rounded"
+                  minLength={6}
+                  required
+                  value={changePasswordUser?.password}
+                  onChange={(e) => handleInputChange(e)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <label className="text-sm font-medium">
+                  Xác nhận mật khẩu mới
+                </label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  className="border p-2 rounded"
+                  minLength={6}
+                  required
+                  value={changePasswordUser?.confirmPassword}
+                  onChange={(e) => handleInputChange(e)}
+                />
+              </div>
+            </div>
+            <DialogFooter className="flex justify-end gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setOpenChangePassword(false)}
+              >
+                Huỷ
+              </Button>
+              <Button type="submit">Đổi</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </StudentLayout>
   )
 }

@@ -47,11 +47,7 @@ export interface UserProfile {
   note:string
 }
 
-export interface ChangePassword{
-  email: string,
-  password: string,
-  confirmPassword: string
-}
+
 
 const useGetUsers = () => {
   const { data, error, isLoading } = useSWR<User[]>(

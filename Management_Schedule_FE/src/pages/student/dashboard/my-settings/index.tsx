@@ -10,7 +10,7 @@ import {
   DialogFooter,
   DialogOverlay,
 } from "@/components/ui/dialog"
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import useSWR from "swr"
 import { useAtom } from "jotai/react"
 import { userInfoAtom } from "@/stores/auth"
@@ -23,7 +23,7 @@ import {
   showSuccessToast,
 } from "@/components/common/toast/toast"
 import format from "date-fns/format"
-import TeacherLayout from "@/components/features/guest/TeacherLayout"
+import { ChangePasswordDtos } from "@/hooks/api/user/user-change-password"
 
 const phoneRegex =
   /^(?:\+84|0)(?:3[2-9]|5[6|8|9]|7[0|6-9]|8[1-5]|9[0-4|6-9])[0-9]{7}$/
@@ -39,11 +39,70 @@ export default function Page() {
   const [phoneError, setPhoneError] = useState<string | null>(null)
   const closePopup = () => setActiveField(null)
   const [openChangePassword, setOpenChangePassword] = useState(false)
+  const [changePasswordUser, setChangePasswordUser] =
+    useState<ChangePasswordDtos>({
+      email: userInfo?.email,
+      oldPassword: "",
+      password: "",
+      confirmPassword: "",
+    })
   const changePassword = () => {
     setOpenChangePassword(true)
   }
 
-  const handleChangePassword = () => {}
+  useEffect(() => {
+    if (!openChangePassword) {
+      setChangePasswordUser({
+        email: userInfo?.email || "",
+        oldPassword: "",
+        password: "",
+        confirmPassword: "",
+      })
+    }
+  }, [openChangePassword])
+
+  const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
+    debugger
+    e.preventDefault()
+
+    if (
+      !changePasswordUser?.oldPassword ||
+      !changePasswordUser?.password ||
+      !changePasswordUser?.confirmPassword
+    ) {
+      showErrorToast("Vui lòng nhập đầy đủ các trường")
+      return
+    }
+
+    if (changePasswordUser.password !== changePasswordUser.confirmPassword) {
+      showErrorToast("Mật khẩu không trùng khớp")
+      return
+    }
+
+    console.log(changePasswordUser)
+    const payload = {
+      Email: userInfo?.email,
+      OldPassword: changePasswordUser.oldPassword,
+      Password: changePasswordUser.password,
+      ConfirmPassword: changePasswordUser.confirmPassword,
+    }
+
+    try {
+      const responseData = await axios.post(
+        `${Endpoints.baseApiURL.URL}/${Endpoints.Users.CHANGEPASSWORD}`,
+        payload,
+      )
+      if (responseData.status == 200) {
+        showSuccessToast("Đổi mật khẩu thành công")
+        setOpenChangePassword(false)
+      }
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại sau"
+      showErrorToast(errorMessage)
+    }
+  }
+
   const email: string | undefined = user?.email
   useEffect(() => {
     const accessToken = localStorage.getItem(Constants.API_TOKEN_KEY)
@@ -187,6 +246,14 @@ export default function Page() {
     } catch (err: any) {
       showErrorToast(err?.response?.data?.message || "Lỗi cập nhật")
     }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setChangePasswordUser((prev) => ({
+      ...prev!,
+      [name]: value,
+    }))
   }
   return (
     <StudentLayout>
@@ -439,16 +506,24 @@ export default function Page() {
                 <label className="text-sm font-medium">Mật khẩu cũ</label>
                 <input
                   type="password"
+                  name="oldPassword"
                   className="border p-2 rounded"
+                  minLength={6}
                   required
+                  value={changePasswordUser?.oldPassword}
+                  onChange={(e) => handleInputChange(e)}
                 />
               </div>
               <div className="grid gap-2">
                 <label className="text-sm font-medium">Mật khẩu mới</label>
                 <input
                   type="password"
+                  name="password"
                   className="border p-2 rounded"
+                  minLength={6}
                   required
+                  value={changePasswordUser?.password}
+                  onChange={(e) => handleInputChange(e)}
                 />
               </div>
               <div className="grid gap-2">
@@ -457,8 +532,12 @@ export default function Page() {
                 </label>
                 <input
                   type="password"
+                  name="confirmPassword"
                   className="border p-2 rounded"
+                  minLength={6}
                   required
+                  value={changePasswordUser?.confirmPassword}
+                  onChange={(e) => handleInputChange(e)}
                 />
               </div>
             </div>
