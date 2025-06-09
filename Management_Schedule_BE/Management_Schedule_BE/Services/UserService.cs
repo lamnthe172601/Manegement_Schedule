@@ -76,14 +76,18 @@ namespace Management_Schedule_BE.Services
         {
             try
             {
+                
                 if (avatarUrl != null && avatarUrl.Length > 0)
                 {
                     user.AvatarUrl = await _storageService.UploadFileAsync(avatarUrl);
                 }
                 else
                 {
-                    var defaultAvatar = _configuration["R2:PublicUrlBase"] + avtDefault;
-                    user.AvatarUrl = defaultAvatar;
+                    if(user.AvatarUrl == null)
+                    {
+                        var defaultAvatar = _configuration["R2:PublicUrlBase"] + avtDefault;
+                        user.AvatarUrl = defaultAvatar;
+                    }   
                 }
             }
             catch (Exception ex)
