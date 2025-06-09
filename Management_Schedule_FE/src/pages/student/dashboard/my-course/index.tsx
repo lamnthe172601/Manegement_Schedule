@@ -2,7 +2,7 @@
 import StudentLayout from "@/components/features/guest/StudentLayout"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
-import { Plus } from "lucide-react"
+import { DollarSign, Plus } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Course } from "@/hooks/api/course/use-get-course"
 import useSWR from "swr"
@@ -13,10 +13,20 @@ import axios from "axios"
 import { showErrorToast } from "@/components/common/toast/toast"
 import { Constants } from "@/lib/constants"
 import Link from "next/link"
+import { FolderPen, Pen, Mail, Percent, Gauge } from "lucide-react"
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 function Page() {
   const [courses, setCourse] = useState<Course[]>([])
+  const [coursesDetail, setCourseDetail] = useState<Course | null>(null)
   const [token, setToken] = useState("")
   const [user] = useAtom(userInfoAtom)
+  const [open, setOpen] = useState(false)
   const studentId: string | undefined = user?.nameid
   useEffect(() => {
     const accessToken = localStorage.getItem(Constants.API_TOKEN_KEY)
@@ -33,8 +43,6 @@ function Page() {
     return response.data.data
   }
 
-  
-
   const { data, error, isLoading } = useSWR(
     studentId
       ? `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_COURSE_BY_STUDENT_ID(studentId)}`
@@ -47,7 +55,6 @@ function Page() {
   }
 
   if (isLoading) {
-    
   }
 
   useEffect(() => {
@@ -57,14 +64,30 @@ function Page() {
     }
   }, [data])
 
+  const handleDetailCourse = async (courseID: number) => {
+    debugger
+    try {
+      const url = `${Endpoints.baseApiURL.URL}/${Endpoints.Courses.GET_BY_ID(courseID)}`
+      const response = await axios.get(url)
+      if (response.data.data == "success") {
+        setCourseDetail(response.data.data)
+      }
+    } catch (error: any) {
+      showErrorToast(error.message)
+      if (error.response?.status === 404) {
+        showErrorToast(error.message)
+      } else {
+        showErrorToast(error.message)
+      }
+    }
+  }
+
   return (
     <StudentLayout>
       <div className="mx-5 mt-3">
         <h1 className="font-extrabold text-3xl">Khóa học của tôi</h1>
-        <h4 className="mt-2 text-gray-600">
-          Bạn đã mua những khóa học nào.
-        </h4>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-1 gap-y-6 mt-[40px] ">
+        <h4 className="mt-2 text-gray-600">Bạn đã mua những khóa học nào.</h4>
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-6 mt-[40px] ">
           {courses &&
             Array.isArray(courses) &&
             courses.map((c) => (
@@ -77,14 +100,18 @@ function Page() {
                   className="rounded-xl"
                 />
                 <h3 className="mt-2 mb-2 font-semibold">{c.courseName}</h3>
-                <h4 className="text-gray-600 text-sm">
-                  Số ca học {c.level}
-                </h4>
-                <div className="absolute inset-0 bg-[#00000033] bg-opacity-20 opacity-0 group-hover:opacity-100 transition duration-300 rounded-xl w-[300px] h-[170px]"></div>
+                <h4 className="text-gray-600 text-sm">Số ca học {c.level}</h4>
+
+                <div className="absolute inset-0 bg-[#00000033] bg-opacity-20 opacity-0 group-hover:opacity-100 transition duration-300 rounded-xl w-[290px] h-[160px]"></div>
+
                 <Button
-                  className="absolute top-1/2 left-1/2 transform -translate-x-15 -translate-y-10
+                  className="absolute top-1/2 left-1/2 transform -translate-x-10 -translate-y-10
                      opacity-0 group-hover:opacity-100 hover:!bg-gray-400 transition duration-300
                      bg-white text-black px-4 py-2 rounded-full"
+                  onClick={() => {
+                    handleDetailCourse(c.courseID)
+                    setOpen(true)
+                  }}
                 >
                   Chi tiết
                 </Button>
@@ -95,11 +122,46 @@ function Page() {
               <Plus size={20} />
             </Button>
             {/* sửa thành thẻ link sang trang mua khoá học */}
-            <Link href={"/user/khoa-hoc"} className="btn text-[#91AD9C] border-2 rounded-xl border-[#91AD9C] bg-white">
+            <Link
+              href={"/user/khoa-hoc"}
+              className="btn text-[#91AD9C] border-2 rounded-xl border-[#91AD9C] bg-white"
+            >
               Thêm khóa học
             </Link>
           </div>
         </div>
+      </div>
+      <div className="flex-1 mr-[10px]">
+        <Dialog open={open} onOpenChange={setOpen}>
+          {/* <DialogTrigger asChild></DialogTrigger> */}
+          <DialogContent className="max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Thông tin khóa học</DialogTitle>
+            </DialogHeader>
+            <div className="mt-2 whitespace-pre-line flex flex-row gap-2">
+              <p className="font-semibold">Tên khóa học:</p>
+              <span>{coursesDetail?.courseName || "Không có nội dung."}</span>
+            </div>
+            <div className="mt-2 whitespace-pre-line flex flex-row gap-2">
+              <p className="font-semibold">Mô tả:</p>
+              <span>{coursesDetail?.description || "Không có nội dung."}</span>
+            </div>
+            <div className="mt-2 whitespace-pre-line flex flex-row gap-2">
+              <p className="font-semibold">Giá:</p>
+              <span>{coursesDetail?.price}$</span>
+            </div>
+            <div className="mt-2 whitespace-pre-line flex flex-row gap-2">
+              <p className="font-semibold">Giảm giá:</p>
+              <span>
+                {coursesDetail?.discountPercent || "Chưa có giảm giá."}
+              </span>
+            </div>
+            <div className="mt-2 whitespace-pre-line flex flex-row gap-2">
+              <p className="font-semibold">Số ca học:</p>
+              <span>{coursesDetail?.level || "Không có nội dung."}</span>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </StudentLayout>
   )

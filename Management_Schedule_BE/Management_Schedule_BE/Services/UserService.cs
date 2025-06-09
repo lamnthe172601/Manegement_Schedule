@@ -185,7 +185,7 @@ namespace Management_Schedule_BE.Services
             {
                 if (profile.AvatarUrl != null)
                 {
-                    await UpLoadFileImgAsync(user, profile.AvatarUrl, "/avatar-mac-dinh-4.jpg");
+                    user.AvatarUrl = await _storageService.UploadFileAsync(profile.AvatarUrl);
                 }
 
                 _mapper.Map(profile, user);
