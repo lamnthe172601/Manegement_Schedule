@@ -191,13 +191,15 @@ namespace Management_Schedule_BE.Helpers.Validators
             var enrolledClasses = await _context.StudentClassEnrollments
                 .Include(e => e.Class)
                     .ThenInclude(c => c.Course)
-                .Where(e => e.StudentID == studentId && e.Status == 1) // Status 1 = Active
+                .Where(e => e.StudentID == studentId ) 
                 .Select(e => new
                 {
                     Class = e.Class,
                     Course = e.Class.Course,
                     EnrolledCount = _context.StudentClassEnrollments
-                        .Count(en => en.ClassID == e.ClassID && en.Status == 1)
+                        .Count(en => en.ClassID == e.ClassID && en.Status == 1),
+                            Status = e.Status 
+
                 })
                 .Select(x => new StudentEnrolledClassDTO(
                     x.Class.ClassName,
@@ -209,7 +211,9 @@ namespace Management_Schedule_BE.Helpers.Validators
                     x.Class.EndDate,
                     x.Course.Duration,
                     x.Course.Price,
-                    x.Course.Level
+                    x.Course.Level,
+                    x.Status
+
                 ))
                 .ToListAsync();
 

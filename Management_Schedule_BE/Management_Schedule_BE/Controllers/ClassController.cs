@@ -117,6 +117,7 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpGet("student/{studentId}/enrolled")]
+        [EnableQuery]
         public async Task<ActionResult<IEnumerable<StudentEnrolledClassDTO>>> GetStudentEnrolledClasses(int studentId)
         {
             try
@@ -150,6 +151,7 @@ namespace Management_Schedule_BE.Controllers
         }
 
         [HttpGet("basic")]
+        [EnableQuery]
         public async Task<ActionResult<IEnumerable<ClassBasicDTO>>> GetAllClassBasic()
         {
             try

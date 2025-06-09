@@ -12,6 +12,7 @@ namespace Management_Schedule_BE.DTOs
         DateTime? EndDate,
         int Duration,
         decimal Price,
-        byte Level
+        byte Level,
+        byte Status // 1=Active, 2=Completed, 3=Cancelled
     );
 } 
