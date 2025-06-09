@@ -1,4 +1,5 @@
 ﻿using Management_Schedule_BE.DTOs;
+using Management_Schedule_BE.Helpers;
 using Management_Schedule_BE.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -129,7 +130,29 @@ namespace Management_Schedule_BE.Controllers
                 Message = "Update sucessfully"
             });
         }
-
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePasswordByEmail([FromBody] ChangePasswordDtos changePasswordDtos)
+        {
+            var user = await _userService.GetUserByEmailAsync(changePasswordDtos.Email);
+            var passwordEnter = PasswordHassing.ComputeSha256Hash(changePasswordDtos.Password);
+            if(user.PasswordHash != passwordEnter)
+            {
+                return Ok(new { message = "mật khẩu cũ không đúng" });
+            }
+            if (changePasswordDtos.Password != changePasswordDtos.ConfirmPassword)
+            {
+                return Ok(new { message = "mật khẩu mới nhập không trùng" });
+            }
+            var result = await _userService.UpdatePasswordAsync(changePasswordDtos.Email, changePasswordDtos.Password);
+            if (result == null)
+            {
+                return BadRequest(new { message = "Email không tồn tại" });
+            }
+            return Ok(new
+            {
+                Message = "Thay đổi mật thành công"
+            });
+        }
         [HttpPost("by-admin")]
         public async Task<ActionResult<UserDTO>> AddUserByAdmin([FromForm] UserCreateByAdminDTO dto)
         {
