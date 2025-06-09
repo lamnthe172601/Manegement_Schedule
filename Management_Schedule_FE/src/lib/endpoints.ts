@@ -55,7 +55,7 @@ export class Endpoints {
   static readonly Courses = {
     GET_ALL: "Course",
     GET_ALL_V2: "Courses/v2",
-    GET_BY_ID: (id: string) => `Courses/${id}`,
+    GET_BY_ID: (id: number) => `Course/${id}`,
     CREATE: "Courses",
     UPDATE: (id: string) => `Courses/${id}`,
     DELETE: (id: string) => `Courses/${id}`,

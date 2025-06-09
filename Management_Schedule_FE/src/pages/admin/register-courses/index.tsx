@@ -34,31 +34,27 @@ import format from "date-fns/format"
 import { showErrorToast } from "@/components/common/toast/toast"
 import { useAxios } from "@/hooks/api/use-axios"
 
-const fetcher = (url: string) =>
-  axios.get(url).then((res) => res.data.data)
+const fetcher = (url: string) => axios.get(url).then((res) => res.data.data)
 
 function Page() {
   const axiox = useAxios()
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null)
-  const [selectedEnrollmentId, setSelectedEnrollmentId] = useState<number | null>(null)
+  const [selectedEnrollmentId, setSelectedEnrollmentId] = useState<
+    number | null
+  >(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
 
-
-  const {
-    data: classes = [],
-    error: classError,
-  } = useSWR<ClassList[]>(
+  const { data: classes = [], error: classError } = useSWR<ClassList[]>(
     `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_ALL_BASIC}`,
-    fetcher
+    fetcher,
   )
-
 
   useEffect(() => {
     if (classes.length > 0 && !selectedClassId) {
       setSelectedClassId(classes[0].classID)
     }
   }, [classes])
-
 
   const {
     data: students = [],
@@ -68,7 +64,7 @@ function Page() {
     selectedClassId
       ? `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_STUDENT_BY_CLASS_ID(selectedClassId)}`
       : null,
-    fetcher
+    fetcher,
   )
 
   if (classError || studentError) {
@@ -92,7 +88,7 @@ function Page() {
       try {
         await axiox.patch(
           `${Endpoints.baseApiURL.URL}/${Endpoints.Enrollment.UPDATE_STATUS_ENROLL(selectedEnrollmentId)}`,
-          { status: 1 }
+          { status: 1 },
         )
         setIsDialogOpen(false)
         mutateStudents() // Refresh student list
@@ -102,11 +98,22 @@ function Page() {
     }
   }
 
+  const pageSize = 5
+
+  const totalPages = Math.ceil(students.length / pageSize)
+  const paginatedStudents = students.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  )
+
   return (
     <div>
       <div className="flex justify-between items-end mb-6">
         <h1 className="text-2xl font-bold">Quản lý học viên</h1>
-        <Select onValueChange={handleSelectClass} value={selectedClassId?.toString()}>
+        <Select
+          onValueChange={handleSelectClass}
+          value={selectedClassId?.toString()}
+        >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a Class" />
           </SelectTrigger>
@@ -171,13 +178,51 @@ function Page() {
             ))}
           </TableBody>
         </Table>
+        <div className="flex items-center justify-between mt-4">
+          <div className="text-sm text-gray-500">
+            Hiển thị {(currentPage - 1) * pageSize + 1} -{" "}
+            {Math.min(currentPage * pageSize, students.length)} của{" "}
+            {students.length} học viên
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(currentPage - 1)}
+            >
+              Trước
+            </Button>
+            {[...Array(totalPages)].map((_, i) => (
+              <Button
+                key={i}
+                size="sm"
+                variant={i + 1 === currentPage ? "ghost" : "outline"}
+                onClick={() => setCurrentPage(i + 1)}
+              >
+                {i + 1}
+              </Button>
+            ))}
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(currentPage + 1)}
+            >
+              Sau
+            </Button>
+          </div>
+        </div>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent>
             <DialogHeader>Xác nhận cập nhật trạng thái</DialogHeader>
             <p>Bạn có chắc muốn cập nhật trạng thái của sinh viên không?</p>
             <DialogFooter>
-              <Button onClick={() => setIsDialogOpen(false)} variant="secondary">
+              <Button
+                onClick={() => setIsDialogOpen(false)}
+                variant="secondary"
+              >
                 Hủy
               </Button>
               <Button onClick={handleUpdateStatus}>Xác nhận</Button>
