@@ -117,6 +117,7 @@ function Page() {
                     onClick={() => setOpen(true)}
                     className="rounded-xl border-gray-200 border-[2] cursor-pointer hover:bg-gray-50"
                   >
+                    <h2 className="p-2 font-semibold">Thông tin cá nhân</h2>
                     <div className="flex flex-row">
                       <h2 className="font-semibold p-2">Giới thiệu: </h2>
                       <h3 className="p-2 ">
@@ -136,9 +137,12 @@ function Page() {
                       </h3>
                     </div>
                     <div className="flex flex-row">
-                      <h2 className="font-semibold p-2">Tham gia trung tâm từ: </h2>
+                      <h2 className="font-semibold p-2">
+                        Tham gia trung tâm từ:{" "}
+                      </h2>
                       <h3 className="p-2">
-                        {formatDate(userInfo?.createdAt.toString()) || "Chưa cập nhật."}
+                        {formatDate(userInfo?.createdAt.toString()) ||
+                          "Chưa cập nhật."}
                       </h3>
                     </div>
                   </div>
@@ -184,18 +188,11 @@ function Page() {
               {courses &&
                 Array.isArray(courses) &&
                 courses.map((c) => (
-                  <div className="flex flex-row">
-                    <Image
-                      src={c.thumbnailUrl ?? "/courses.png"}
-                      width={200}
-                      height={100}
-                      alt="khao hoc"
-                      className="p-2 rounded-2xl"
-                    />
-
-                    <div>
+                  <div className="flex flex-col">
+                    <div className="flex flex-row">
                       <h2 className="font-semibold p-2">{c.courseName}</h2>
-                      <h3 className="p-2 flex flex-row">{c.description}</h3>
+                      <h3 className="p-2">{c.price}$</h3>
+                      <h3 className="p-2">{c.createdAt ? formatDate(c.createdAt) : 'Chưa có ngày tạo' }</h3>
                     </div>
                   </div>
                 ))}

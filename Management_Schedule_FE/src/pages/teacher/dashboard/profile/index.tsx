@@ -117,6 +117,7 @@ function Page() {
                     onClick={() => setOpen(true)}
                     className="rounded-xl border-gray-200 border-[2] cursor-pointer hover:bg-gray-50"
                   >
+                    <h2 className="p-2 font-semibold">Thông tin cá nhân</h2>
                     <div className="flex flex-row">
                       <h2 className="font-semibold p-2">Giới thiệu: </h2>
                       <h3 className="p-2 ">

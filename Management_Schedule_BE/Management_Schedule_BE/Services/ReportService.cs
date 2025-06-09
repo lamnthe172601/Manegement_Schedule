@@ -97,7 +97,7 @@ namespace Management_Schedule_BE.Services
         public async Task<List<NewApprovedStudentDTO>> GetNewApprovedStudentsAsync()
         {
             var students = await _context.Students
-                .Where(s => s.User.Status == 0)
+                .Where(s => s.ClassEnrollments.Any(e => e.Status == 0))
                 .OrderByDescending(s => s.User.CreatedAt)
                 .Take(10)
                 .Select(s => new NewApprovedStudentDTO
@@ -112,4 +112,4 @@ namespace Management_Schedule_BE.Services
             return students;
         }
     }
-} 
+}

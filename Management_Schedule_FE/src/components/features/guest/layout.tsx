@@ -1,22 +1,29 @@
 // components/layouts/DashboardLayout.tsx
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Bell, ChevronLeft, Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useAtom } from "jotai/react"
+import { Lock } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuItem,
   DropdownMenuContent,
   DropdownMenuSeparator,
-  DropdownMenuGroup,
-  DropdownMenuLabel,
 } from "@radix-ui/react-dropdown-menu"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogOverlay,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
 import { LogOut } from "lucide-react"
 import { logout } from "@/lib/utils"
 type SidebarItem = {
@@ -40,6 +47,7 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname()
   const [searchQuery, setSearchQuery] = useState("")
+  
   return (
     <div className="flex min-h-screen bg-zinc-50">
       {/* Sidebar */}
@@ -77,13 +85,12 @@ export default function DashboardLayout({
             <DropdownMenuSeparator />
 
             <DropdownMenuSeparator />
-
             <DropdownMenuItem
               onClick={() => logout()}
-              className="px-4 py-1 text-sm text-red-600 hover:bg-red-50 cursor-pointer"
+              className="px-4 py-1 text-sm text-red-600 hover:bg-red-50 cursor-pointer flex flex-row"
             >
               <LogOut className="mr-2 h-4 w-4" />
-              Đăng xuất
+              <p>Đăng xuất</p>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -128,8 +135,9 @@ export default function DashboardLayout({
           </button>
         </header>
 
-        <main className="p-2">{children}</main>
+        <main className="p-2 relative z-[0]">{children}</main>
       </div>
+      
     </div>
   )
 }

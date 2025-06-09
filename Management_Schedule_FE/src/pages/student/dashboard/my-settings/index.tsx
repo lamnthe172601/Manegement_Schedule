@@ -7,6 +7,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
+  DialogOverlay,
 } from "@/components/ui/dialog"
 import { useState, useEffect } from "react"
 import useSWR from "swr"
@@ -36,6 +38,12 @@ export default function Page() {
   const [activeField, setActiveField] = useState<keyof UserProfile | null>(null)
   const [phoneError, setPhoneError] = useState<string | null>(null)
   const closePopup = () => setActiveField(null)
+  const [openChangePassword, setOpenChangePassword] = useState(false)
+  const changePassword = () => {
+    setOpenChangePassword(true)
+  }
+
+  const handleChangePassword = () => {}
   const email: string | undefined = user?.email
   useEffect(() => {
     const accessToken = localStorage.getItem(Constants.API_TOKEN_KEY)
@@ -181,15 +189,24 @@ export default function Page() {
     }
   }
   return (
-    <TeacherLayout>
+    <StudentLayout>
       <h1 className="text-2xl font-bold mb-6">Cài đặt</h1>
 
       <div className="flex">
         {/* Settings Content */}
         <div className="flex-1">
           <div className="bg-white rounded-lg border p-6">
-            <h2 className="text-lg font-medium mb-6">Thông tin cá nhân</h2>
-
+            <div className="flex flex-row justify-between items-center">
+              <h2 className="text-lg font-medium mb-6">Thông tin cá nhân</h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-sx font-semibold text-red-500 hover:text-gray-700"
+                onClick={() => changePassword()}
+              >
+                Đổi mật khẩu
+              </Button>
+            </div>
             {/* Name */}
             <div className="mb-6 space-y-2">
               <div className="flex items-center justify-between mb-2">
@@ -410,6 +427,54 @@ export default function Page() {
           </div>
         </DialogContent>
       </Dialog>
-    </TeacherLayout>
+      <Dialog open={openChangePassword} onOpenChange={setOpenChangePassword}>
+        <DialogOverlay className="fixed inset-0 bg-black/50 z-[999]" />
+        <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white sm:max-w-md z-[1000] rounded-lg shadow-lg p-6">
+          <DialogHeader>
+            <DialogTitle>Đổi mật khẩu</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleChangePassword}>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <label className="text-sm font-medium">Mật khẩu cũ</label>
+                <input
+                  type="password"
+                  className="border p-2 rounded"
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <label className="text-sm font-medium">Mật khẩu mới</label>
+                <input
+                  type="password"
+                  className="border p-2 rounded"
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <label className="text-sm font-medium">
+                  Xác nhận mật khẩu mới
+                </label>
+                <input
+                  type="password"
+                  className="border p-2 rounded"
+                  required
+                />
+              </div>
+            </div>
+            <DialogFooter className="flex justify-end gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setOpenChangePassword(false)}
+              >
+                Huỷ
+              </Button>
+              <Button type="submit">Đổi</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </StudentLayout>
   )
 }
