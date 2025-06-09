@@ -17,6 +17,7 @@ export interface Course {
   level: number
   createdAt: string
   modifiedAt: string
+  status: number
 }
 
 // Hook để lấy danh sách khóa học

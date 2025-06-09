@@ -13,7 +13,6 @@ import axios from "axios"
 import { showErrorToast } from "@/components/common/toast/toast"
 import { Constants } from "@/lib/constants"
 import Link from "next/link"
-import { FolderPen, Pen, Mail, Percent, Gauge } from "lucide-react"
 import {
   Dialog,
   DialogTrigger,
@@ -21,12 +20,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  SelectGroup,
+  SelectLabel,
+} from "@/components/ui/select"
 function Page() {
   const [courses, setCourse] = useState<Course[]>([])
   const [coursesDetail, setCourseDetail] = useState<Course | null>(null)
   const [token, setToken] = useState("")
   const [user] = useAtom(userInfoAtom)
   const [open, setOpen] = useState(false)
+  const [statusFilter, setStatusFilter] = useState(-1)
   const studentId: string | undefined = user?.nameid
   useEffect(() => {
     const accessToken = localStorage.getItem(Constants.API_TOKEN_KEY)
@@ -69,8 +78,9 @@ function Page() {
     try {
       const url = `${Endpoints.baseApiURL.URL}${Endpoints.Courses.GET_BY_ID(courseID)}`
       const response = await axios.get(url)
-      if (response.data.data == "success") {
+      if (response.status == 200) {
         setCourseDetail(response.data.data)
+        console.log(coursesDetail)
       }
     } catch (error: any) {
       showErrorToast(error.message)
@@ -82,15 +92,40 @@ function Page() {
     }
   }
 
+  const filteredCourses = courses.filter((c) => {
+    if (statusFilter === -1) return true
+    return c.status === statusFilter
+  })
+
+  const handleSelectClass = (value: string) => {
+    setStatusFilter(parseInt(value))
+  }
   return (
     <StudentLayout>
       <div className="mx-5 mt-3">
-        <h1 className="font-extrabold text-3xl">Khóa học của tôi</h1>
-        <h4 className="mt-2 text-gray-600">Bạn đã mua những khóa học nào.</h4>
+        <div className="flex flex-row justify-between">
+          <h1 className="font-extrabold text-3xl">Khóa học của tôi</h1>
+          <Select
+            onValueChange={handleSelectClass}
+            value={statusFilter.toString()}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Chọn trạng thái" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Trạng thái</SelectLabel>
+                <SelectItem value="-1">Tất cả</SelectItem>
+                <SelectItem value="1">Đã duyệt</SelectItem>
+                <SelectItem value="0">Chưa duyệt</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-6 mt-[40px] ">
-          {courses &&
-            Array.isArray(courses) &&
-            courses.map((c) => (
+          {filteredCourses &&
+            Array.isArray(filteredCourses) &&
+            filteredCourses.map((c) => (
               <div className="relative group cursor-pointer" key={c.courseID}>
                 <Image
                   src={c.thumbnailUrl ?? "/courses.png"}
@@ -148,7 +183,7 @@ function Page() {
             </div>
             <div className="mt-2 whitespace-pre-line flex flex-row gap-2">
               <p className="font-semibold">Giá:</p>
-              <span>{coursesDetail?.price}$</span>
+              <span>{coursesDetail?.price.toLocaleString("vi-VN")}VND</span>
             </div>
             <div className="mt-2 whitespace-pre-line flex flex-row gap-2">
               <p className="font-semibold">Giảm giá:</p>

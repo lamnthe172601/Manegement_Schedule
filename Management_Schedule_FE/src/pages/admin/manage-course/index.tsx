@@ -378,7 +378,7 @@ const CoursePage = () => {
                         {course.isSelling ? (
                           <Badge className="bg-green-600">Có bán </Badge>
                         ) : (
-                          <Badge variant="destructive">Đéo bán</Badge>
+                          <Badge variant="destructive">Không bán</Badge>
                         )}
                       </TableCell>
                       <TableCell>

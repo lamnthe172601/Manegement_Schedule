@@ -26,7 +26,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
 
   const { data, error, isLoading } = useSWR(
     email
-      ? `${Endpoints.baseApiURL.URL}/${Endpoints.Users.GETUSERBYEMAIL(email)}`
+      ? `${Endpoints.baseApiURL.URL}${Endpoints.Users.GETUSERBYEMAIL(email)}`
       : null,
     fetcher,
   )

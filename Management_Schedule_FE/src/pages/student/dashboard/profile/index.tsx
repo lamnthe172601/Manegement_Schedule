@@ -191,7 +191,7 @@ function Page() {
                   <div className="flex flex-col">
                     <div className="flex flex-row">
                       <h2 className="font-semibold p-2">{c.courseName}</h2>
-                      <h3 className="p-2">{c.price}$</h3>
+                      <h3 className="p-2">{c.price.toLocaleString('vi-VN')}VND</h3>
                       <h3 className="p-2">{c.createdAt ? formatDate(c.createdAt) : 'Chưa có ngày tạo' }</h3>
                     </div>
                   </div>
