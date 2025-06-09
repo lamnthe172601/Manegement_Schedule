@@ -89,7 +89,7 @@ function Page() {
         <div>
           <div className="h-100 w-full relative ">
             <Image
-              src="/anhbia.jpg"
+              src="/anh1.webp"
               alt="anh bia student"
               layout="fill"
               objectFit="cover"
@@ -105,9 +105,9 @@ function Page() {
             <h1 className="absolute top-100 left-60 font-bold text-xl">
               {userInfo?.fullName}
             </h1>
-            <Button className="absolute top-85 right-10 p-[20px]">
+            {/* <Button className="absolute top-85 right-10 p-[20px]">
               <Camera size={20} /> Chỉnh sửa ảnh bìa
-            </Button>
+            </Button> */}
           </div>
           <div className="flex flex-row mt-[100px] mx-[20px]">
             <div className="flex-1 mr-[10px]">
@@ -192,7 +192,7 @@ function Page() {
                     <div className="flex flex-row">
                       <h2 className="font-semibold p-2">{c.courseName}</h2>
                       <h3 className="p-2">{c.price.toLocaleString('vi-VN')}VND</h3>
-                      <h3 className="p-2">{c.createdAt ? formatDate(c.createdAt) : 'Chưa có ngày tạo' }</h3>
+                      <h3 className="p-2">{c.startDate ? formatDate(c.startDate) : 'Chưa có ngày tạo' }</h3>
                     </div>
                   </div>
                 ))}

@@ -83,6 +83,11 @@ function Page() {
 
   const [photoCover, setPhotoCover] = useState("null")
   const [open, setOpen] = useState(false)
+  const filterSchedule = schedules.filter((s) => {
+    const today = new Date().toISOString().split("T")[0]
+    const sDate = new Date(s.date).toISOString().split("T")[0]
+    const isSameDate = sDate === today
+  })
   return (
     <TeacherLayout>
       {userInfo && (
@@ -185,19 +190,26 @@ function Page() {
             </div>
             <div className="flex-1 flex-1 rounded-xl border-gray-200 border-[2]">
               <h2 className="p-2 font-semibold">Các lớp học đang dạy</h2>
-              {schedules &&
-                Array.isArray(schedules) &&
-                schedules.map((s) => (
-                  <div className="flex flex-row">
+              {Array.isArray(filterSchedule) && filterSchedule.length > 0 ? (
+                filterSchedule.map((s) => (
+                  <div className="flex flex-row" key={s.classID}>
                     <div className="flex flex-row">
                       <h2 className="font-semibold p-2">{s.className}</h2>
                       <h3 className="p-2 flex flex-row">{s.room}</h3>
+                      <h3 className="p-2 flex flex-row">
+                        {s.studySessionName}
+                      </h3>
                       <h3 className="p-2 flex flex-row">
                         {formatDate(s.date)}
                       </h3>
                     </div>
                   </div>
-                ))}
+                ))
+              ) : (
+                <div className="text-center text-gray-500 mt-4">
+                  Không có lịch dạy cho ngày hôm nay
+                </div>
+              )}
             </div>
           </div>
         </div>

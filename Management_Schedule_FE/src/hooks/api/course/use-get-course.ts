@@ -18,6 +18,7 @@ export interface Course {
   createdAt: string
   modifiedAt: string
   status: number
+  startDate: string
 }
 
 // Hook để lấy danh sách khóa học

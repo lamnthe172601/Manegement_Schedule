@@ -12,12 +12,12 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useAtomValue } from "jotai/react"
 import { userInfoAtom } from "@/stores/auth"
 import { logout } from "@/lib/utils"
+import { LayoutDashboard } from "lucide-react"
 
 export default function Header() {
   const pathname = usePathname()
@@ -29,10 +29,9 @@ export default function Header() {
       ? "/teacher/dashboard/profile"
       : userData?.role === "Student"
         ? "/student/dashboard/profile"
-        : "/"; // default nếu cần
+        : "/" // default nếu cần
 
   // Hàm logout (bạn sửa theo logic thực tế)
-
 
   const navItems = [
     { href: "/", label: "TRANG CHỦ" },
@@ -47,7 +46,12 @@ export default function Header() {
         <div className="container mx-auto px-4 py-2">
           <div className="flex items-center justify-between">
             <Link href="/" className="mr-8">
-              <Image src="/lms_logo.png" alt="Sidebar Logo" width={100} height={100} />
+              <Image
+                src="/lms_logo.png"
+                alt="Sidebar Logo"
+                width={100}
+                height={100}
+              />
             </Link>
             <nav className="hidden md:flex space-x-9 ml-6">
               {navItems.map((item) => {
@@ -56,8 +60,9 @@ export default function Header() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`text-sm font-bold hover:text-blue-500 ${isActive ? "text-blue-500" : "text-gray-700"
-                      }`}
+                    className={`text-sm font-bold hover:text-blue-500 ${
+                      isActive ? "text-blue-500" : "text-gray-700"
+                    }`}
                   >
                     {item.label}
                   </Link>
@@ -118,25 +123,21 @@ export default function Header() {
                         className="text-gray-500 hover:text-gray-700 flex items-center space-x-2"
                       >
                         <User size={20} />
-                        <span>{userData.role}-{userData.fullName}</span>
+                        <span>
+                          {userData.role}-{userData.fullName}
+                        </span>
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56" align="end">
-                      <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
                       <DropdownMenuGroup>
                         <DropdownMenuItem asChild>
-                          <Link href="/user/profile">Profile</Link>
+                          <Link href={dashboardLink}><LayoutDashboard/>Dashboard</Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link href={dashboardLink}>Dashboard</Link>
+                        <DropdownMenuItem onClick={() => logout()}>
+                          <LogOut className="mr-2 h-4 w-4" />
+                          Log out
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => logout()}>
-                        <LogOut className="mr-2 h-4 w-4" />
-                        Log out
-                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 ) : (
@@ -158,14 +159,15 @@ export default function Header() {
                 )}
               </div>
 
-
-
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button aria-label="Shopping Cart" className="text-gray-500 hover:text-gray-700">
+                {/* <DropdownMenuTrigger asChild>
+                  <button
+                    aria-label="Shopping Cart"
+                    className="text-gray-500 hover:text-gray-700"
+                  >
                     <ShoppingCart size={20} />
                   </button>
-                </DropdownMenuTrigger>
+                </DropdownMenuTrigger> */}
                 <DropdownMenuContent className="w-64" align="end">
                   <DropdownMenuLabel>Shopping Cart</DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -193,23 +195,39 @@ export default function Header() {
         <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0 md:pr-10">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">ENGLISH LEARNING SYSTEM</h1>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                ENGLISH LEARNING SYSTEM
+              </h1>
               <p className="text-lg md:text-xl mb-8 opacity-90">
-                Hệ thống học tiếng Anh giao tiếp toàn diện cho người bắt đầu. Phương pháp học hiệu quả, nội dung chất
-                lượng, giảng viên chuyên nghiệp.
+                Hệ thống học tiếng Anh giao tiếp toàn diện cho người bắt đầu.
+                Phương pháp học hiệu quả, nội dung chất lượng, giảng viên chuyên
+                nghiệp.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-white font-bold text-blue-600 hover:bg-gray-100">
+                <Button
+                  size="lg"
+                  className="bg-white font-bold text-blue-600 hover:bg-gray-100"
+                >
                   Bắt đầu học ngay
                 </Button>
-                <Button size="lg" variant="outline" className="bg-white font-bold text-blue-600 hover:bg-gray-100">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="bg-white font-bold text-blue-600 hover:bg-gray-100"
+                >
                   Tìm hiểu thêm
                 </Button>
               </div>
             </div>
             <div className="md:w-1/2 flex justify-center">
               <div className="relative w-full max-w-md h-[300px] md:h-[400px]">
-                <Image src="/anh1.webp" alt="Landmaster Learning" fill className="object-contain" priority />
+                <Image
+                  src="/anh1.webp"
+                  alt="Landmaster Learning"
+                  fill
+                  className="object-contain"
+                  priority
+                />
               </div>
             </div>
           </div>
