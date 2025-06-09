@@ -72,7 +72,7 @@ function Page() {
   // lấy danh sách lịch học của sinh viên
   const { data, error, isLoading } = useSWR(
     studentId
-      ? `${Endpoints.baseApiURL.URL}/${Endpoints.Schedule.GET_SCHEDULE_BY_STUDENT_ID(studentId)}`
+      ? `${Endpoints.baseApiURL.URL}${Endpoints.Schedule.GET_SCHEDULE_BY_STUDENT_ID(studentId)}`
       : null,
     fetcher,
   )
