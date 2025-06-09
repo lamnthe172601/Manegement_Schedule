@@ -99,6 +99,7 @@ export default function AddCourse() {
 
 
   return (
+
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}

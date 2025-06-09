@@ -505,7 +505,7 @@ const CoursePage = () => {
       </Dialog>
       {/* Form chỉnh sửa: */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-        <DialogContent className="max-w-xl">
+        <DialogContent className="max-h-[90vh] overflow-auto px-4">
           <DialogHeader>
             <DialogTitle>Chỉnh sửa khóa học</DialogTitle>
           </DialogHeader>
