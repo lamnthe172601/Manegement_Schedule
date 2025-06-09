@@ -6,9 +6,11 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useAddClasses } from '@/hooks/api/classes/use-add-classes';
 import { useAddSchedule } from '@/hooks/api/schedule/use-add-schedule';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { format } from "date-fns"
+import { Input } from '@/components/ui/input';
+import { Label } from "@/components/ui/label"
+import { useAxios } from '@/hooks/api/use-axios';
 interface Course {
     courseID: number;
     courseName: string;
@@ -47,6 +49,7 @@ interface ClassInput {
 const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export default function ClassPage() {
+    const axios = useAxios();
     const [classes, setClasses] = useState<ClassItem[]>([]);
     const [courses, setCourses] = useState<Course[]>([]);
     const [formVisible, setFormVisible] = useState(false);
@@ -82,7 +85,7 @@ export default function ClassPage() {
 
     const fetchClasses = async () => {
         try {
-            const res = await axios.get('http://localhost:5163/api/Class');
+            const res = await axios.get('/Class');
             if (res.data.status === 'success') setClasses(res.data.data);
         } catch (err) {
             console.error('Fetch class error:', err);
@@ -91,7 +94,7 @@ export default function ClassPage() {
 
     const fetchCourses = async () => {
         try {
-            const res = await axios.get('http://localhost:5163/api/Course');
+            const res = await axios.get('/Course');
             if (res.data.status === 'success') setCourses(res.data.data);
         } catch (err) {
             console.error('Fetch course error:', err);
@@ -100,7 +103,7 @@ export default function ClassPage() {
 
     const fetchTeacher = async () => {
         try {
-            const res = await axios.get('http://localhost:5163/api/Teacher/details');
+            const res = await axios.get('/Teacher/details');
             console.log(res.data);
             if (res.data.status === 'success') setTeacherList(res.data.data);
         } catch (err) {
@@ -292,7 +295,7 @@ export default function ClassPage() {
         e.preventDefault();
         console.log(makeupData)
         try {
-            const res = await axios.post("http://localhost:5163/api/Schedule/makeup", (makeupData),
+            const res = await axios.post("/Schedule/makeup", (makeupData),
             );
 
             if (res) {
@@ -308,6 +311,64 @@ export default function ClassPage() {
             showErrorToast("Đã xảy ra lỗi khi gửi yêu cầu.");
         }
     };
+    const [editForm, setEditForm] = useState(
+        {
+            id: '',
+            className: '',
+            courseID: 0,
+            maxStudents: 0,
+            startDate: '',
+            endDate: '',
+            status: 1,
+
+        });
+    const [editDialogOpen, setEditDialogOpen] = useState(false)
+
+    const handleOpenEditForm = (cls: any) => {
+        console.log(cls);
+        setEditDialogOpen(true);
+        setEditForm({
+            id: cls.classID,
+            className: cls.className,
+            courseID: cls.courseID,
+            maxStudents: cls.maxStudents,
+            startDate: cls.startDate,
+            endDate: cls.endDate,
+            status: cls.status,
+        });
+    };
+
+
+    const handleUpdateClass = async () => {
+        const updatedData = {
+            className: editForm.className,
+            maxStudents: editForm.maxStudents,
+            startDate: editForm.startDate,
+            endDate: editForm.endDate,
+            status: editForm.status,
+        };
+
+        console.log(updatedData);
+
+        try {
+            const response = await axios.put(`/Class/${editForm.id}`, updatedData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response) {
+                showSuccessToast("Cập nhật khóa học thành công!");
+                setEditDialogOpen(false);
+            }
+            fetchClasses();
+
+
+        } catch (error) {
+            showErrorToast("Cập nhật khóa học thất bại!");
+        }
+    };
+
 
 
 
@@ -489,6 +550,16 @@ export default function ClassPage() {
 
                                 </>}
                             </TableCell>
+
+                            <Button
+                                onClick={() => handleOpenEditForm(cls)}
+                                className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                            >
+                                ✏️ Sửa
+                            </Button>
+
+
+
                         </TableRow>
                     ))}
                 </TableBody>
@@ -692,6 +763,55 @@ export default function ClassPage() {
                     </DialogFooter>
                 </DialogContent>
 
+            </Dialog>
+
+            <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+                <DialogContent className="sm:max-w-[500px]">
+                    <DialogHeader>
+                        <DialogTitle>Cập nhật lớp học</DialogTitle>
+                    </DialogHeader>
+
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="className" className="text-right">
+                                Tên lớp
+                            </Label>
+                            <Input
+                                id="className"
+                                value={editForm.className}
+                                onChange={(e) =>
+                                    setEditForm({ ...editForm, className: e.target.value })
+                                }
+                                className="col-span-3"
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="maxStudents" className="text-right">
+                                Số lượng tối đa
+                            </Label>
+                            <Input
+                                type="number"
+                                id="maxStudents"
+                                value={editForm.maxStudents}
+                                onChange={(e) =>
+                                    setEditForm({
+                                        ...editForm,
+                                        maxStudents: Number(e.target.value),
+                                    })
+                                }
+                                className="col-span-3"
+                            />
+                        </div>
+                    </div>
+
+                    <DialogFooter>
+                        <Button variant="secondary" onClick={() => setEditDialogOpen(false)}>
+                            Hủy
+                        </Button>
+                        <Button onClick={handleUpdateClass}>Lưu</Button>
+                    </DialogFooter>
+                </DialogContent>
             </Dialog>
 
         </div>
