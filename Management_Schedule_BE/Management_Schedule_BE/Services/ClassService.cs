@@ -245,7 +245,9 @@ namespace Management_Schedule_BE.Helpers.Validators
                 e.Status,
                 e.EnrollmentID
             ))
-            .OrderBy(s => s.FullName)
+            // Sắp xếp: Status = 0 lên đầu, sau đó theo tên
+            .OrderBy(s => s.Status != 0)
+            .ThenBy(s => s.FullName)
             .ToList();
 
             return students;
