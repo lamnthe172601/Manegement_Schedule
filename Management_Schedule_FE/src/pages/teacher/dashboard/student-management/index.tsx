@@ -48,7 +48,7 @@ export default function StudentManagementPage() {
   }
   const { data, error, isLoading } = useSWR(
     teacherId
-      ? `${Endpoints.baseApiURL.URL}/${Endpoints.Teacher.GET_CLASS_BY_TEACHER_ID(teacherId)}`
+      ? `${Endpoints.baseApiURL.URL}${Endpoints.Teacher.GET_CLASS_BY_TEACHER_ID(teacherId)}`
       : null,
     fetcher
   )
@@ -69,7 +69,7 @@ export default function StudentManagementPage() {
   async function fetchStudents(idClass: number) {
     try {
       const response = await axios.get(
-        `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_STUDENT_BY_CLASS_ID(idClass)}`
+        `${Endpoints.baseApiURL.URL}${Endpoints.Classes.GET_STUDENT_BY_CLASS_ID(idClass)}`
       )
       setStudents(response.data.data)
       setCurrentPage(1)

@@ -65,7 +65,7 @@ export default function SchedulePage() {
 
   const { data, error, isLoading } = useSWR(
     teacherId
-      ? `${Endpoints.baseApiURL.URL}/${Endpoints.Schedule.GET_SCHEDULE_BY_TEACHER_ID(teacherId)}`
+      ? `${Endpoints.baseApiURL.URL}${Endpoints.Schedule.GET_SCHEDULE_BY_TEACHER_ID(teacherId)}`
       : "",
     getScheduleTeach,
   )

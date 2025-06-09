@@ -35,7 +35,7 @@ function Page() {
 
   const { data, error, isLoading } = useSWR(
     email
-      ? `${Endpoints.baseApiURL.URL}/${Endpoints.Users.GETUSERBYEMAIL(email)}`
+      ? `${Endpoints.baseApiURL.URL}${Endpoints.Users.GETUSERBYEMAIL(email)}`
       : null,
     fetcher,
   )
@@ -60,7 +60,7 @@ function Page() {
     const fetchDataCourse = async () => {
       const response = await axios.get(
         studentId
-          ? `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_COURSE_BY_STUDENT_ID(studentId)}`
+          ? `${Endpoints.baseApiURL.URL}${Endpoints.Classes.GET_COURSE_BY_STUDENT_ID(studentId)}`
           : "",
       )
       if (response.status == 200) {

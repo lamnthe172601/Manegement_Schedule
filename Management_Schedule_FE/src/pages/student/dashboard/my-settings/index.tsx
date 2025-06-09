@@ -89,7 +89,7 @@ export default function Page() {
 
     try {
       const responseData = await axios.post(
-        `${Endpoints.baseApiURL.URL}/${Endpoints.Users.CHANGEPASSWORD}`,
+        `${Endpoints.baseApiURL.URL}${Endpoints.Users.CHANGEPASSWORD}`,
         payload,
       )
       if (responseData.status == 200) {
@@ -118,7 +118,7 @@ export default function Page() {
 
   const { data, error, isLoading, mutate } = useSWR(
     email
-      ? `${Endpoints.baseApiURL.URL}/${Endpoints.Users.GETUSERBYEMAIL(email)}`
+      ? `${Endpoints.baseApiURL.URL}${Endpoints.Users.GETUSERBYEMAIL(email)}`
       : null,
     getUserByEmail,
   )
@@ -227,7 +227,7 @@ export default function Page() {
     try {
       const response = await axios.put(
         email
-          ? `${Endpoints.baseApiURL.URL}/${Endpoints.Users.UPDATEBYEMAIL(email)}`
+          ? `${Endpoints.baseApiURL.URL}${Endpoints.Users.UPDATEBYEMAIL(email)}`
           : "",
         formData,
         {
