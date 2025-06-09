@@ -23,7 +23,7 @@ export default function CoursesPage() {
         showSuccessToast("Đăng ký thành công!")
 
       }
-    } catch (error) {
+    } catch (error: any) {
       const axiosError = error as AxiosError<any>
 
       if (axiosError.response) {
@@ -32,8 +32,6 @@ export default function CoursesPage() {
       } else {
         showErrorToast("Lỗi kết nối đến máy chủ!")
       }
-
-      console.error("Error:", error)
     }
   }
 
