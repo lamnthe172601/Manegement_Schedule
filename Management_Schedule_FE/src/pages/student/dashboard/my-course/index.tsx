@@ -45,7 +45,7 @@ function Page() {
 
   const { data, error, isLoading } = useSWR(
     studentId
-      ? `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_COURSE_BY_STUDENT_ID(studentId)}`
+      ? `${Endpoints.baseApiURL.URL}${Endpoints.Classes.GET_COURSE_BY_STUDENT_ID(studentId)}`
       : null,
     fetcher,
   )
@@ -67,7 +67,7 @@ function Page() {
   const handleDetailCourse = async (courseID: number) => {
     debugger
     try {
-      const url = `${Endpoints.baseApiURL.URL}/${Endpoints.Courses.GET_BY_ID(courseID)}`
+      const url = `${Endpoints.baseApiURL.URL}${Endpoints.Courses.GET_BY_ID(courseID)}`
       const response = await axios.get(url)
       if (response.data.data == "success") {
         setCourseDetail(response.data.data)
