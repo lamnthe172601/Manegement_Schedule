@@ -67,7 +67,7 @@ const PAGE_SIZE = 10
 const SORTABLE_COLUMNS = [
   { key: "fullName", label: "Tên" },
   { key: "email", label: "Email" },
-  { key: "gender", label: "Gender" },
+  { key: "gender", label: "Giới tính" },
   { key: "createdAt", label: "Ngày tạo" },
   { key: "status", label: "Trạng thái" },
 ]

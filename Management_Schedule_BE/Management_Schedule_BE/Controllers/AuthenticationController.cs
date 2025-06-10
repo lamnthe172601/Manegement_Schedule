@@ -77,7 +77,7 @@ namespace Management_Schedule_BE.Controllers
                 {
                     if (user.Status == 3 || user.Status == 2)
                     {
-                        return Ok(new { message = "tài khoản đã bị vô hiệu hóa" });
+                        return BadRequest(new { message = "tài khoản đã bị vô hiệu hóa" });
                     }
                     string token = _jwtConfig.GenerateToken(user);
                     return Ok(new { message = "Đăng nhập thành công", data = token });
