@@ -43,7 +43,6 @@ import {
   MinusIcon,
 } from "lucide-react"
 import { Constants } from "@/lib/constants"
-import { useRouter } from "next/router"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import {
@@ -92,8 +91,8 @@ const UserPage = () => {
   )
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
   const [userToDelete, setUserToDelete] = React.useState<User | null>(null)
-  const router = useRouter()
   const { mutate } = useSWRConfig()
+  const [viewDialogOpen, setViewDialogOpen] = React.useState(false)
   const [editDialogOpen, setEditDialogOpen] = React.useState(false)
   const [userToEdit, setUserToEdit] = React.useState<User | null>(null)
 
@@ -282,7 +281,9 @@ const UserPage = () => {
                       <TableCell>{(page - 1) * PAGE_SIZE + idx + 1}</TableCell>
                       <TableCell>{user.fullName}</TableCell>
                       <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.gender}</TableCell>
+                      <TableCell>
+                        {user?.gender === "M" ? "Nam" : user?.gender === "F" ? "Nữ" : "-"}
+                      </TableCell>
 
                       <TableCell>
                         {new Date(user.createdAt).toLocaleDateString("vi-VN")}
@@ -306,7 +307,8 @@ const UserPage = () => {
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem
                               onClick={() => {
-                                router.push(`/users/${user.userID}/view`)
+                                setUserToEdit(user)
+                                setViewDialogOpen(true)
                               }}
                             >
                               Chi tiết
@@ -402,6 +404,87 @@ const UserPage = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>Họ tên</Label>
+              <div className="border rounded px-3 py-2">{userToEdit?.fullName || "-"}</div>
+            </div>
+            <div>
+              <Label>Giới tính</Label>
+              <div className="border rounded px-3 py-2">
+                {userToEdit?.gender === "M" ? "Nam" : userToEdit?.gender === "F" ? "Nữ" : "-"}
+              </div>
+            </div>
+            <div>
+              <Label>Ngày sinh</Label>
+              <div className="border rounded px-3 py-2">
+                {userToEdit?.dateOfBirth && !isNaN(new Date(userToEdit.dateOfBirth).getTime())
+                  ? (new Date(userToEdit.dateOfBirth), "dd/MM/yyyy")
+                  : "-"}
+              </div>
+            </div>
+            <div>
+              <Label>Số điện thoại</Label>
+              <div className="border rounded px-3 py-2">{userToEdit?.phone || "-"}</div>
+            </div>
+            <div className="col-span-2">
+              <Label>Địa chỉ</Label>
+              <div className="border rounded px-3 py-2">{userToEdit?.address || "-"}</div>
+            </div>
+            <div className="col-span-2">
+              <Label>Giới thiệu</Label>
+              <div className="border rounded px-3 py-2 whitespace-pre-line">
+                {userToEdit?.introduction || "-"}
+              </div>
+            </div>
+
+            <div className="col-span-2">
+              <Label>Avatar</Label>
+              {userToEdit?.avatarUrl ? (
+                <img
+                  src={userToEdit.avatarUrl}
+                  alt="Avatar"
+                  className="w-24 h-24 object-cover rounded-full mb-2"
+                />
+              ) : (
+                <div className="border rounded px-3 py-2">Chưa có avatar</div>
+              )}
+            </div>
+
+            <div>
+              <Label>Trạng thái</Label>
+              <div className="border rounded px-3 py-2">
+                {userToEdit?.status === 1
+                  ? "Hoạt động"
+                  : userToEdit?.status === 2
+                    ? "Không hoạt động"
+                    : userToEdit?.status === 3
+                      ? "Khóa"
+                      : "-"}
+              </div>
+            </div>
+            <div>
+              <Label>Role</Label>
+              <div className="border rounded px-3 py-2">
+                {userToEdit?.role === 2
+                  ? "Teacher"
+                  : userToEdit?.role === 3
+                    ? "Học sinh"
+                    : "-"}
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter className="mt-4">
+            <Button variant="outline" onClick={() => setViewDialogOpen(false)}>
+              Đóng
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <UserEditDialog
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
