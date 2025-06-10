@@ -1,16 +1,21 @@
-import Link from "next/link"
+
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ChevronRight, Clock, Users, Calendar, User, Info } from "lucide-react"
+import { Clock, Users, Calendar, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import useGetClass from "@/hooks/api/classes/use-get-class"
 import { format } from "date-fns"
 import { showErrorToast, showSuccessToast } from "@/components/common/toast/toast"
 import { useAxios } from "@/hooks/api/use-axios"
 import { AxiosError } from "axios"
+import { useAtomValue } from "jotai/react"
+import { userInfoAtom } from "@/stores/auth"
 
 export default function CoursesPage() {
   const { data, error, isLoading } = useGetClass()
+  const userData = useAtomValue(userInfoAtom) // dùng userData làm check đăng nhập
+
+  console.log("userData", userData)
   console.log(data)
   const axios = useAxios()
   if (isLoading) return <div>Đang tải lớp học...</div>
@@ -76,7 +81,7 @@ export default function CoursesPage() {
                   {cls.status === 1 ? (
                     <div className="flex flex-col space-y-2 w-full px-4">
                       <Button variant="outline">Xem chi tiết</Button>
-                      <Button onClick={() => handleEnroll(cls.classID)}>Mua khóa học</Button>
+                      {userData?.role === "Student" && <Button onClick={() => handleEnroll(cls.classID)}>Mua khóa học</Button>}
                     </div>
                   ) : (
                     <span className="text-yellow-600 font-semibold">Lớp chưa hoạt động</span>

@@ -70,8 +70,8 @@ export function RegisterForm({
     } catch (error: any) {
       showErrorToast(
         error?.response?.data?.message ||
-          error?.message ||
-          "Có lỗi xảy ra, vui lòng thử lại sau",
+        error?.message ||
+        "Có lỗi xảy ra, vui lòng thử lại sau",
       )
     }
   }
@@ -80,6 +80,11 @@ export function RegisterForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
+          <div className="flex items-start justify-between">
+            <Button variant="ghost" onClick={() => window.history.back()}>
+              ← Quay lại
+            </Button>
+          </div>
           <CardTitle>Đăng ký tài khoản</CardTitle>
           <CardDescription>Nhập email và mật khẩu để đăng ký</CardDescription>
         </CardHeader>

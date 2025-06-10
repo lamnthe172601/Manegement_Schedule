@@ -55,32 +55,37 @@ export function LoginForm({
     try {
       const response = await login(values.email, values.password)
       console.log("response", response)
-      if (response.status === "success") {
-        const token = response.data
-        console.log("token", token)
+
+      const token = response?.data
+
+      // Kiểm tra token hợp lệ (phải là chuỗi JWT)
+      if (typeof token === "string" && token.length > 0) {
         localStorage.setItem(Constants.API_TOKEN_KEY, token)
 
-        // Decode token để lấy thông tin user (payload)
         const user = jwtDecode<JwtUser>(token)
-        console.log("Decoded user:", user)
         setUserAtom(user)
+
         if (user.role === "Admin") {
           router.push("/admin/dashboards")
         } else {
           router.push("/")
         }
-        // Lưu thông tin user vào atom (localStorage
       } else {
-        showErrorToast(response.message || "Đăng nhập thất bại")
+        const message =
+          typeof response?.data?.message === "string"
+            ? response.data.message
+            : response?.message || "Đăng nhập thất bại"
+        showErrorToast(message)
       }
     } catch (error: any) {
-      showErrorToast(
+      const errorMessage =
         error?.response?.data?.message ||
         error?.message ||
-        "Có lỗi xảy ra, vui lòng thử lại sau",
-      )
+        "Có lỗi xảy ra, vui lòng thử lại sau"
+      showErrorToast(errorMessage)
     }
   }
+
 
   const handleLoginGoogle = async (credentialReponse: any) => {
     try {
@@ -118,6 +123,11 @@ export function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
+          <div className="flex items-start justify-between">
+            <Button variant="ghost" onClick={() => window.history.back()}>
+              ← Quay lại
+            </Button>
+          </div>
           <CardTitle>Đăng nhập tài khoản</CardTitle>
           <CardDescription>Nhập email của bạn để đăng nhập</CardDescription>
         </CardHeader>
