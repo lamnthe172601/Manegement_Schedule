@@ -46,7 +46,7 @@ function Page() {
   const [currentPage, setCurrentPage] = useState(1)
 
   const { data: classes = [], error: classError } = useSWR<ClassList[]>(
-    `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_ALL_BASIC}`,
+    `${Endpoints.baseApiURL.URL}${Endpoints.Classes.GET_ALL_BASIC}`,
     fetcher,
   )
 
@@ -62,7 +62,7 @@ function Page() {
     mutate: mutateStudents,
   } = useSWR<Student[]>(
     selectedClassId
-      ? `${Endpoints.baseApiURL.URL}/${Endpoints.Classes.GET_STUDENT_BY_CLASS_ID(selectedClassId)}`
+      ? `${Endpoints.baseApiURL.URL}${Endpoints.Classes.GET_STUDENT_BY_CLASS_ID(selectedClassId)}`
       : null,
     fetcher,
   )

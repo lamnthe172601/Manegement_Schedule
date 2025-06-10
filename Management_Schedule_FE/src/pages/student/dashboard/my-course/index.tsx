@@ -188,7 +188,7 @@ function Page() {
             <div className="mt-2 whitespace-pre-line flex flex-row gap-2">
               <p className="font-semibold">Giảm giá:</p>
               <span>
-                {coursesDetail?.discountPercent || "Chưa có giảm giá."}
+                {coursesDetail?.discountPercent || "Chưa có giảm giá."}%
               </span>
             </div>
             <div className="mt-2 whitespace-pre-line flex flex-row gap-2">
