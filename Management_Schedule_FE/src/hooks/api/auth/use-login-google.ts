@@ -10,7 +10,7 @@ export const useLoginGoogle = () => {
             setLoading(true);
             debugger
             console.log(Endpoints.baseApiURL.URL,Endpoints.Auth.LOGIN_GOOGLE);
-            const response = await axios.post(`${Endpoints.baseApiURL.URL}/${Endpoints.Auth.LOGIN_GOOGLE}`, {
+            const response = await axios.post(`${Endpoints.baseApiURL.URL}${Endpoints.Auth.LOGIN_GOOGLE}`, {
                 idToken: tokenId
             });
             const result = response.data;
