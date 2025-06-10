@@ -43,7 +43,7 @@ namespace Management_Schedule_BE.Controllers
             var user = await _userService.GetUserByEmailAndPasswordAsync(userLogin.Email, userLogin.PasswordHash);
             if (user != null)
             {
-                if (user.Status == 3)
+                if (user.Status == 3 || user.Status == 2)
                 {
                     return Ok(new { message = "tài khoản đã bị xóa" });
                 }
@@ -75,7 +75,7 @@ namespace Management_Schedule_BE.Controllers
 
                 if (user != null)
                 {
-                    if (user.Status == 3)
+                    if (user.Status == 3 || user.Status == 2)
                     {
                         return Ok(new { message = "tài khoản đã bị xóa" });
                     }
