@@ -47,7 +47,7 @@ export default function Header() {
           <div className="flex items-center justify-between">
             <Link href="/" className="mr-8">
               <Image
-                src="/lms_logo.png"
+                src="/logo.jpg"
                 alt="Sidebar Logo"
                 width={100}
                 height={100}
