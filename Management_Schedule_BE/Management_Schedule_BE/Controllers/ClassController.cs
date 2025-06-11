@@ -164,5 +164,14 @@ namespace Management_Schedule_BE.Controllers
                 return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống!", detail = ex.Message });
             }
         }
+
+        [HttpDelete("enrollments/{enrollmentId}")]
+        public async Task<IActionResult> DeleteStudentEnrollment(int enrollmentId)
+        {
+            var result = await _classService.DeleteStudentEnrollmentAsync(enrollmentId);
+            if (!result)
+                return NotFound(new { message = "Không tìm thấy bản ghi đăng ký" });
+            return Ok(new { message = "Xóa đăng ký thành công" });
+        }
     }
 } 
