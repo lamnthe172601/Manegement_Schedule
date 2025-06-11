@@ -117,9 +117,9 @@ function Page() {
             <h1 className="absolute top-100 left-60 font-bold text-xl">
               {userInfo?.fullName}
             </h1>
-            <Button className="absolute top-85 right-10 p-[20px]">
+            {/* <Button className="absolute top-85 right-10 p-[20px]">
               <Camera size={20} /> Chỉnh sửa ảnh bìa
-            </Button>
+            </Button> */}
           </div>
           <div className="flex flex-row mt-[100px] mx-[20px]">
             <div className="flex-1 mr-[10px]">
@@ -196,7 +196,7 @@ function Page() {
               </Dialog>
             </div>
             <div className="flex-1 flex-1 rounded-xl border-gray-200 border-[2]">
-              <h2 className="p-2 font-semibold">Các lớp học đang dạy</h2>
+              <h2 className="p-2 font-semibold">Lịch dạy ngày hôm nay</h2>
               {filterSchedule &&
               Array.isArray(filterSchedule) &&
               filterSchedule.length > 0 ? (
