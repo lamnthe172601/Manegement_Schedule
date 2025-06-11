@@ -259,5 +259,24 @@ namespace Management_Schedule_BE.Helpers.Validators
                 .Select(c => new ClassBasicDTO(c.ClassID, c.ClassName))
                 .ToListAsync();
         }
+
+        public async Task<bool> DeleteStudentEnrollmentAsync(int enrollmentId)
+        {
+            var enrollment = await _context.StudentClassEnrollments.FindAsync(enrollmentId);
+            if (enrollment == null)
+                return false;
+
+            // Xóa các bản ghi StudentHistory liên quan
+            var studentHistories = await _context.StudentTuitionHistories
+                .Where(h => h.EnrollmentID == enrollmentId)
+                .ToListAsync();
+
+            _context.StudentTuitionHistories.RemoveRange(studentHistories);
+
+            // Xóa bản ghi Enrollment
+            _context.StudentClassEnrollments.Remove(enrollment);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

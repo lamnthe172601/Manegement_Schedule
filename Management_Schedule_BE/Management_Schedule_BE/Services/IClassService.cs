@@ -14,5 +14,6 @@ namespace Management_Schedule_BE.Services
         Task<IEnumerable<StudentEnrolledClassDTO>> GetStudentEnrolledClassesAsync(int studentId);
         Task<IEnumerable<StudentInClassDTO>> GetStudentsInClassAsync(int classId);
         Task<IEnumerable<ClassBasicDTO>> GetAllClassBasicAsync();
+        Task<bool> DeleteStudentEnrollmentAsync(int enrollmentId);
     }
 } 
