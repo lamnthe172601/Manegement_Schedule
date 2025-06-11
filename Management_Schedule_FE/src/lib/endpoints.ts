@@ -35,7 +35,7 @@ export class Endpoints {
   }
   static readonly Classes = {
     GET_ALL: "Class",
-    GET_COURSE_BY_STUDENT_ID: (studentId: string) =>
+    GET_COURSE_BY_STUDENT_ID: (studentId: number) =>
       `Class/student/${studentId}/enrolled`,
     GET_STUDENT_BY_CLASS_ID: (classId: number) => `Class/${classId}/students`,
     GET_ALL_BASIC: "Class/basic",
@@ -46,7 +46,7 @@ export class Endpoints {
     GET_ALL: "Schedule",
     GET_SCHEDULE_BY_STUDENT_ID: (studentid: string) =>
       `Schedule/student/${studentid}`,
-    GET_SCHEDULE_BY_TEACHER_ID: (teacherid: string) =>
+    GET_SCHEDULE_BY_TEACHER_ID: (teacherid: number) =>
       `Schedule/teacher/${teacherid}`,
   }
   static readonly Books = {

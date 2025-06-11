@@ -27,7 +27,7 @@ function Page() {
   const [userInfo, SetUserInfo] = useState<UserProfile | null>(null)
   const [courses, setCourse] = useState<Course[]>([])
   const email: string | undefined = user?.email
-  console.log("email", user?.email)
+  
   const fetcher = async (url: string): Promise<UserProfile> => {
     const response = await axios.get(url)
     return response.data.data
@@ -54,13 +54,13 @@ function Page() {
     }
   }, [data])
 
-  const studentId: string | undefined = user?.nameid
+  
 
   useEffect(() => {
     const fetchDataCourse = async () => {
       const response = await axios.get(
-        studentId
-          ? `${Endpoints.baseApiURL.URL}${Endpoints.Classes.GET_COURSE_BY_STUDENT_ID(studentId)}`
+        data?.userID
+          ? `${Endpoints.baseApiURL.URL}${Endpoints.Classes.GET_COURSE_BY_STUDENT_ID(data?.userID)}`
           : "",
       )
       if (response.status == 200) {
