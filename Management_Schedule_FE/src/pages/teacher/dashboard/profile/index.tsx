@@ -83,11 +83,11 @@ function Page() {
 
   const [photoCover, setPhotoCover] = useState("null")
   const [open, setOpen] = useState(false)
-    const filterSchedule = schedules.filter((s) => {
-      const today = new Date().toISOString().split("T")[0]
-      const sDate = new Date(s.date).toISOString().split("T")[0]
-      const isSameDate = sDate === today
-    })
+  const filterSchedule = schedules.filter((s) => {
+    const today = new Date().toISOString().split("T")[0]
+    const sDate = new Date(s.date).toISOString().split("T")[0]
+    return sDate === today
+  })
 
   return (
     <TeacherLayout>
@@ -191,7 +191,9 @@ function Page() {
             </div>
             <div className="flex-1 flex-1 rounded-xl border-gray-200 border-[2]">
               <h2 className="p-2 font-semibold">Các lớp học đang dạy</h2>
-              {filterSchedule && Array.isArray(filterSchedule) && filterSchedule.length > 0 ? (
+              {filterSchedule &&
+              Array.isArray(filterSchedule) &&
+              filterSchedule.length > 0 ? (
                 filterSchedule.map((s) => (
                   <div className="flex flex-row" key={s.classID}>
                     <div className="flex flex-row">
