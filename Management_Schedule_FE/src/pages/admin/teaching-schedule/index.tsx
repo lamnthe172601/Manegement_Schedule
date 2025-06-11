@@ -149,8 +149,8 @@ export default function SchedulePage() {
             if (res.ok && result.status === 'success') {
                 showSuccessToast('✅ Cập nhật giáo viên thành công!');
                 setOpenDialog(false);
-                // Refresh lại lịch
-                setDateRange((prev) => (prev ? { ...prev } : null));
+                // Thêm dòng này để refresh data
+                mutate(Endpoints.Schedule.GET_ALL);
             } else {
                 const errorMessage = result?.errors?.detail || result?.message || '❌ Cập nhật giáo viên thất bại!';
                 showErrorToast(errorMessage);

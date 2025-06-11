@@ -171,10 +171,7 @@ const CoursePage = () => {
   }, [courseToEdit]);
 
 
-  const handleDeleteClick = (course: Course) => {
-    setCourseToDelete(course)
-    setDeleteDialogOpen(true)
-  }
+
   const convertToFormData = (data: Partial<Course>) => {
     const formData = new FormData();
 
@@ -413,9 +410,7 @@ const CoursePage = () => {
                             >
                               Chỉnh sửa
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleDeleteClick(course)}>
-                              Xóa
-                            </DropdownMenuItem>
+
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>

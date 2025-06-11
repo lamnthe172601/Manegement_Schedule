@@ -306,9 +306,12 @@ export default function ClassPage() {
             } else {
                 showErrorToast("Tạo lịch học bù thất bại.");
             }
-        } catch (error) {
+        } catch (error: any) {
+            const detailError =
+                error?.response?.data?.errors?.detail || error?.response?.data?.message || '❌ Cập nhật giáo viên thất bại!';
+            showErrorToast(detailError);
+            console.error("detailError", detailError);
             console.error("Lỗi tạo lịch học bù:", error);
-            showErrorToast("Đã xảy ra lỗi khi gửi yêu cầu.");
         }
     };
     const [editForm, setEditForm] = useState(

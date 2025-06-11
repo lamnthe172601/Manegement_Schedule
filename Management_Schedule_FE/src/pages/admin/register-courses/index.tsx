@@ -31,7 +31,7 @@ import { Button } from "@/components/ui/button"
 import { Student } from "@/hooks/api/students/Student"
 import { ClassList } from "@/hooks/api/classes/use-get-class"
 import format from "date-fns/format"
-import { showErrorToast } from "@/components/common/toast/toast"
+import { showErrorToast, showSuccessToast } from "@/components/common/toast/toast"
 import { useAxios } from "@/hooks/api/use-axios"
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data.data)
@@ -82,12 +82,24 @@ function Page() {
     setSelectedEnrollmentId(enrollmentId)
     setIsDialogOpen(true)
   }
+  const handleDeleteEnrollment = async (enrollmentID: number) => {
+    if (!window.confirm("Bạn có chắc muốn xóa học viên này?")) return;
+
+    try {
+      await axios.delete(`${Endpoints.baseApiURL.URL}${Endpoints.Classes.DELETE_STATUS_ENROLL(enrollmentID)}`,);
+      showSuccessToast("Xóa học viên thành công!");
+      mutateStudents() // Refresh student list
+    } catch (error: any) {
+      console.error("Lỗi xóa học viên:", error);
+      showErrorToast("Không thể xóa học viên. Vui lòng thử lại.");
+    }
+  };
 
   const handleUpdateStatus = async () => {
     if (selectedEnrollmentId) {
       try {
         await axiox.patch(
-          `${Endpoints.baseApiURL.URL}/${Endpoints.Enrollment.UPDATE_STATUS_ENROLL(selectedEnrollmentId)}`,
+          `${Endpoints.baseApiURL.URL}${Endpoints.Enrollment.UPDATE_STATUS_ENROLL(selectedEnrollmentId)}`,
           { status: 1 },
         )
         setIsDialogOpen(false)
@@ -173,6 +185,14 @@ function Page() {
                     disabled={student.status === 1}
                   >
                     {student.status === 1 ? "Đã duyệt " : "Chưa duyệt"}
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="destructive"
+                    onClick={() => handleDeleteEnrollment(student.enrollmentID)}
+                  >
+                    Xóa
                   </Button>
                 </TableCell>
               </TableRow>
