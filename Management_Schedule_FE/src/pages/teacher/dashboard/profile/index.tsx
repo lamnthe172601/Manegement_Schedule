@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/dialog"
 import TeacherLayout from "@/components/features/guest/TeacherLayout"
 import { ScheduleTeacher } from "@/hooks/api/schedule/use-get-schedules"
+import format from "date-fns/format"
+import parseISO from "date-fns/parseISO"
 function Page() {
   const [schedules, setSchedules] = useState<ScheduleTeacher[]>([])
   const [user] = useAtom(userInfoAtom)
@@ -40,7 +42,7 @@ function Page() {
       : null,
     fetcher,
   )
-  console.log("data from swr", data)
+
   if (error) {
     showErrorToast(`${error.message}`)
   }
@@ -51,16 +53,18 @@ function Page() {
 
   useEffect(() => {
     if (data) {
+      debugger
       SetUserInfo(data)
     }
   }, [data])
 
-  const teacherId: string | undefined = user?.nameid
   useEffect(() => {
     const fetchDataCourse = async () => {
+      if (!data?.userID) return
+      debugger
       const response = await axios.get(
-        teacherId
-          ? `${Endpoints.baseApiURL.URL}${Endpoints.Schedule.GET_SCHEDULE_BY_TEACHER_ID(teacherId)}`
+        data?.userID
+          ? `${Endpoints.baseApiURL.URL}${Endpoints.Schedule.GET_SCHEDULE_BY_TEACHER_ID(data?.userID)}`
           : "",
       )
       if (response.status == 200) {
@@ -68,7 +72,7 @@ function Page() {
       }
     }
     fetchDataCourse()
-  }, [])
+  }, [data?.userID])
 
   function formatDate(isoDateString: string): string {
     if (!isoDateString) return "Không có dữ liệu"
@@ -81,13 +85,15 @@ function Page() {
     return `${day}/${month}/${year}`
   }
 
-  const [photoCover, setPhotoCover] = useState("null")
+  // const [photoCover, setPhotoCover] = useState("null")
   const [open, setOpen] = useState(false)
-  const filterSchedule = schedules.filter((s) => {
-    const today = new Date().toISOString().split("T")[0]
-    const sDate = new Date(s.date).toISOString().split("T")[0]
-    return sDate === today
-  })
+  const filterSchedule = Array.isArray(schedules)
+    ? schedules.filter((s) => {
+        const today = format(new Date(), "dd-MM-yyyy")
+        const sDate = format(parseISO(s.date), "dd-MM-yyyy")
+        return sDate === today
+      })
+    : []
 
   return (
     <TeacherLayout>
@@ -203,7 +209,7 @@ function Page() {
                         {s.studySessionName}
                       </h3>
                       <h3 className="p-2 flex flex-row">
-                        {formatDate(s.date)}
+                        {format(new Date(s.date), "dd-MM-yyyy")}
                       </h3>
                     </div>
                   </div>

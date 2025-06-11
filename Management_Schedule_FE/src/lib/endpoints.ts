@@ -44,7 +44,7 @@ export class Endpoints {
     GET_ALL: "Schedule",
     GET_SCHEDULE_BY_STUDENT_ID: (studentid: string) =>
       `Schedule/student/${studentid}`,
-    GET_SCHEDULE_BY_TEACHER_ID: (teacherid: string) =>
+    GET_SCHEDULE_BY_TEACHER_ID: (teacherid: number) =>
       `Schedule/teacher/${teacherid}`,
   }
   static readonly Books = {
