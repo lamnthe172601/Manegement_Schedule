@@ -15,6 +15,7 @@ export default function StudentListPage() {
 
   const teamMembers = data?.filter((user: any) => user.role === 3) || [];
 
+  console.log("teamMembers", teamMembers)
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold mb-6 text-center">Danh sách học viên</h1>
@@ -24,7 +25,7 @@ export default function StudentListPage() {
           <TableHeader>
             <TableRow className="bg-gray-100">
               <TableHead className="text-base">Học viên</TableHead>
-              <TableHead className="text-base">Khóa học đang học</TableHead>
+              <TableHead className="text-base">Ngày tham gia trung tâm</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -58,7 +59,7 @@ export default function StudentListPage() {
                     <span className="font-medium">{student.fullName}</span>
                   </TableCell>
                   <TableCell className="text-sm text-gray-700">
-                    {student.courseName || "Chưa đăng ký"}
+                    {student.createdAt ? new Date(student.createdAt).toLocaleString() : "Chưa đăng ký"}
                   </TableCell>
                 </TableRow>
               ))
