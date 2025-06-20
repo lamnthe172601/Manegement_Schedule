@@ -284,7 +284,7 @@ export default function SchedulePage() {
                     <span>Hoạt động</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded" style={{ backgroundColor: '#FFD700' }}></div>
+                    <div className="w-5 h-5 rounded" style={{ backgroundColor: '#38A169' }}></div>
                     <span>Đã hoàn thành</span>
                 </div>
                 <div className="flex items-center gap-2">
