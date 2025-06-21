@@ -60,7 +60,7 @@ export default function AddCourse() {
       isPro: false,
       isCompletable: false,
       discountPercent: '0',
-      duration: '0',
+      duration: '1',
       level: '1',
     },
   })
@@ -90,10 +90,13 @@ export default function AddCourse() {
         console.log(`${key}:`, value);
       }
       await addCourse(formData);
+
       showSuccessToast("Thêm khóa học thành công!");
       router.push("/admin/manage-course");
-    } catch (error) {
-      showErrorToast(`Thêm khóa học thất bại! ${error}`);
+    } catch (error: any) {
+      const detailError =
+        error?.response?.data?.errors?.detail || error?.response?.data?.message || '❌ Cập nhật giáo viên thất bại!';
+      showErrorToast(detailError);
     }
   };
 

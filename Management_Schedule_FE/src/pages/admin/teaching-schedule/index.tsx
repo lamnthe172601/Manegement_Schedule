@@ -149,8 +149,8 @@ export default function SchedulePage() {
             if (res.ok && result.status === 'success') {
                 showSuccessToast('✅ Cập nhật giáo viên thành công!');
                 setOpenDialog(false);
-                // Refresh lại lịch
-                setDateRange((prev) => (prev ? { ...prev } : null));
+                // Thêm dòng này để refresh data
+                mutate(Endpoints.Schedule.GET_ALL);
             } else {
                 const errorMessage = result?.errors?.detail || result?.message || '❌ Cập nhật giáo viên thất bại!';
                 showErrorToast(errorMessage);
@@ -284,7 +284,7 @@ export default function SchedulePage() {
                     <span>Hoạt động</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded" style={{ backgroundColor: '#FFD700' }}></div>
+                    <div className="w-5 h-5 rounded" style={{ backgroundColor: '#38A169' }}></div>
                     <span>Đã hoàn thành</span>
                 </div>
                 <div className="flex items-center gap-2">

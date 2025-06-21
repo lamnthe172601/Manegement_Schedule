@@ -6,6 +6,7 @@ export const useAddCourse = () => {
   const [loading, setLoading] = useState(false)
 
   const addCourse = async (data: FormData) => {
+    console.log("data", data)
     setLoading(true)
     try {
       const response = await axios.post(`/Course`, data, {

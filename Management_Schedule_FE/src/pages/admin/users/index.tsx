@@ -80,7 +80,7 @@ const SORT_ICONS = {
 
 const UserPage = () => {
   const { data, error, isLoading } = useGetUsers()
-  console.log(data)
+
   const { editUser } = useEditUser()
   const { deleteUser, loading: deleting } = useDeleteUser()
   const [page, setPage] = React.useState(1)
@@ -97,14 +97,16 @@ const UserPage = () => {
   const [userToEdit, setUserToEdit] = React.useState<User | null>(null)
 
   // Lọc và tìm kiếm
-  const filtered = (data || []).filter((users) => {
-    const matchesSearch =
-      users.fullName.toLowerCase().includes(search.toLowerCase()) ||
-      users.email.toLowerCase().includes(search.toLowerCase())
-    const matchesRole = role && role !== "all" ? users.role === Number(role) : true
+  const filtered = (data || [])
+    .filter(user => user.role !== 1)
+    .filter((users) => {
+      const matchesSearch =
+        users.fullName.toLowerCase().includes(search.toLowerCase()) ||
+        users.email.toLowerCase().includes(search.toLowerCase())
+      const matchesRole = role && role !== "all" ? users.role === Number(role) : true
 
-    return matchesSearch && matchesRole
-  })
+      return matchesSearch && matchesRole
+    })
 
   // Multi-column sort logic
   const sorted = React.useMemo(() => {
@@ -320,12 +322,7 @@ const UserPage = () => {
                               Chỉnh sửa
                             </DropdownMenuItem>
 
-                            <DropdownMenuItem
-                              variant="destructive"
-                              onClick={() => handleDeleteClick(user)}
-                            >
-                              Xóa
-                            </DropdownMenuItem>
+
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
