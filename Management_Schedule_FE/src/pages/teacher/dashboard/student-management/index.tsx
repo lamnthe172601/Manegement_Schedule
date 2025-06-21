@@ -85,7 +85,7 @@ export default function StudentManagementPage() {
   }
 
   const totalPages = Math.ceil(students.length / pageSize)
-  const paginatedStudents = students.slice(
+  const paginatedStudents = students.filter(s => s.status === 1).slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   )
@@ -133,7 +133,7 @@ export default function StudentManagementPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginatedStudents.map((student, idx) => (
+            {paginatedStudents && Array.isArray(paginatedStudents) && paginatedStudents.map((student, idx) => (
               <TableRow key={student.studentID}>
                 <TableCell>{(currentPage - 1) * pageSize + idx + 1}</TableCell>
                 <TableCell>{student.fullName}</TableCell>

@@ -20,6 +20,16 @@ interface Class {
   isHaveTeacher: boolean
 }
 
+export interface ClassDetail{
+  classID: number,
+  className: string,
+  courseID: number,
+  maxStudents: number,
+  startDate: string,
+  endDate: string,
+  status: number
+}
+
 export interface ClassList{
   classID: number
   className: string

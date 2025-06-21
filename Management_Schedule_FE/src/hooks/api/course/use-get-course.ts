@@ -21,6 +21,21 @@ export interface Course {
   startDate: string
 }
 
+export interface CourseDetail{
+    courseID: number,
+    courseName: string,
+    description: string,
+    price: number,
+    thumbnailUrl: string,
+    isSelling: boolean,
+    isComingSoon: boolean,
+    isPro: boolean,
+    isCompletable: boolean,
+    discountPercent: number,
+    duration: number,
+    level: number
+}
+
 // Hook để lấy danh sách khóa học
 const useGetCourses = () => {
   const { data, error, isLoading } = useSWR<Course[]>(

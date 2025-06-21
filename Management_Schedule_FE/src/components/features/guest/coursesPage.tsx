@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Clock, Users, Calendar, User } from "lucide-react"
@@ -10,7 +9,7 @@ import { useAxios } from "@/hooks/api/use-axios"
 import { AxiosError } from "axios"
 import { useAtomValue } from "jotai/react"
 import { userInfoAtom } from "@/stores/auth"
-
+import { useRouter } from "next/router"
 export default function CoursesPage() {
   const { data, error, isLoading } = useGetClass()
   const userData = useAtomValue(userInfoAtom) // dùng userData làm check đăng nhập
@@ -38,6 +37,10 @@ export default function CoursesPage() {
         showErrorToast("Lỗi kết nối đến máy chủ!")
       }
     }
+  }
+  const router = useRouter()
+  const viewDetail = (id: number) => {
+    router.push(`/user/khoa-hoc/chi-tiet-khoa-hoc/${id}`)
   }
 
   return (
@@ -80,7 +83,7 @@ export default function CoursesPage() {
                 <div className="flex justify-center mt-4 mb-4">
                   {cls.status === 1 ? (
                     <div className="flex flex-col space-y-2 w-full px-4">
-                      <Button variant="outline">Xem chi tiết</Button>
+                      <Button variant="outline" onClick={()=>viewDetail(cls.classID)}>Xem chi tiết</Button>
                       {userData?.role === "Student" && <Button onClick={() => handleEnroll(cls.classID)}>Mua khóa học</Button>}
                     </div>
                   ) : (
