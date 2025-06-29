@@ -1,7 +1,6 @@
 "use client"
 import StudentLayout from "@/components/features/guest/StudentLayout"
 import { Button } from "@/components/ui/button"
-import Image from "next/image"
 import { DollarSign, Plus } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Course } from "@/hooks/api/course/use-get-course"
@@ -127,12 +126,10 @@ function Page() {
             Array.isArray(filteredCourses) &&
             filteredCourses.map((c) => (
               <div className="relative group cursor-pointer" key={c.courseID}>
-                <Image
+                <img
                   src={c.thumbnailUrl ?? "/courses.png"}
                   alt="khoa hoc"
-                  width={300}
-                  height={200}
-                  className="rounded-xl"
+                  className="rounded-xl w-[300px] h-[200px] object-cover"
                 />
                 <h3 className="mt-2 mb-2 font-semibold">{c.courseName}</h3>
                 <h4 className="text-gray-600 text-sm">Số ca học {c.level}</h4>

@@ -84,11 +84,10 @@ export default function HomePage() {
                                     <CardContent className="p-0">
                                         <div className="relative h-72 bg-gray-200">
                                             {course.thumbnailUrl ? (
-                                                <Image
+                                                <img
                                                     src={course.thumbnailUrl}
                                                     alt={course.courseName}
-                                                    fill
-                                                    className="object-cover"
+                                                    className="w-full h-full object-cover"
                                                 />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center text-gray-500 text-sm">
